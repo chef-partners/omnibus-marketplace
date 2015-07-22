@@ -1,0 +1,14 @@
+Metrics/LineLength:
+  Enabled: false
+Metrics/MethodLength:
+  Max: 40
+Metrics/ClassLength:
+  Max: 200
+Metrics/AbcSize:
+  Max: 40
+Style/GuardClause:
+  Enabled: false
+Style/SingleSpaceBeforeFirstArg:
+  Enabled: false
+Style/FileName:
+  Enabled: false

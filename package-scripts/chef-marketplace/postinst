@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# Perform necessary chef-marketplace setup steps
+# after package is installed.
+#
+
+PROGNAME=$(basename $0)
+
+function error_exit
+{
+  echo "${PROGNAME}: ${1:-"Unknown Error"}" 1>&2
+  exit 1
+}
+
+mkdir -p /var/opt/opscode/plugins
+ln -sf /opt/chef-marketplace/chef-server-plugin.rb /var/opt/opscode/plugins/chef-marketplace.rb
+chown -Rh 0:0 /opt/chef-marketplace
+
+exit 0
