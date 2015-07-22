@@ -9,8 +9,8 @@ build_iteration 1
 # creates required build directories
 dependency 'preparation'
 
-dependency 'chef-markplace'
-dependency 'chef-markplace-cookbooks'
+dependency 'chef-marketplace'
+dependency 'chef-marketplace-cookbooks'
 
 # version manifest file
 dependency 'version-manifest'
