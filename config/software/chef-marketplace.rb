@@ -1,5 +1,6 @@
 name 'chef-marketplace'
 
+# Hook into chef-server-ctl reconfigure as a plugin
 build do
   block do
     File.open("#{install_dir}/chef-server-plugin.rb", 'w') do |f|
