@@ -10,5 +10,5 @@ include_recipe "chef-marketplace::_#{platform}_#{role}_enable"
 # Publishing recipes
 if node['chef-marketplace']['publishing']['enabled']
   include_recipe 'chef-marketplace::_security'
-  include_recipe "chef-marketplace::#{platform}_security"
+  include_recipe "chef-marketplace::_#{platform}_security"
 end

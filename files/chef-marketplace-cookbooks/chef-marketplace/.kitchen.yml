@@ -23,7 +23,7 @@ suites:
       chef-marketplace:
         role: 'server'
   - name: analytics
-    run_list: test::analytics
+    run_list: chef-marketplace::default
     attributes:
       chef-marketplace:
         role: 'analytics'
