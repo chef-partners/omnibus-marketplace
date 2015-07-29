@@ -1,14 +1,7 @@
 name 'chef-marketplace'
 
+# Hook into chef-server-ctl reconfigure as a plugin
 build do
-  block do
-    File.open("#{install_dir}/chef-server-plugin.rb", 'w') do |f|
-      f.puts <<EOF
-plugin "chef-marketplace" do
-  cookbook_path "/opt/chef-marketplace/embedded/cookbooks"
-  enabled_by_default true
-end
-EOF
-    end
-  end
+  erb source: 'chef-server-plugin.rb.erb',
+      dest: "#{install_dir}/chef-server-plugin.rb"
 end

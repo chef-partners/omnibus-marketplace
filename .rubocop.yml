@@ -5,10 +5,12 @@ Metrics/MethodLength:
 Metrics/ClassLength:
   Max: 200
 Metrics/AbcSize:
-  Max: 40
+  Max: 50
 Style/GuardClause:
   Enabled: false
-Style/SingleSpaceBeforeFirstArg:
+Metrics/CyclomaticComplexity:
+  Enabled: false
+Style/Documentation:
   Enabled: false
 Style/FileName:
   Enabled: false
