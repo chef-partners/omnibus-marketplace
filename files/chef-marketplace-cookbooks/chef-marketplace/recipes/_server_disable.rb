@@ -13,3 +13,7 @@ end
 motd '50-chef-marketplace-appliance' do
   action :delete
 end
+
+template '/etc/cron.d/reporting-partition-cleanup' do
+  action :delete
+end

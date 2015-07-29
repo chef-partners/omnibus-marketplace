@@ -4,6 +4,10 @@ module Marketplace
       node['chef-marketplace']['motd']['enabled'] ? :create : :delete
     end
 
+    def reporting_partition_action
+      node['chef-marketplace']['reporting']['cron']['enabled'] ? :create : :delete
+    end
+
     def current_user_directories
       Etc::Passwd.each_with_object({}) do |user, memo|
         next if %w(halt sync shutdown).include?(user.name) ||

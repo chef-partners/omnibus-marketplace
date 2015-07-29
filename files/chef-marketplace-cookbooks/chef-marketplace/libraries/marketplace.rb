@@ -41,4 +41,19 @@ module Marketplace
     # Prep the node for marketplace publishing, eg: run the security recipes
     default :enabled, false
   end
+
+  config_context :reporting do
+    config_context :cron do
+      default :enabled, true
+
+      # Standard crontab expression
+      default :expression, '*/1 * * * *'
+
+      # Up to what year to delete
+      default :year, 'date +%Y'
+
+      # Up to what month to delete
+      default :month, 'date +%m'
+    end
+  end
 end

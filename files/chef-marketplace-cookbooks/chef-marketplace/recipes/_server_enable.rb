@@ -27,3 +27,18 @@ motd '50-chef-marketplace-appliance' do
   )
   action motd_action
 end
+
+template '/etc/cron.d/reporting-partition-cleanup' do
+  source 'reporting-partition-cleanup.erb'
+  variables(
+    expression: node['chef-marketplace']['reporting']['cron']['expression'],
+    year: node['chef-marketplace']['reporting']['cron']['year'],
+    month: node['chef-marketplace']['reporting']['cron']['month']
+  )
+  action reporting_partition_action
+end
+
+package 'cronie' do
+  action :install
+  only_if { node['chef-marketplace']['reporting']['cron']['enabled'] }
+end
