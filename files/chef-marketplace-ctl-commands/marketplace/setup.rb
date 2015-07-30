@@ -5,12 +5,12 @@ require 'ohai/system'
 require 'shellwords'
 # Hacks to get around using helpers with omnibus-ctl
 begin
-  require 'marketplace/payment'
+  require_relative 'payment'
 rescue LoadError
   require '/opt/chef-marketplace/embedded/service/omnibus-ctl/marketplace/payment'
 end
 begin
-  require 'marketplace/options'
+  require_relative 'options'
 rescue LoadError
   require '/opt/chef-marketplace/embedded/service/omnibus-ctl/marketplace/options'
 end

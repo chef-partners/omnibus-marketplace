@@ -1,6 +1,6 @@
 # Hacks to get around using helpers with omnibus-ctl
 begin
-  require 'marketplace/setup'
+  require_relative 'marketplace/setup'
 rescue LoadError
   require '/opt/chef-marketplace/embedded/service/omnibus-ctl/marketplace/setup'
 end

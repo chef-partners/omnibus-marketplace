@@ -2,7 +2,7 @@ require 'ostruct'
 require 'highline/import'
 # Hacks to get around using helpers with omnibus-ctl
 begin
-  require 'marketplace/helpers'
+  require_relative 'helpers'
 rescue LoadError
   require '/opt/chef-marketplace/embedded/service/omnibus-ctl/marketplace/helpers'
 end
@@ -40,8 +40,8 @@ class Marketplace
             end
           when 'organization'
             ask('Please enter the name of your Organization (e.g. Chef):', ->(org) { normalize_option(org) }) do |q|
-              q.validate = /[a-z0-9\-_]+/
-              q.responses[:not_valid] = 'Your Organization cannot contain special characters'
+              q.validate = ->(o) { o =~ /[a-z0-9\-_]+/ && o.length >= 1 && o.length <= 255 }
+              q.responses[:not_valid] = 'The Organization name must begin with a lower-case letter or digit, may only contain lower-case letters, digits, hyphens, and underscores, and must be between 1 and 255 characters.  Please enter a valid Organization name'
             end
           when 'email'
             ask('Please enter your email:', ->(org) { normalize_email(org) }) do |q|
