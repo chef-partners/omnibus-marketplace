@@ -1,6 +1,7 @@
 class Marketplace
   module Helpers
     def normalize_email(string)
+      string.gsub!(/\s+/, '')
       string.downcase!
       string
     end

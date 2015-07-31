@@ -11,8 +11,6 @@ class Marketplace
   class Options
     include Marketplace::Helpers
 
-    REQUIRED_OPTIONS = %w(first_name last_name username email organization password).freeze
-
     attr_accessor :options
 
     #
@@ -20,15 +18,17 @@ class Marketplace
     #
     def initialize(options)
       @options = options
+      @highline = HighLine.new
+      @required_options = %w(first_name last_name username email organization password).freeze
     end
 
     def validate
-      REQUIRED_OPTIONS.each do |opt|
+      required_options.each do |opt|
         next if options.send(opt)
         options[opt] =
           case opt
           when 'password'
-            ask('<%= @key %>: ') do |q|
+            highline.ask('<%= @key %>: ') do |q|
               q.echo = '*'
               q.validate = ->(p) { p.length >= 6 }
               q.verify_match = true
@@ -39,17 +39,17 @@ class Marketplace
               q.responses[:not_valid] = 'Password must be at least 6 characters'
             end
           when 'organization'
-            ask('Please enter the name of your Organization (e.g. Chef):', ->(org) { normalize_option(org) }) do |q|
+            highline.ask('Please enter the name of your Organization (e.g. Chef):', ->(org) { normalize_option(org) }) do |q|
               q.validate = ->(o) { o =~ /[a-z0-9\-_]+/ && o.length >= 1 && o.length <= 255 }
               q.responses[:not_valid] = 'The Organization name must begin with a lower-case letter or digit, may only contain lower-case letters, digits, hyphens, and underscores, and must be between 1 and 255 characters.  Please enter a valid Organization name'
             end
           when 'email'
-            ask('Please enter your email:', ->(org) { normalize_email(org) }) do |q|
+            highline.ask('Please enter your email:', ->(org) { normalize_email(org) }) do |q|
               q.validate = /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
               q.responses[:not_valid] = 'Your entry was not a valid email address'
             end
           else
-            ask("Please enter your #{opt}:", ->(org) { normalize_option(org) })
+            highline.ask("Please enter your #{opt}:", ->(org) { normalize_option(org) })
           end
       end
     end
@@ -58,5 +58,10 @@ class Marketplace
     def method_missing(meth, *args, &block)
       options.respond_to?(meth) ? options.send(meth, *args, &block) : super
     end
+
+    private
+
+    attr_reader :required_options
+    attr_accessor :highline
   end
 end
