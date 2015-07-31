@@ -32,10 +32,12 @@ module Marketplace
   end
 
   # Which role the marketplace addition is to play, eg: 'server' or 'analytics'
-  role 'server'
+  default :role, 'server'
 
-  # The marketplace platform
-  platform 'aws'
+  # The marketplace platform, eg: 'aws', 'openstack', 'azure', 'gce', etc.
+  default :platform, 'aws'
+
+  default :user,  'ec2-user'
 
   config_context :publishing do
     # Prep the node for marketplace publishing, eg: run the security recipes

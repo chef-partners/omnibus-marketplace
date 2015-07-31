@@ -9,4 +9,4 @@ if File.exist?('/etc/chef-marketplace/marketplace.rb')
   Marketplace.from_file('/etc/chef-marketplace/marketplace.rb')
 end
 
-node.consume_attributes('chef-marketplace' => Marketplace.save(true))
+node.consume_attributes('chef-marketplace' => Marketplace.save(false))

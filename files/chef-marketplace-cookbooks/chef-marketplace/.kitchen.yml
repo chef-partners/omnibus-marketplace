@@ -17,13 +17,47 @@ platforms:
         memory: 4096
 
 suites:
-  - name: server
+  - name: server-aws
     run_list: chef-marketplace::default
     attributes:
       chef-marketplace:
-        role: 'server'
-  - name: analytics
+        role: server
+        platform: aws
+        user: ec2-user
+        documentation:
+          url: https://docs.chef.io/aws_marketplace.html
+        support:
+          email: aws@chef.io
+  - name: analytics-aws
     run_list: chef-marketplace::default
     attributes:
       chef-marketplace:
-        role: 'analytics'
+        role: analytics
+        platform: aws
+        user: ec2-user
+        documentation:
+          url: https://docs.chef.io/aws_marketplace.html
+        support:
+          email: aws@chef.io
+  - name: server-openstack
+    run_list: chef-marketplace::default
+    attributes:
+      chef-marketplace:
+        role: server
+        platform: openstack
+        user: openstack-user
+        documentation:
+          url: https://docs.chef.io/openstack_marketplace.html
+        support:
+          email: openstack@chef.io
+  - name: analytics-openstack
+    run_list: chef-marketplace::default
+    attributes:
+      chef-marketplace:
+        role: analytics
+        platform: openstack
+        user: openstack-user
+        documentation:
+          url: https://docs.chef.io/openstack_marketplace.html
+        support:
+          email: openstack@chef.io

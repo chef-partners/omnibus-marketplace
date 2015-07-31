@@ -17,3 +17,19 @@ end
 template '/etc/cron.d/reporting-partition-cleanup' do
   action :delete
 end
+
+file "etc/chef/ohai/hints/#{node['chef-marketplace']['platform']}.json" do
+  action :delete
+end
+
+user node['chef-marketplace']['user'] do
+  action :delete
+end
+
+package 'cloud-init' do
+  action :uninstall
+end
+
+template '/etc/cloud/cloud.cfg' do
+  action :delete
+end
