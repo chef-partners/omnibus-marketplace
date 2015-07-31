@@ -79,7 +79,7 @@ describe Marketplace::Options do
       allow(subject).to receive(:required_options).and_return(['password'])
       expect(subject).to_not receive(:normalize_option).with(password)
 
-      with_user_input(email + "\n" + email) { subject.validate }
+      with_user_input(password + "\n" + password) { subject.validate }
     end
 
     it 'retries if the passwords do not match' do
