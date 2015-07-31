@@ -28,9 +28,13 @@ add_command_under_category 'test', 'Test', 'Test that the Chef Server Marketplac
 
     statuses << run_command(setup_cmd).exitstatus
 
+    # verify that the user and org were created
+    statuses << run_command('chef-server-ctl org-show johhdoedeadcheftestorg').exitstatus
+    statuses << run_command('chef-server-ctl user-show johndoedeadcheftest').exitstatus
+
     # clean up
-    run_command('chef-server-ctl org-delete johhdoedeadcheftestorg -y')
-    run_command('chef-server-ctl user-delete johndoedeadcheftest -y')
+    statuses << run_command('chef-server-ctl org-delete johhdoedeadcheftestorg -y').exitstatus
+    statuses << run_command('chef-server-ctl user-delete johndoedeadcheftest -y').exitstatus
   end
 
   exit(statuses.all? { |s| s == 0 } ? 0 : 1)
