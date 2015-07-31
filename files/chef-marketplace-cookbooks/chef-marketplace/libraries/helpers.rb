@@ -25,6 +25,13 @@ module Marketplace
     def current_sudoers
       Dir['/etc/sudoers.d/*']
     end
+
+    def gecos
+      case node['chef-marketplace']['platform']
+      when 'aws' then 'Ec2 User'
+      when 'openstack' then 'OpenStack User'
+      end
+    end
   end
 end
 

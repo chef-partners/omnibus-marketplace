@@ -17,6 +17,7 @@
 
 if File.exist?('/etc/chef-marketplace/marketplace.rb')
   Marketplace.from_file('/etc/chef-marketplace/marketplace.rb')
+  node.consume_attributes('chef-marketplace' => Marketplace.save(false))
 end
 
-puts Chef::JSONCompat.to_json_pretty(Marketplace.save(true))
+puts Chef::JSONCompat.to_json_pretty(node['chef-marketplace'])

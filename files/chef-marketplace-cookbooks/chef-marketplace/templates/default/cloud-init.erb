@@ -7,6 +7,7 @@ ssh_pwauth: false
 locale_configfile: /etc/sysconfig/i18n
 mount_default_fields: [~, ~, 'auto', 'defaults,nofail', '0', '2']
 
+manage_etc_hosts: true
 resize_rootfs: noblock
 resize_rootfs_tmp: /dev
 ssh_deletekeys: true
@@ -51,9 +52,9 @@ cloud_final_modules:
 
 system_info:
   default_user:
-    name: ec2-user
+    name: <%= @default_user %>
     lock_passwd: true
-    gecos: Ec2 User
+    gecos: <%= @gecos %>
     groups: [wheel, adm]
     sudo: ["ALL=(ALL) NOPASSWD:ALL"]
     shell: /bin/bash
