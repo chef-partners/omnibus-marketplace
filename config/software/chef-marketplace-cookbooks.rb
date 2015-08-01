@@ -12,11 +12,21 @@ build do
                  'GEM_PATH'        => nil,
                  'GEM_HOME'        => nil }
 
-  erb source: 'dna.json.erb',
-      dest: "#{install_dir}/embedded/cookbooks/dna.json"
+  erb source: 'single-recipe.json.erb',
+      dest: "#{install_dir}/embedded/cookbooks/dna.json",
+      vars: { recipe: 'chef-marketplace::default' }
 
-  erb source: 'show-config.json.erb',
-      dest: "#{install_dir}/embedded/cookbooks/show-config.json"
+  erb source: 'single-recipe.json.erb',
+      dest: "#{install_dir}/embedded/cookbooks/show-config.json",
+      vars: { recipe: 'chef-marketplace::show_config' }
+
+  erb source: 'single-recipe.json.erb',
+      dest: "#{install_dir}/embedded/cookbooks/upgrade-marketplace.json",
+      vars: { recipe: 'chef-marketplace::upgrade_marketplace' }
+
+  erb source: 'single-recipe.json.erb',
+      dest: "#{install_dir}/embedded/cookbooks/upgrade-chef-server.json",
+      vars: { recipe: 'chef-marketplace::upgrade_chef_server' }
 
   erb source: 'solo.rb.erb',
       dest: "#{install_dir}/embedded/cookbooks/solo.rb"

@@ -10,7 +10,7 @@ add_command_under_category 'setup', 'Configuration', 'Set up the Chef Server Mar
   options.agree_to_eula = false
 
   OptionParser.new do |opts|
-    opts.banner = 'Usage: chef-server-ctl marketplace-setup [options]'
+    opts.banner = 'Usage: chef-marketplace-ctl setup [options]'
 
     opts.on('-y', '--yes', 'Agree to the Chef End User License Agreement') do
       options.agree_to_eula = true
