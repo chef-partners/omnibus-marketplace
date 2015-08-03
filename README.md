@@ -9,7 +9,7 @@ Shortcuts to All The Things
 1. [chef-marketplace-ctl](#chef-marketplace-ctl)
   * [chef-marketplace-ctl setup](#setup)
   * [chef-marketplace-ctl reconfigure](#reconfigure)
-  * [chef-marketplace-ctl update](#update)
+  * [chef-marketplace-ctl upgrade](#upgrade)
   * [chef-marketplace-ctl test](#test)
 1. [Configuration](#configuration)
   * [Example marketplace.rb](#example-config)
@@ -103,8 +103,8 @@ the embedded configuration recipes.
 See the [marketplace.rb](#configuration) configuration for a list of user
 configurable attributes.
 
-### Update
-`chef-marketplace-ctl update` will update the installed Chef server packages
+### Upgrade
+`chef-marketplace-ctl upgrade` will upgrade the installed Chef server packages
 
 #### Options
 `-y, --yes` Agree to upgrade Chef Server, Marketplace, Reporting and Manage
