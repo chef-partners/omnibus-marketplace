@@ -1,6 +1,4 @@
-require 'json'
-
-add_command_under_category 'test', 'Test', 'Test that the Chef Server Marketplace addtions are working properly', 2 do
+add_command_under_category 'test', 'Configuration', 'Test that the Chef Server Marketplace addtions are working properly', 2 do
   statuses = []
 
   ctl_rspec = [

@@ -1,3 +1,5 @@
+# rubocop:disable Style/SingleSpaceBeforeFirstArg
+
 name              'chef-marketplace'
 maintainer        'Chef Software, Inc.'
 maintainer_email  'partnereng@chef.io'
@@ -8,3 +10,4 @@ version           '0.0.1'
 supports          'centos'
 
 depends 'motd'
+depends 'chef-ingredient'
