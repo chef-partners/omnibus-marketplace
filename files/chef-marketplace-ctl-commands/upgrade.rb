@@ -27,6 +27,10 @@ add_command_under_category 'upgrade', 'Configuration', 'Upgrade the Chef Marketp
     end
   end.parse!(ARGV)
 
+  unless options.upgrade_marketplace || options.upgrade_chef_server
+    puts 'Please specify the component you wish to upgrade.  Run `chef-marketplace-ctl -h` for more information' && exit(1)
+  end
+
   if options.upgrade_marketplace
     marketplace_status = run_chef("#{base_path}/embedded/cookbooks/upgrade-marketplace.json")
     exit(1) unless marketplace_status.success?

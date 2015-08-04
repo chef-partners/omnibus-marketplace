@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 # Install omnibus software
 gem 'omnibus-software', github: 'opscode/omnibus-software'
 gem 'omnibus', github: 'opscode/omnibus'
+gem 'omnibus-ctl', github: 'chef/omnibus-ctl', branch: '0.3.6'
 
 group :development do
   # Use Berkshelf for resolving cookbook dependencies
@@ -11,4 +12,9 @@ group :development do
   # Use Test Kitchen with Vagrant for converging the build environment
   gem 'test-kitchen',    '~> 1.3'
   gem 'kitchen-vagrant', '~> 0.14'
+
+  gem 'rspec'
+  gem 'rubocop'
+  gem 'pry'
+  gem 'chef'
 end

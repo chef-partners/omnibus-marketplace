@@ -2,11 +2,8 @@ add_command_under_category 'test', 'Configuration', 'Test that the Chef Server M
   statuses = []
 
   ctl_rspec = [
-    '/opt/chef-marketplace/embedded/bin/rspec',
-    '-I /opt/chef-marketplace/embedded/service/omnibus-ctl/spec',
-    '/opt/chef-marketplace/embedded/service/omnibus-ctl/',
-    '--format documentation',
-    '--color'
+    'cd /opt/chef-marketplace &&',
+    '/opt/chef-marketplace/embedded/bin/rake spec'
   ].join(' ')
 
   statuses << run_command(ctl_rspec).exitstatus
