@@ -72,7 +72,7 @@ template '/etc/cloud/cloud.cfg' do
   source 'cloud-init.erb'
   cookbook 'chef-marketplace'
   variables(
-    user: node['chef-marketplace']['user'],
+    default_user: node['chef-marketplace']['user'],
     gecos: gecos
   )
   action :create

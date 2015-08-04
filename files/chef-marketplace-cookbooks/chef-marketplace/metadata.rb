@@ -11,3 +11,4 @@ supports          'centos'
 
 depends 'motd'
 depends 'chef-ingredient'
+depends 'yum-centos'

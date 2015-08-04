@@ -2,7 +2,7 @@ require 'ostruct'
 require 'highline/import'
 # Hacks to get around using helpers with omnibus-ctl
 begin
-  require_relative 'helpers'
+  require 'helpers'
 rescue LoadError
   require '/opt/chef-marketplace/embedded/service/omnibus-ctl/marketplace/helpers'
 end
