@@ -39,6 +39,9 @@ module Marketplace
 
   default :user,  'ec2-user'
 
+  # Set to true if you don't want to use outbound networks, eg: package mirrors
+  default :disable_outboud_traffic, false
+
   config_context :publishing do
     # Prep the node for marketplace publishing, eg: run the security recipes
     default :enabled, false

@@ -40,7 +40,7 @@ end
 
 package 'cronie' do
   action :install
-  only_if { node['chef-marketplace']['reporting']['cron']['enabled'] }
+  only_if { node['chef-marketplace']['reporting']['cron']['enabled'] && mirrors_reachable? }
 end
 
 directory '/etc/chef/ohai/hints' do
@@ -66,6 +66,15 @@ end
 
 package 'cloud-init' do
   action :install
+  only_if { mirrors_reachable? }
+end
+
+directory '/etc/cloud' do
+  owner 'root'
+  group 'root'
+  mode '0755'
+  recursive true
+  action :create
 end
 
 template '/etc/cloud/cloud.cfg' do

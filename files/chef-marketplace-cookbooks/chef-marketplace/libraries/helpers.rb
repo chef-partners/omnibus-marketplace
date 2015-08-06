@@ -1,3 +1,7 @@
+require 'resolv'
+require 'net/http'
+require 'timeout'
+
 module Marketplace
   module Helpers
     def motd_action
@@ -31,6 +35,33 @@ module Marketplace
       when 'aws' then 'Ec2 User'
       when 'openstack' then 'OpenStack User'
       end
+    end
+
+    # When the Chef Server is in a private VPC some recipes will wait for a very
+    # long time for yum to timeout and then eventually crash. Instead, we won't
+    # worry about package installs/removals in that environment.
+    def mirrors_reachable?(mirror = 'http://mirrorlist.centos.org')
+      return true if node['chef-marketplace']['mirrors_reachable']
+
+      # check whether or not outbound traffic is disabled
+      if node['chef-marketplace']['disable_outbound_traffic']
+        return node.set['chef-marketplace']['mirrors_reachable'] = false
+      end
+
+      # check if the hostname is resolvable
+      uri = URI(mirror)
+      Resolv.getaddress(uri.host)
+
+      # check if the mirror is reachable
+      Timeout.timeout(2) do
+        res = Net::HTTP.get_response(uri)
+        node.set['chef-marketplace']['mirrors_reachable'] = res.is_a?(Net::HTTPSuccess)
+      end
+
+      node['chef-marketplace']['mirrors_reachable']
+    rescue
+      node.set['chef-marketplace']['mirrors_reachable'] = false
+      false
     end
   end
 end

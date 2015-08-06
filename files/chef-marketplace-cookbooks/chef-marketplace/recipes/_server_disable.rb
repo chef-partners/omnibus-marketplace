@@ -1,9 +1,6 @@
 # Add chef-server-ctl marketplace-setup shim for backwards compatability
 directory '/opt/opscode/embedded/service/omnibus-ctl' do
-  owner 'root'
-  group 'root'
-  recursive true
-  action :create
+  action :delete
 end
 
 file '/opt/opscode/embedded/service/omnibus-ctl/marketplace_setup.rb' do
@@ -28,6 +25,11 @@ end
 
 package 'cloud-init' do
   action :uninstall
+  only_if { mirrors_reachable? }
+end
+
+directory '/etc/cloud' do
+  action :delete
 end
 
 template '/etc/cloud/cloud.cfg' do

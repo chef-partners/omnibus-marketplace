@@ -4,8 +4,21 @@ DEPENDENCIES
     metadata: true
 
 GRAPH
+  apt (2.7.0)
+  apt-chef (0.1.0)
+    apt (>= 0.0.0)
+  chef-ingredient (0.9.0)
+    apt-chef (>= 0.0.0)
+    yum-chef (>= 0.0.0)
   chef-marketplace (0.0.1)
+    chef-ingredient (>= 0.0.0)
     motd (>= 0.0.0)
+    yum-centos (>= 0.0.0)
   chef_handler (1.2.0)
   motd (0.6.2)
     chef_handler (>= 0.0.0)
+  yum (3.6.3)
+  yum-centos (0.4.6)
+    yum (~> 3.2)
+  yum-chef (0.1.0)
+    yum (>= 0.0.0)
