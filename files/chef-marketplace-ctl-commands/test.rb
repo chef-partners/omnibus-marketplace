@@ -1,15 +1,17 @@
 add_command_under_category 'test', 'Configuration', 'Test that the Chef Server Marketplace addtions are working properly', 2 do
-  statuses = []
+  puts 'Running chef-marketplace unit tests..'
+  statuses = {}
 
   ctl_rspec = [
     'cd /opt/chef-marketplace &&',
     '/opt/chef-marketplace/embedded/bin/rake spec'
   ].join(' ')
 
-  statuses << run_command(ctl_rspec).exitstatus
+  statuses['rspec'] = run_command(ctl_rspec).exitstatus
 
   # If the Chef Server has been set up make sure the ctl commands work
   if File.exist?('/etc/opscode/chef-server-running.json')
+    puts 'Chef Server detected, running chef-marketplace functional tests..'
     setup_cmd = [
       'chef-server-ctl marketplace-setup',
       '-f john',
@@ -21,16 +23,18 @@ add_command_under_category 'test', 'Configuration', 'Test that the Chef Server M
       '--yes'
     ].join(' ')
 
-    statuses << run_command(setup_cmd).exitstatus
+    statuses['marketplace_setup'] = run_command(setup_cmd).exitstatus
 
     # verify that the user and org were created
-    statuses << run_command('chef-server-ctl org-show johhdoedeadcheftestorg').exitstatus
-    statuses << run_command('chef-server-ctl user-show johndoedeadcheftest').exitstatus
+    statuses['org_show'] = run_command('chef-server-ctl org-show johhdoedeadcheftestorg').exitstatus
+    statuses['user_show'] = run_command('chef-server-ctl user-show johndoedeadcheftest').exitstatus
 
     # clean up
-    statuses << run_command('chef-server-ctl org-delete johhdoedeadcheftestorg -y').exitstatus
-    statuses << run_command('chef-server-ctl user-delete johndoedeadcheftest -y').exitstatus
+    statuses['org_delete'] = run_command('chef-server-ctl org-delete johhdoedeadcheftestorg -y').exitstatus
+    statuses['user_delete'] = run_command('chef-server-ctl user-delete johndoedeadcheftest -y').exitstatus
   end
 
-  exit(statuses.all? { |s| s == 0 } ? 0 : 1)
+  statuses.select { |_, code| code != 0 }.each { |cmd, code| puts "ERROR: test '#{cmd}' failed with code #{code}" }
+
+  exit(statuses.values.all? { |s| s == 0 } ? 0 : 1)
 end

@@ -13,6 +13,7 @@ Shortcuts to All The Things
   * [chef-marketplace-ctl test](#test)
 1. [Configuration](#configuration)
   * [Example marketplace.rb](#example-config)
+1. [Contributing](#contributing)
 
 Kitchen-based Build Environment
 -------------------------------
@@ -142,6 +143,10 @@ platform 'aws'
 # Default user for cloud-init
 user 'ec2-user'
 
+# Prevents commands from attempting to use external services like package mirrors
+# Changing this setting will disable certain features
+disable_outboud_traffic true
+
 # If the instance is going to be bundled/published into the cloud marketplace
 # this option will run will enable security recipe to make sure we don't leave
 # around sensitive data.
@@ -157,3 +162,16 @@ reporting['cron']['expression'] = '*/2 * * * *'
 reporting['cron']['year'] = 'date +%Y'
 reporting['cron']['month'] = 'date +%m'
 ```
+
+Contributing
+------------
+Please submit a GitHub issue with any problems you encounter.
+
+Contributions are always welcome!  If you'd like to send up any fixes or changes:
+
+1. Fork it ( https://github.com/chef-partners/omnibus-marketplace/fork )
+1. Create your feature branch (`git checkout -b my-new-feature`)
+1. Test your changes (`cd omnibus-supermarket && bundle install && bundle exec rake`)
+1. Commit your changes (`git commit -am 'Add some feature'`)
+1. Push to the branch (`git push origin my-new-feature`)
+1. Create a new Pull Request
