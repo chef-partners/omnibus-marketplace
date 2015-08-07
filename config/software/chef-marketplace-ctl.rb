@@ -21,12 +21,10 @@ build do
 
   sync project_dir, "#{install_dir}/embedded/service/omnibus-ctl/"
 
-  options ||= { env: {} }
-  env = with_embedded_path || {}
+  env = with_standard_compiler_flags(with_embedded_path)
   env['BUNDLE_GEMFILE'] = "#{Omnibus::Config.project_root}/Gemfile"
-  options[:env].merge!(env)
 
-  bundle('install', options)
+  bundle('install', env: env)
 
   copy "#{Omnibus::Config.project_root}/Rakefile", "#{install_dir}/Rakefile"
 end

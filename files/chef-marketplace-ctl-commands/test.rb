@@ -4,7 +4,7 @@ add_command_under_category 'test', 'Configuration', 'Test that the Chef Server M
 
   ctl_rspec = [
     'cd /opt/chef-marketplace &&',
-    '/opt/chef-marketplace/embedded/bin/rake spec'
+    '/opt/chef-marketplace/embedded/bin/rake spec --trace'
   ].join(' ')
 
   statuses['rspec'] = run_command(ctl_rspec).exitstatus

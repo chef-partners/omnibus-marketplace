@@ -2,7 +2,6 @@ require 'rake'
 require 'rspec'
 require 'rspec/core'
 require 'rspec/core/rake_task'
-require 'bundler'
 require 'rubocop/rake_task'
 
 desc 'Default task to run spec suite'

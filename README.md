@@ -171,7 +171,7 @@ Contributions are always welcome!  If you'd like to send up any fixes or changes
 
 1. Fork it ( https://github.com/chef-partners/omnibus-marketplace/fork )
 1. Create your feature branch (`git checkout -b my-new-feature`)
-1. Test your changes (`cd omnibus-supermarket && bundle install && bundle exec rake`)
+1. Test your changes (`cd omnibus-marketplace && bundle install && bundle exec rake`)
 1. Commit your changes (`git commit -am 'Add some feature'`)
 1. Push to the branch (`git push origin my-new-feature`)
 1. Create a new Pull Request
