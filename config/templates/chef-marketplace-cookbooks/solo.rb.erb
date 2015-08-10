@@ -6,4 +6,4 @@ ssl_verify_mode :verify_peer
 client_fork false
 # Bind to a different port so child chef-runs (opscode-reporting-ctl reconfigure)
 # don't cause a port conflict
-chef_zero[:port] = 8899
+chef_zero[:port] = 8999.upto(9999)
