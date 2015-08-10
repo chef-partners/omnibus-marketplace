@@ -21,10 +21,7 @@ build do
 
   sync project_dir, "#{install_dir}/embedded/service/omnibus-ctl/"
 
-  env = with_standard_compiler_flags(with_embedded_path)
-  env['BUNDLE_GEMFILE'] = "#{Omnibus::Config.project_root}/Gemfile"
-
-  bundle('install', env: env)
+  bundle 'install --without development', env: with_standard_compiler_flags(with_embedded_path)
 
   copy "#{Omnibus::Config.project_root}/Rakefile", "#{install_dir}/Rakefile"
 end
