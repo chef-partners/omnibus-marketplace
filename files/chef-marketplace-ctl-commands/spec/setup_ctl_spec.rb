@@ -2,15 +2,39 @@ require 'spec_helper'
 require 'ostruct'
 
 describe 'chef-marketplace-ctl setup' do
-  shared_examples_for 'chef-marketplace-ctl cli arguments' do
-    let(:marketplace_ctl) do
-      @ctl = OmnibusCtlTest.new('setup')
-      # Omnibus::Ctl will Kernel#eval the Marketplace source so we have to stub
-      # after we create the object
-      allow(Marketplace).to receive(:setup).and_return(true)
-      @ctl
+  let(:marketplace_ctl) do
+    @ctl = OmnibusCtlTest.new('setup')
+    # Omnibus::Ctl will Kernel#eval the Marketplace source so we have to stub
+    # after we create the object
+    allow(Marketplace).to receive(:setup).and_return(true)
+    @ctl
+  end
+  let(:omnibus_ctl) { marketplace_ctl.plugin }
+
+  before do
+    allow(omnibus_ctl)
+      .to receive_message_chain(:run_command, :exitstatus).and_return(0)
+  end
+
+  context 'when the hostname is not resolvable' do
+    before do
+      allow(omnibus_ctl)
+        .to receive_message_chain(:run_command, :exitstatus).and_return(1)
     end
 
+    it 'raises an error' do
+      expect { marketplace_ctl.execute('setup') }
+        .to raise_error(SystemExit) { |e| expect(e.status).to eq(1) }
+    end
+  end
+
+  context 'when the hostname is resolvable' do
+    it 'does not raise an error' do
+      expect { marketplace_ctl.execute('setup') }.to_not raise_error
+    end
+  end
+
+  shared_examples_for 'chef-marketplace-ctl cli arguments' do
     it 'should properly parse the value from ARGV and add it to the options' do
       # mock options
       opts = OpenStruct.new
@@ -19,7 +43,7 @@ describe 'chef-marketplace-ctl setup' do
       # agree_to_eula is set by default so expect it unless --yes is passed
       opts['agree_to_eula'] = false unless option_name == 'agree_to_eula'
 
-      expect(Marketplace).to receive(:setup).with(opts, marketplace_ctl.plugin)
+      expect(Marketplace).to receive(:setup).with(opts, omnibus_ctl)
       expect(Kernel).to_not receive(:eval)
 
       marketplace_ctl.execute("setup #{input}")

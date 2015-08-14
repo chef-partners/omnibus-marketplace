@@ -1,4 +1,4 @@
-add_command_under_category 'test', 'Configuration', 'Test that the Chef Server Marketplace addtions are working properly', 2 do
+add_command_under_category 'test', 'Configuration', 'Verify that the Chef Server Marketplace add-on is working properly', 2 do
   puts 'Running chef-marketplace unit tests..'
   statuses = {}
 

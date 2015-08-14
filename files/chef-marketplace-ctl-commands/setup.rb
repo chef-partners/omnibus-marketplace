@@ -46,5 +46,9 @@ add_command_under_category 'setup', 'Configuration', 'Set up the Chef Server Mar
     end
   end.parse!(ARGV)
 
+  puts 'Determining the system hostname..'
+  exit(1) unless run_command('chef-marketplace-ctl hostname').exitstatus.to_i == 0
+
+  puts 'Starting setup..'
   Marketplace.setup(options, self)
 end
