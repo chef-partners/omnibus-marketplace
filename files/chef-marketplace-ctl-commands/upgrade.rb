@@ -1,6 +1,6 @@
 require 'ostruct'
 
-add_command_under_category 'upgrade', 'Configuration', 'Upgrade the Chef Marketplace', 2 do
+add_command_under_category 'upgrade', 'Configuration', 'Upgrade or install Chef Server software', 2 do
   options = OpenStruct.new
   options.upgrade_marketplace = false
   options.upgrade_chef_server = false
@@ -32,11 +32,13 @@ add_command_under_category 'upgrade', 'Configuration', 'Upgrade the Chef Marketp
   end
 
   if options.upgrade_marketplace
+    puts 'Upgrading the Chef Server Marketplace Add-On...'
     marketplace_status = run_chef("#{base_path}/embedded/cookbooks/upgrade-marketplace.json")
     exit(1) unless marketplace_status.success?
   end
 
   if options.upgrade_chef_server
+    puts 'Upgrading the Chef Server, Manage and Reporting...'
     chef_server_status = run_chef("#{base_path}/embedded/cookbooks/upgrade-chef-server.json")
     exit(1) unless chef_server_status.success?
   end

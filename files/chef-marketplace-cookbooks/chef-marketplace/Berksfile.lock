@@ -2,19 +2,27 @@ DEPENDENCIES
   chef-marketplace
     path: .
     metadata: true
+  hostname
+    git: git://github.com/3ofcoins/chef-cookbook-hostname.git
+    revision: 565b26905509da7494e502476a99d0b82c5f4604
+    branch: v0.4.0
 
 GRAPH
   apt (2.7.0)
   apt-chef (0.1.0)
     apt (>= 0.0.0)
-  chef-ingredient (0.9.0)
+  chef-ingredient (0.10.1)
     apt-chef (>= 0.0.0)
     yum-chef (>= 0.0.0)
   chef-marketplace (0.0.1)
     chef-ingredient (>= 0.0.0)
+    hostname (>= 0.0.0)
     motd (>= 0.0.0)
     yum-centos (>= 0.0.0)
   chef_handler (1.2.0)
+  hostname (0.4.0)
+    hostsfile (>= 0.0.0)
+  hostsfile (2.4.5)
   motd (0.6.2)
     chef_handler (>= 0.0.0)
   yum (3.6.3)
