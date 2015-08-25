@@ -33,13 +33,13 @@ add_command_under_category 'upgrade', 'Configuration', 'Upgrade or install Chef 
 
   if options.upgrade_marketplace
     puts 'Upgrading the Chef Server Marketplace Add-On...'
-    marketplace_status = run_chef("#{base_path}/embedded/cookbooks/upgrade-marketplace.json")
+    marketplace_status = run_chef("#{base_path}/embedded/cookbooks/upgrade-marketplace.json", '--lockfile /tmp/chef-client-upgrade.lock')
     exit(1) unless marketplace_status.success?
   end
 
   if options.upgrade_chef_server
     puts 'Upgrading the Chef Server, Manage and Reporting...'
-    chef_server_status = run_chef("#{base_path}/embedded/cookbooks/upgrade-chef-server.json")
+    chef_server_status = run_chef("#{base_path}/embedded/cookbooks/upgrade-chef-server.json", '--lockfile /tmp/chef-client-upgrade.lock')
     exit(1) unless chef_server_status.success?
   end
 

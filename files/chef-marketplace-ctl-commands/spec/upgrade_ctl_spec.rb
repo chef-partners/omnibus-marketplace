@@ -19,9 +19,11 @@ describe 'chef-marketplace-ctl upgrade' do
   context 'with --yes' do
     it "runs the both upgrade recipes and exit's cleanly" do
       expect(omnibus_ctl).to receive(:run_chef)
-        .with('/opt/upgrade/embedded/cookbooks/upgrade-marketplace.json')
+        .with('/opt/upgrade/embedded/cookbooks/upgrade-marketplace.json',
+              '--lockfile /tmp/chef-client-upgrade.lock')
       expect(omnibus_ctl).to receive(:run_chef)
-        .with('/opt/upgrade/embedded/cookbooks/upgrade-chef-server.json')
+        .with('/opt/upgrade/embedded/cookbooks/upgrade-chef-server.json',
+              '--lockfile /tmp/chef-client-upgrade.lock')
       expect { marketplace_ctl.execute('upgrade --yes') }
         .to raise_error(SystemExit) { |e| expect(e.status).to eq(0) }
     end
@@ -30,9 +32,11 @@ describe 'chef-marketplace-ctl upgrade' do
   context 'with -s' do
     it "runs the chef server upgrade recipe and exit's cleanly" do
       expect(omnibus_ctl).to_not receive(:run_chef)
-        .with('/opt/upgrade/embedded/cookbooks/upgrade-marketplace.json')
+        .with('/opt/upgrade/embedded/cookbooks/upgrade-marketplace.json',
+              '--lockfile /tmp/chef-client-upgrade.lock')
       expect(omnibus_ctl).to receive(:run_chef)
-        .with('/opt/upgrade/embedded/cookbooks/upgrade-chef-server.json')
+        .with('/opt/upgrade/embedded/cookbooks/upgrade-chef-server.json',
+              '--lockfile /tmp/chef-client-upgrade.lock')
       expect { marketplace_ctl.execute('upgrade -s') }
         .to raise_error(SystemExit) { |e| expect(e.status).to eq(0) }
     end
@@ -41,9 +45,11 @@ describe 'chef-marketplace-ctl upgrade' do
   context 'with -m' do
     it "runs the marketplace upgrade recipe and exit's cleanly" do
       expect(omnibus_ctl).to receive(:run_chef)
-        .with('/opt/upgrade/embedded/cookbooks/upgrade-marketplace.json')
+        .with('/opt/upgrade/embedded/cookbooks/upgrade-marketplace.json',
+              '--lockfile /tmp/chef-client-upgrade.lock')
       expect(omnibus_ctl).to_not receive(:run_chef)
-        .with('/opt/upgrade/embedded/cookbooks/upgrade-chef-server.json')
+        .with('/opt/upgrade/embedded/cookbooks/upgrade-chef-server.json',
+              '--lockfile /tmp/chef-client-upgrade.lock')
       expect { marketplace_ctl.execute('upgrade -m') }
         .to raise_error(SystemExit) { |e| expect(e.status).to eq(0) }
     end
