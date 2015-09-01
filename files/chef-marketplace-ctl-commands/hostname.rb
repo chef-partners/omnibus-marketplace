@@ -32,14 +32,36 @@ add_command_under_category 'hostname', 'Configuration', 'Query and modify the ho
 
   if hostname
     puts "Configuring the hostname to: #{hostname}.."
+
     marketplace.write_chef_json('/opt/chef-marketplace/embedded/cookbooks/update-hostname.json', hostname)
     run_chef('/opt/chef-marketplace/embedded/cookbooks/update-hostname.json')
+
+    puts 'Reconfiguring Chef Server software...'
+    run_command('chef-marketplace-ctl reconfigure')
+    if server_configured?
+      run_command('chef-server-ctl reconfigure')
+      run_command('opscode-reporting-ctl reconfigure')
+    end
+    run_command('opscode-manage-ctl reconfigure') if manage_configured?
+    run_command('opscode-analytics-ctl reconfigure') if analytics_configured?
   else
     fqdn = marketplace.resolve
     msg = 'ERROR: The Chef Server requires a resolvable fully qualified domain name.'
     msg << 'You can attempt to associate a FQDN by running: chef-marketplace-ctl hostname your.hostname.com'
     puts msg && exit(1) unless fqdn
     puts fqdn
+  end
+
+  def server_configured?
+    File.exist?('/opt/opscode/chef-server-running.json')
+  end
+
+  def analytics_configured?
+    File.exist?('/opt/opscode-analytics/opscode-analytics-running.json')
+  end
+
+  def manage_configured?
+    File.exist?('/opt/opscode-manage/opscode-manage-running.json')
   end
 
   exit(0)

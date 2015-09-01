@@ -1,3 +1,1 @@
-motd '50-chef-marketplace-appliance' do
-  action :delete
-end
+include_recipe 'chef-marketplace::_common_disable'

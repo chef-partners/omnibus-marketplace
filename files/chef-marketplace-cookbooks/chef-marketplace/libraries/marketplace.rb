@@ -31,19 +31,26 @@ module Marketplace
     default :url, 'https://docs.chef.io/aws_marketplace.html'
   end
 
-  # Which role the marketplace addition is to play, eg: 'server' or 'analytics'
+  default :license_count, 5
+
+  # Which role the marketplace addition is to play, eg: 'server', 'aio', 'analytics'
   default :role, 'server'
 
   # The marketplace platform, eg: 'aws', 'openstack', 'azure', 'gce', etc.
   default :platform, 'aws'
 
-  default :user,  'ec2-user'
+  default :user, 'ec2-user'
 
   # Set to true if you don't want to use outbound networks, eg: package mirrors
   default :disable_outboud_traffic, false
 
   config_context :publishing do
-    # Prep the node for marketplace publishing, eg: run the security recipes
+    # Prep the node for publishing
+    default :enabled, false
+  end
+
+  config_context :security do
+    # Force enable or disable the security recipe
     default :enabled, false
   end
 
@@ -54,11 +61,15 @@ module Marketplace
       # Standard crontab expression
       default :expression, '*/1 * * * *'
 
-      # Up to what year to delete
+      # Up to what year to delete, must be a valid shell command
       default :year, 'date +%Y'
 
-      # Up to what month to delete
+      # Up to what month to delete, must be a valid shell command
       default :month, 'date +%m'
     end
+  end
+
+  config_context :analytics do
+    default :ssl_port, 8443
   end
 end

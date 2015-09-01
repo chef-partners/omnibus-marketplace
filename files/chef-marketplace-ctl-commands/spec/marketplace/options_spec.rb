@@ -16,8 +16,9 @@ describe Marketplace::Options do
   let(:email) { 'John@OCP.com' }
   let(:organization) { 'A full Organization-with-Special things!@#$%^*()' }
   let(:password) { 'Ultra Secure Password!' }
+  let(:options) { OpenStruct.new }
 
-  subject { described_class.new(OpenStruct.new) }
+  subject { described_class.new(options) }
 
   describe '#validate' do
     it 'asks and normalizes the first_name' do
@@ -125,6 +126,34 @@ describe Marketplace::Options do
     it 'normalizes email addresses' do
       expect(subject.normalize_email(email)).to eq('john@ocp.com')
       expect(subject.normalize_email('email @ with spaces . com')).to eq('email@withspaces.com')
+    end
+  end
+
+  describe '#required_options' do
+    context 'when the role is server' do
+      before { subject.options.role = 'server' }
+
+      it 'returns the correct options' do
+        expect(subject.send(:required_options))
+          .to eq(%w(first_name last_name username email organization password))
+      end
+    end
+
+    context 'when the role is analytics' do
+      before { subject.options.role = 'analytics' }
+
+      it 'returns the correct options' do
+        expect(subject.send(:required_options)).to eq([])
+      end
+    end
+
+    context 'when the role is aio' do
+      before { subject.options.role = 'aio' }
+
+      it 'returns the correct options' do
+        expect(subject.send(:required_options))
+          .to eq(%w(first_name last_name username email organization password))
+      end
     end
   end
 end

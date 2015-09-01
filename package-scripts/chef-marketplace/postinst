@@ -12,8 +12,6 @@ function error_exit
   exit 1
 }
 
-mkdir -p /var/opt/opscode/plugins
-ln -sf /opt/chef-marketplace/chef-server-plugin.rb /var/opt/opscode/plugins/chef-marketplace.rb
 ln -sf /opt/chef-marketplace/bin/chef-marketplace-ctl /usr/bin || error_exit "Cannot link chef-marketplace-ctl in /usr/bin"
 chown -Rh 0:0 /opt/chef-marketplace
 

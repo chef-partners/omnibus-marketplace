@@ -15,7 +15,6 @@ override :bundler, version: '1.10.6'
 
 dependency 'preparation'
 dependency 'chef-gem'
-dependency 'chef-marketplace'
 dependency 'chef-marketplace-ctl'
 dependency 'chef-marketplace-cookbooks'
 dependency 'version-manifest'

@@ -1,10 +1,7 @@
-motd '50-chef-marketplace-appliance' do
-  source 'motd.erb'
-  cookbook 'chef-marketplace'
-  variables(
-    role: 'analytics',
-    support_email: node['chef-marketplace']['support']['email'],
-    doc_url: node['chef-marketplace']['documentation']['url']
-  )
-  action motd_action
+include_recipe 'chef-marketplace::_common_enable'
+
+directory '/etc/opscode-analytics/' do
+  owner 'root'
+  group 'root'
+  action :create
 end

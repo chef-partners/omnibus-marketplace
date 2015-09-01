@@ -1,4 +1,7 @@
 DEPENDENCIES
+  chef-ingredient
+    git: git://github.com/chef-cookbooks/chef-ingredient.git
+    revision: 1037b76390bb61655dff2b1dff58afffdada66c5
   chef-marketplace
     path: .
     metadata: true
@@ -8,10 +11,10 @@ DEPENDENCIES
     branch: v0.4.0
 
 GRAPH
-  apt (2.7.0)
+  apt (2.8.2)
   apt-chef (0.1.0)
     apt (>= 0.0.0)
-  chef-ingredient (0.10.1)
+  chef-ingredient (0.10.2)
     apt-chef (>= 0.0.0)
     yum-chef (>= 0.0.0)
   chef-marketplace (0.0.1)

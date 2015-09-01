@@ -1,3 +1,5 @@
+include_recipe 'chef-marketplace::_common_enable'
+
 # Add chef-server-ctl marketplace-setup shim for backwards compatability
 directory '/opt/opscode/embedded/service/omnibus-ctl' do
   owner 'root'
@@ -17,17 +19,6 @@ EOF
   action :create
 end
 
-motd '50-chef-marketplace-appliance' do
-  source 'motd.erb'
-  cookbook 'chef-marketplace'
-  variables(
-    role: 'server',
-    support_email: node['chef-marketplace']['support']['email'],
-    doc_url: node['chef-marketplace']['documentation']['url']
-  )
-  action motd_action
-end
-
 template '/etc/cron.d/reporting-partition-cleanup' do
   source 'reporting-partition-cleanup.erb'
   variables(
@@ -43,46 +34,31 @@ package 'cronie' do
   only_if { node['chef-marketplace']['reporting']['cron']['enabled'] && mirrors_reachable? }
 end
 
-directory '/etc/chef/ohai/hints' do
+directory '/etc/opscode' do
   owner 'root'
   group 'root'
-  mode '0755'
+  action :create
+end
+
+file '/etc/opscode/chef-server.rb' do
+  owner 'root'
+  group 'root'
+  action :create
+end
+
+# FIXME: As soon as Chef Server 12.2 ships you can yank these two resources
+#
+# After the rails update oc_id/rails likes to listen only on ::1 (IPv6) and that
+# causes all sorts of issues with nginx routes.
+
+templates_dir = '/opt/opscode/embedded/cookbooks/private-chef/templates/default'
+
+directory templates_dir do
   recursive true
   action :create
 end
 
-file "etc/chef/ohai/hints/#{node['chef-marketplace']['platform']}.json" do
-  owner 'root'
-  group 'root'
-  mode '0755'
-  action :create_if_missing
-end
-
-user node['chef-marketplace']['user'] do
-  home "/home/#{node['chef-marketplace']['user']}"
-  shell '/bin/bash'
-  action [:create, :lock]
-end
-
-package 'cloud-init' do
-  action :install
-  only_if { mirrors_reachable? }
-end
-
-directory '/etc/cloud' do
-  owner 'root'
-  group 'root'
-  mode '0755'
-  recursive true
-  action :create
-end
-
-template '/etc/cloud/cloud.cfg' do
-  source 'cloud-init.erb'
-  cookbook 'chef-marketplace'
-  variables(
-    default_user: node['chef-marketplace']['user'],
-    gecos: gecos
-  )
+cookbook_file ::File.join(templates_dir, 'sv-oc_id-run.erb') do
+  source 'sv-oc_id-run.erb'
   action :create
 end

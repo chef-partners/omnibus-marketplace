@@ -9,6 +9,7 @@ default['chef-marketplace'].tap do |m|
   m['support']['email'] = 'aws@chef.io'
   m['documentation']['url'] = 'https://docs.chef.io/aws_marketplace.html'
   m['role'] = 'server'
+  m['license_count'] = 5
   m['platform'] = 'aws'
   m['user'] = 'ec2-user'
   m['publishing']['enabled'] = false
@@ -16,6 +17,7 @@ default['chef-marketplace'].tap do |m|
   m['reporting']['cron']['expression'] = '*/1 * * * *'
   m['reporting']['cron']['year'] = 'date +%Y'
   m['reporting']['cron']['month'] = 'date +%m'
+  m['analytics']['ssl_port'] = 8443
 end
 
 default['openssh']['server'].tap do |server|
