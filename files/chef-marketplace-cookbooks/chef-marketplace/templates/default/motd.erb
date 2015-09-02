@@ -15,19 +15,21 @@ ________/\\\\\\\\\__/\\\________/\\\__/\\\\\\\\\\\\\\\__/\\\\\\\\\\\\\\\_
         _______\/////////__\///________\///__\///////////////__\///______________
 
 
-Welcome to the Chef <%= @role %> Marketplace Appliance!
+           Welcome to the Chef Server Marketplace Appliance!
 
-<% if @role == 'server' %>
 If this your first time logging in you'll need to set up the Chef server by
 running the following command:
 
 sudo chef-server-ctl marketplace-setup
+
+Read Chef documentation at: <%= @doc_url %>
+Email the Chef support team at: <%= @support_email %>
+<% if @manage_url %>
+Login to Chef Manage at: <%= @manage_url %>
 <% end -%>
-
-If you need help, you can find documentation at <%= @doc_url %>
-
-You can also email our support team at <%= @support_email %>.
-
+<% if @analytics_url %>
+Login to Chef Analytics at: <%= @analytics_url %>
+<% end -%>
 <% if @update_motd %>
 EOS
 <% end -%>

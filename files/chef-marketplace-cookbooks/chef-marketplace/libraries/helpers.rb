@@ -61,7 +61,65 @@ module Marketplace
       node['chef-marketplace']['mirrors_reachable']
     rescue
       node.set['chef-marketplace']['mirrors_reachable'] = false
+    end
+
+    # We only want to run the security in two scenarios:
+    #   1) Security is explicitly enabled
+    #   2) We're publishing for the first time
+    #
+    # We do this because the security recipe will blow away the SSH keys.
+    def security_enabled?
+      if node['chef-marketplace'].attribute?('security') && node['chef-marketplace']['security']['enabled']
+        true
+      elsif previously_published?
+        false
+      elsif publishing_enabled?
+        true
+      else
+        false
+      end
+    end
+
+    def publishing_enabled?
+      node['chef-marketplace']['publishing']['enabled']
+    rescue NoMethodError
       false
+    end
+
+    def previously_published?
+      node.attribute?('previous_run') && node['previous_run'].attribute?('publishing') && node['previous_run']['publishing']['enabled']
+    end
+
+    def chef_server_configured?
+      File.exist?('/etc/opscode/chef-server-running.json')
+    end
+
+    def analytics_configured?
+      File.exist?('/etc/opscode-analytics/opscode-analytics-running.json')
+    end
+
+    def manage_url
+      "https://#{node['chef-marketplace']['api_fqdn']}"
+    end
+
+    def analytics_url
+      "#{manage_url}:#{node['chef-marketplace']['analytics']['ssl_port']}"
+    end
+
+    def determine_api_fqdn
+      # Use the FQDN unless cloud_v2 has data
+      api_fqdn = node['fqdn'] unless node.key?('cloud_v2') && !node['cloud_v2'].nil?
+      api_fqdn ||=
+        case node['cloud_v2']['provider']
+        when 'gce'
+          node['cloud_v2']['public_ipv4']
+        when 'azure'
+          "#{node['cloud_v2']['public_hostname']}.cloudapp.net"
+        else # aws, etc..
+          node['cloud_v2']['public_hostname'] || node['cloud_v2']['local_hostname'] || node['fqdn']
+        end
+
+      node.set['chef-marketplace']['api_fqdn'] = api_fqdn
     end
   end
 end

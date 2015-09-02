@@ -16,10 +16,9 @@ class Marketplace
     #
     # @param [OpenStruct] options
     #
-    def initialize(options)
+    def initialize(options, ui = HighLine.new)
       @options = options
-      @highline = HighLine.new
-      @required_options = %w(first_name last_name username email organization password).freeze
+      @ui = ui
     end
 
     def validate
@@ -28,7 +27,7 @@ class Marketplace
         options[opt] =
           case opt
           when 'password'
-            highline.ask('<%= @key %>: ') do |q|
+            ui.ask('<%= @key %>: ') do |q|
               q.echo = '*'
               q.validate = ->(p) { p.length >= 6 }
               q.verify_match = true
@@ -39,17 +38,17 @@ class Marketplace
               q.responses[:not_valid] = 'Password must be at least 6 characters'
             end
           when 'organization'
-            highline.ask('Please enter the name of your Organization (e.g. Chef):', ->(org) { normalize_option(org) }) do |q|
+            ui.ask('Please enter the name of your Organization (e.g. Chef):', ->(org) { normalize_option(org) }) do |q|
               q.validate = ->(o) { o =~ /[a-z0-9\-_]+/ && o.length >= 1 && o.length <= 255 }
               q.responses[:not_valid] = 'The Organization name must begin with a lower-case letter or digit, may only contain lower-case letters, digits, hyphens, and underscores, and must be between 1 and 255 characters.  Please enter a valid Organization name'
             end
           when 'email'
-            highline.ask('Please enter your email:', ->(org) { normalize_email(org) }) do |q|
+            ui.ask('Please enter your email:', ->(org) { normalize_email(org) }) do |q|
               q.validate = /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
               q.responses[:not_valid] = 'Your entry was not a valid email address'
             end
           else
-            highline.ask("Please enter your #{opt}:", ->(org) { normalize_option(org) })
+            ui.ask("Please enter your #{opt}:", ->(org) { normalize_option(org) })
           end
       end
     end
@@ -61,7 +60,17 @@ class Marketplace
 
     private
 
-    attr_reader :required_options
-    attr_accessor :highline
+    def required_options
+      case options.role
+      when 'server'
+        %w(first_name last_name username email organization password).freeze
+      when 'analytics'
+        []
+      when 'aio'
+        %w(first_name last_name username email organization password).freeze
+      end
+    end
+
+    attr_accessor :ui
   end
 end

@@ -9,7 +9,7 @@ def with_user_input(string = '')
   stdin << string
   stdin << ("\n")
   stdin.rewind
-  allow(subject).to receive(:highline).and_return(HighLine.new(stdin, stdout))
+  allow(subject).to receive(:ui).and_return(HighLine.new(stdin, stdout))
   yield(stdin, stdout) if block_given?
 end
 
