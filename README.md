@@ -1,19 +1,130 @@
 chef-marketplace Omnibus project
 ================================
 This project creates full-stack platform-specific packages for
-the `chef-marketplace` Chef server add-on.  This add-on extends the Chef server's support for cloud marketplaces.
+the `chef-marketplace` Chef server add-on.  This add-on extends the Chef server's
+support for cloud marketplaces.
 
-Shortcuts to All The Things
+All The Things
 --------------
-1. [Kitchen-Based Build Environment](#kitchen-based-build-environment)
+1. [Configuration](#configuration)
+  * [Example chef-server.rb](#example-server-config)
+  * [Example marketplace.rb](#example-marketplace-config)
 1. [chef-marketplace-ctl](#chef-marketplace-ctl)
   * [chef-marketplace-ctl setup](#setup)
   * [chef-marketplace-ctl reconfigure](#reconfigure)
   * [chef-marketplace-ctl upgrade](#upgrade)
+  * [chef-marketplace-ctl hostname](#hostname)
   * [chef-marketplace-ctl test](#test)
-1. [Configuration](#configuration)
-  * [Example marketplace.rb](#example-config)
+1. [Kitchen-Based Build Environment](#kitchen-based-build-environment)
 1. [Contributing](#contributing)
+
+Configuration
+-------------
+The `chef-marketplace` package supports a number of user supplied customization
+options.  Like the majority of Chef products, the syntax is `Mixlib::Config`
+based and the file should be located at `/etc/chef-marketplace/marketplace.rb`
+
+** Configuration is required to enable the chef-marketplace plugin: **
+* The `role` **_must_** be configured in the `marketplace.rb` file
+* The `topology` ** _must_** be set to `chef-marketplace` in the
+  `chef-server.rb` configuration file
+
+#### Example Server Config
+```ruby
+topology 'chef-marketplace'
+```
+
+#### Example Marketplace Config
+```ruby
+# Enable or disable changing the motd
+motd['enable'] = true
+
+# Marketplace specific support email address
+support['email'] = 'some@email.com'
+
+# Marketplace specific documentation
+documentation['url'] = 'http://myorg.com/docs'
+
+# Which role the instance is supposed to play
+role 'aio' # or 'server'
+
+# Which Cloud Platform the instance is running on
+platform 'aws'
+
+# Default user for cloud-init
+user 'ec2-user'
+
+# Prevents commands from attempting to use external services like package mirrors
+# Changing this setting will disable certain features
+disable_outboud_traffic true
+
+# If the instance is going to be bundled/published into the cloud marketplace
+# this option will run will enable security recipe to make sure we don't leave
+# around sensitive data.
+publishing['enabled'] = true
+
+# Configure which port the Analytics UI binds to
+analytics['ssl_port'] = 8443
+
+# Enable or disable the reporting auto clean-up
+reporting['cron']['enabled'] = true
+
+# Standard crontab expression
+reporting['cron']['expression'] = '*/2 * * * *'
+
+# The latest year/month in the reporting database that you want to preserve
+reporting['cron']['year'] = 'date +%Y'
+reporting['cron']['month'] = 'date +%m'
+```
+
+chef-marketplace-ctl
+--------------------
+### Setup
+`chef-marketplace-ctl setup` is a helper command that sets up the Chef server,
+Manage, Reporting and Analytics with user provided configuration options.
+
+#### Options
+`-y, --yes` Agree to the Chef End User License Agreement
+`-u USERNAME, --username USERNAME` Admin username
+`-p PASSWORD, --password PASSWORD` Admin password
+`-f FIRSTNAME, --firstname FIRSTNAME` Admin first name
+`-l LASTNAME, --lastname LASTNAME` Admin last name
+`-e EMAIL, --email EMAIL` Admin email address
+`-o ORGNAME, --org ORGNAME` Default organization name
+`-h, --help` Display help information
+
+### Reconfigure
+After package installation `chef-marketplace-ctl reconfigure` is run to execute
+the embedded configuration recipes.
+
+#### Configuration Options
+See the [marketplace.rb](#example-marketplace-config) configuration for a list of
+user configurable attributes.
+
+### Upgrade
+`chef-marketplace-ctl upgrade` will upgrade the installed Chef server packages
+
+#### Options
+`-y, --yes` Upgrade Marketplace and all installed components for the
+  configured role
+`-s, --server` Upgrade Chef Server, Reporting and Manage
+`-m, --marketplace` Upgrade Marketplace
+`-a, --analytics` Upgrade Chef Analytics
+
+### Test
+`chef-marketplace-ctl test` Perform's unit and functional tests to validate a
+successful package installation and working build. This is run in our development
+continuous delivery pipeline to ensure the package works as expected.
+
+### Hostname
+`chef-marketplace-ctl hostname` will set or return the system hostname.  If the
+hostname is updated it will automatically reconfigure any required Chef Software
+packages.
+
+#### Options
+None, when passing a string to the command it will attempt to configure the
+host's FQDN to the string that is passed.  If nothing is passed it will return
+the current FQDN.
 
 Kitchen-based Build Environment
 -------------------------------
@@ -80,89 +191,6 @@ Full help for the Omnibus command line interface can be accessed with the
 $ bin/omnibus help
 ```
 
-chef-marketplace-ctl
---------------------
-### Setup
-`chef-marketplace-ctl setup` is a helper command that sets up the Chef server,
-Manage, and Reporting with user provided configuration options.
-
-#### Options
-`-y, --yes` Agree to the Chef End User License Agreement
-`-u USERNAME, --username USERNAME` Admin username
-`-p PASSWORD, --password PASSWORD` Admin password
-`-f FIRSTNAME, --firstname FIRSTNAME` Admin first name
-`-l LASTNAME, --lastname LASTNAME` Admin last name
-`-e EMAIL, --email EMAIL` Admin email address
-`-o ORGNAME, --org ORGNAME` Default organization name
-`-h, --help` Display help information
-
-### Reconfigure
-After package installation `chef-marketplace-ctl reconfigure` is run to execute
-the embedded configuration recipes.
-
-#### Configuration Options
-See the [marketplace.rb](#configuration) configuration for a list of user
-configurable attributes.
-
-### Upgrade
-`chef-marketplace-ctl upgrade` will upgrade the installed Chef server packages
-
-#### Options
-`-y, --yes` Agree to upgrade Chef Server, Marketplace, Reporting and Manage
-`-s, --server` Agree to upgrade Chef Server, Reporting and Manage
-`-m, --marketplace` Agree to upgrade Marketplace
-
-### Test
-`chef-marketplace-ctl test` Perform's unit and functional tests to validate a
-succesful package installation and working build. This is run in our development
-continuous delivery pipeline to ensure the package works as expected.
-
-Configuration
--------------
-The chef-marketplace package supports a number of user supplied customization
-options.  Like the majority of Chef products, the syntax is Mixlib::Config based
-and the file should be located at `/etc/chef-marketplace/marketplace.rb`
-
-####Example Config
-```ruby
-# Enable to disable changing the motd
-motd['enable'] = true
-
-# Marketplace specific support email address
-support['email'] = 'some@email.com'
-
-# Marketplace specific documentation
-documentation['url'] = 'http://myorg.com/docs'
-
-# Which role the instanace is supposed to play
-role 'server' # or 'analytics'
-
-# Which Cloud Platform the instance is running on
-platform 'aws'
-
-# Default user for cloud-init
-user 'ec2-user'
-
-# Prevents commands from attempting to use external services like package mirrors
-# Changing this setting will disable certain features
-disable_outboud_traffic true
-
-# If the instance is going to be bundled/published into the cloud marketplace
-# this option will run will enable security recipe to make sure we don't leave
-# around sensitive data.
-publishing['enabled'] = true
-
-# Enable or disable the reporting auto clean-up
-reporting['cron']['enabled'] = true
-
-# Standard crontab expression
-reporting['cron']['expression'] = '*/2 * * * *'
-
-# The latest year/month in the reporting database that you want to preserve
-reporting['cron']['year'] = 'date +%Y'
-reporting['cron']['month'] = 'date +%m'
-```
-
 Contributing
 ------------
 Please submit a GitHub issue with any problems you encounter.
@@ -171,7 +199,8 @@ Contributions are always welcome!  If you'd like to send up any fixes or changes
 
 1. Fork it ( https://github.com/chef-partners/omnibus-marketplace/fork )
 1. Create your feature branch (`git checkout -b my-new-feature`)
-1. Test your changes (`cd omnibus-marketplace && bundle install && bundle exec rake`)
+1. Test your changes (`cd omnibus-marketplace && bundle install && bundle exec
+  rake`)
 1. Commit your changes (`git commit -am 'Add some feature'`)
 1. Push to the branch (`git push origin my-new-feature`)
 1. Create a new Pull Request

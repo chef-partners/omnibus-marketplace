@@ -31,6 +31,8 @@ module Marketplace
     default :url, 'https://docs.chef.io/aws_marketplace.html'
   end
 
+  default :api_fqdn, nil
+
   default :license_count, 5
 
   # Which role the marketplace addition is to play, eg: 'server', 'aio', 'analytics'

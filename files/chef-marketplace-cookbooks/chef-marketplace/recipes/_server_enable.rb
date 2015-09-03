@@ -45,20 +45,3 @@ file '/etc/opscode/chef-server.rb' do
   group 'root'
   action :create
 end
-
-# FIXME: As soon as Chef Server 12.2 ships you can yank these two resources
-#
-# After the rails update oc_id/rails likes to listen only on ::1 (IPv6) and that
-# causes all sorts of issues with nginx routes.
-
-templates_dir = '/opt/opscode/embedded/cookbooks/private-chef/templates/default'
-
-directory templates_dir do
-  recursive true
-  action :create
-end
-
-cookbook_file ::File.join(templates_dir, 'sv-oc_id-run.erb') do
-  source 'sv-oc_id-run.erb'
-  action :create
-end

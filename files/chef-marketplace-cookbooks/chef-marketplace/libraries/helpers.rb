@@ -41,7 +41,7 @@ module Marketplace
     # long time for yum to timeout and then eventually crash. Instead, we won't
     # worry about package installs/removals in that environment.
     def mirrors_reachable?(mirror = 'http://mirrorlist.centos.org')
-      return true if node['chef-marketplace']['mirrors_reachable']
+      return node['chef-marketplace']['mirrors_reachable'] if node['chef-marketplace'].attribute?('mirrors_reachable')
 
       # check whether or not outbound traffic is disabled
       if node['chef-marketplace']['disable_outbound_traffic']
@@ -106,20 +106,41 @@ module Marketplace
       "#{manage_url}:#{node['chef-marketplace']['analytics']['ssl_port']}"
     end
 
-    def determine_api_fqdn
-      # Use the FQDN unless cloud_v2 has data
-      api_fqdn = node['fqdn'] unless node.key?('cloud_v2') && !node['cloud_v2'].nil?
-      api_fqdn ||=
-        case node['cloud_v2']['provider']
-        when 'gce'
-          node['cloud_v2']['public_ipv4']
-        when 'azure'
-          "#{node['cloud_v2']['public_hostname']}.cloudapp.net"
-        else # aws, etc..
-          node['cloud_v2']['public_hostname'] || node['cloud_v2']['local_hostname'] || node['fqdn']
-        end
+    def motd_variables
+      vars = {
+        role: node['chef-marketplace']['role'],
+        support_email: node['chef-marketplace']['support']['email'],
+        doc_url: node['chef-marketplace']['documentation']['url']
+      }
 
-      node.set['chef-marketplace']['api_fqdn'] = api_fqdn
+      vars.merge!(
+        manage_url: manage_url,
+        analytics_url: node['chef-marketplace']['role'] == 'aio' ? analytics_url : false
+      ) unless security_enabled?
+
+      vars
+    end
+
+    def determine_api_fqdn
+      # 1) Use the value set in marketplace.rb
+      # 2) Use the cloud public hostname
+      # 3) Use the cloud local hostname
+      # 4) Fallback on the FQDN
+      node.set['chef-marketplace']['api_fqdn'] =
+        if node['chef-marketplace']['api_fqdn']
+          node['chef-marketplace']['api_fqdn']
+        elsif node.key?('cloud_v2') && !node['cloud_v2'].nil?
+          case node['cloud_v2']['provider']
+          when 'gce'
+            node['cloud_v2']['public_ipv4']
+          when 'azure'
+            "#{node['cloud_v2']['public_hostname']}.cloudapp.net"
+          else # aws, etc..
+            node['cloud_v2']['public_hostname'] || node['cloud_v2']['local_hostname'] || node['fqdn']
+          end
+        else
+          node['fqdn']
+        end
     end
   end
 end
