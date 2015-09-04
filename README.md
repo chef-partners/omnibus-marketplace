@@ -14,6 +14,7 @@ All The Things
   * [chef-marketplace-ctl reconfigure](#reconfigure)
   * [chef-marketplace-ctl upgrade](#upgrade)
   * [chef-marketplace-ctl hostname](#hostname)
+  * [chef-marketplace-ctl trim-actions-db](#trim-actions-db)
   * [chef-marketplace-ctl test](#test)
 1. [Kitchen-Based Build Environment](#kitchen-based-build-environment)
 1. [Contributing](#contributing)
@@ -66,6 +67,12 @@ publishing['enabled'] = true
 # Configure which port the Analytics UI binds to
 analytics['ssl_port'] = 8443
 
+# Enable or disable the actions auto trim
+analytics['trimmer']['enabled'] = true
+
+# How often in hours to run (1-23)
+analytics['trimmer']['interval'] = 4
+
 # Enable or disable the reporting auto clean-up
 reporting['cron']['enabled'] = true
 
@@ -111,11 +118,6 @@ user configurable attributes.
 `-m, --marketplace` Upgrade Marketplace
 `-a, --analytics` Upgrade Chef Analytics
 
-### Test
-`chef-marketplace-ctl test` Perform's unit and functional tests to validate a
-successful package installation and working build. This is run in our development
-continuous delivery pipeline to ensure the package works as expected.
-
 ### Hostname
 `chef-marketplace-ctl hostname` will set or return the system hostname.  If the
 hostname is updated it will automatically reconfigure any required Chef Software
@@ -125,6 +127,22 @@ packages.
 None, when passing a string to the command it will attempt to configure the
 host's FQDN to the string that is passed.  If nothing is passed it will return
 the current FQDN.
+
+### Trim Actions DB
+`chef-marketplace-ctl trim-actions-db` will trim the actions database to prevent
+accidental over-filling of the disk.  This command is run on regular intervals
+via cron.
+
+#### Options
+`-s, --size` The desired size of the Analytics database
+  configured role
+`-l, --log` The location of the trimmer log file
+`-i, --interval` How often the trimmer is running
+
+### Test
+`chef-marketplace-ctl test` Perform's unit and functional tests to validate a
+successful package installation and working build. This is run in our development
+continuous delivery pipeline to ensure the package works as expected.
 
 Kitchen-based Build Environment
 -------------------------------

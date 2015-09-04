@@ -29,11 +29,6 @@ template '/etc/cron.d/reporting-partition-cleanup' do
   action reporting_partition_action
 end
 
-package 'cronie' do
-  action :install
-  only_if { node['chef-marketplace']['reporting']['cron']['enabled'] && mirrors_reachable? }
-end
-
 directory '/etc/opscode' do
   owner 'root'
   group 'root'

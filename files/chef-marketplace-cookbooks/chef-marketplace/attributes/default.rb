@@ -14,10 +14,14 @@ default['chef-marketplace'].tap do |m|
   m['user'] = 'ec2-user'
   m['publishing']['enabled'] = false
   m['reporting']['cron']['enabled'] = true
-  m['reporting']['cron']['expression'] = '*/1 * * * *'
+  m['reporting']['cron']['expression'] = '0 0 * * *'
   m['reporting']['cron']['year'] = 'date +%Y'
   m['reporting']['cron']['month'] = 'date +%m'
   m['analytics']['ssl_port'] = 8443
+  m['analytics']['trimmer']['enabled'] = true
+  m['analytics']['trimmer']['interval'] = 4
+  m['analytics']['trimmer']['log_file'] = '/var/log/opscode-analytics/actions-trimmer.log'
+  m['analytics']['trimmer']['max_db_size'] = 1
 end
 
 default['openssh']['server'].tap do |server|

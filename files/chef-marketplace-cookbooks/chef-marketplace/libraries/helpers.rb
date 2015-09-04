@@ -12,6 +12,10 @@ module Marketplace
       node['chef-marketplace']['reporting']['cron']['enabled'] ? :create : :delete
     end
 
+    def actions_trimmer_action
+      node['chef-marketplace']['analytics']['trimmer']['enabled'] ? :create : :delete
+    end
+
     def current_user_directories
       Etc::Passwd.each_with_object({}) do |user, memo|
         next if %w(halt sync shutdown).include?(user.name) ||

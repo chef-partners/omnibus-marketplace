@@ -48,3 +48,12 @@ template '/etc/cloud/cloud.cfg' do
   )
   action :create
 end
+
+package 'cronie' do
+  action :install
+  only_if do
+    (node['chef-marketplace']['reporting']['cron']['enabled'] ||
+     node['chef-marketplace']['actions']['trimmer']['enabled']
+    ) && mirrors_reachable?
+  end
+end
