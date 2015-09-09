@@ -1,4 +1,15 @@
-include_recipe 'yum-centos::default'
+include_recipe 'chef-marketplace::config'
+
+unless mirrors_reachable?
+  Chef::Log.warn 'Skipping package upgrade because mirrors are not available or outboud traffic is disabled...'
+  return
+end
+
+case node['platform']
+when 'redhat','centos','fedora'
+  include_recipe 'yum-centos::default'
+when 'oracle'
+end
 
 chef_ingredient 'chef-marketplace' do
   action :upgrade

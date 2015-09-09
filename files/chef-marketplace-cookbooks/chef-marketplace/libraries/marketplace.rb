@@ -31,6 +31,8 @@ module Marketplace
     default :url, 'https://docs.chef.io/aws_marketplace.html'
   end
 
+  default :api_fqdn, nil
+
   default :license_count, 5
 
   # Which role the marketplace addition is to play, eg: 'server', 'aio', 'analytics'
@@ -59,7 +61,7 @@ module Marketplace
       default :enabled, true
 
       # Standard crontab expression
-      default :expression, '*/1 * * * *'
+      default :expression, '0 0 * * *'
 
       # Up to what year to delete, must be a valid shell command
       default :year, 'date +%Y'
@@ -71,5 +73,17 @@ module Marketplace
 
   config_context :analytics do
     default :ssl_port, 8443
+
+    config_context :trimmer do
+      default :enabled, true
+
+      # How often in hours to run the trimmer (1-24)
+      default :interval, 4
+
+      default :log_file, '/var/log/opscode-analytics/actions-trimmer.log'
+
+      # The allowed max size of the actiongs database in Gigs
+      default :max_db_size, 1
+    end
   end
 end

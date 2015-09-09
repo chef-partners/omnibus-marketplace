@@ -12,7 +12,7 @@ gen_api_fqdn = lambda do
   end
 
   topology 'standalone'
-  default_gen_api_fqdn
+  gen_api_fqdn_default
 end
 
 PrivateChef.register_extension('chef-marketplace', server_config_required: false, gen_api_fqdn: gen_api_fqdn)

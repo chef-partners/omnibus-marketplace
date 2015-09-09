@@ -14,9 +14,12 @@ override :rubygems, version: '2.4.5'
 override :bundler, version: '1.10.6'
 
 dependency 'preparation'
-dependency 'chef-gem'
+dependency 'postgresql92' # only the client
 dependency 'chef-marketplace-ctl'
 dependency 'chef-marketplace-cookbooks'
+dependency 'chef-gem'
+dependency 'sequel-gem'
+dependency 'pg-gem'
 dependency 'version-manifest'
 
 exclude '\.git*'
