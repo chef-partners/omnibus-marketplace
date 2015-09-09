@@ -1,13 +1,7 @@
 motd '50-chef-marketplace-appliance' do
   source 'motd.erb'
   cookbook 'chef-marketplace'
-  variables(
-    role: node['chef-marketplace']['role'],
-    manage_url: manage_url,
-    analytics_url: node['chef-marketplace']['role'] == 'aio' ? analytics_url : false,
-    support_email: node['chef-marketplace']['support']['email'],
-    doc_url: node['chef-marketplace']['documentation']['url']
-  )
+  variables motd_variables
   action motd_action
 end
 
@@ -53,4 +47,13 @@ template '/etc/cloud/cloud.cfg' do
     gecos: gecos
   )
   action :create
+end
+
+package 'cronie' do
+  action :install
+  only_if do
+    (node['chef-marketplace']['reporting']['cron']['enabled'] ||
+     node['chef-marketplace']['actions']['trimmer']['enabled']
+    ) && mirrors_reachable?
+  end
 end

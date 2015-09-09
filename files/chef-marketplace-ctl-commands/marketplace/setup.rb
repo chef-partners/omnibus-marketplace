@@ -33,6 +33,7 @@ class Marketplace
 
     def setup
       reconfigure_marketplace
+      reload_config!
       validate_payment
       validate_options
       agree_to_eula
@@ -75,6 +76,11 @@ class Marketplace
       setup_analytics
     end
 
+    def reload_config!
+      @marketplace_config = nil
+      marketplace_config
+    end
+
     def marketplace_config
       @marketplace_config ||= begin
         marketplace_json = '/etc/chef-marketplace/chef-marketplace-running.json'
@@ -87,16 +93,14 @@ class Marketplace
     end
 
     def role
-      @role ||= begin
-        if marketplace_config.key?('role')
-          marketplace_config['role']
-        else
-          msg = "Could not determine the Chef Marketplace role.\n"
-          msg << "Please set the role in /etc/chef-marketplace/marketplace.rb\n"
-          msg << "and run 'chef-marketplace-ctl reconfigure'."
-          log(msg, :error)
-          exit(1)
-        end
+      if marketplace_config.key?('role')
+        marketplace_config['role']
+      else
+        msg = "Could not determine the Chef Marketplace role.\n"
+        msg << "Please set the role in /etc/chef-marketplace/marketplace.rb\n"
+        msg << "and run 'chef-marketplace-ctl reconfigure'."
+        log(msg, :error)
+        exit(1)
       end
     end
 
@@ -228,7 +232,7 @@ class Marketplace
 
       if role == 'aio'
         msg << "\nGain insight into your infrastructure in the Chef Analytics UI:\n"
-        msg << "https://#{fqdn}:#{analytics_ssl_port}"
+        msg << "https://#{fqdn}:#{analytics_ssl_port}\n\n"
       end
 
       log(msg)

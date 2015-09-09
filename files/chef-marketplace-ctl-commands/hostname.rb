@@ -51,18 +51,17 @@ add_command_under_category 'hostname', 'Configuration', 'Query and modify the ho
     puts msg && exit(1) unless fqdn
     puts fqdn
   end
-
-  def server_configured?
-    File.exist?('/opt/opscode/chef-server-running.json')
-  end
-
-  def analytics_configured?
-    File.exist?('/opt/opscode-analytics/opscode-analytics-running.json')
-  end
-
-  def manage_configured?
-    File.exist?('/opt/opscode-manage/opscode-manage-running.json')
-  end
-
   exit(0)
+end
+
+def server_configured?
+  File.exist?('/etc/opscode/chef-server-running.json')
+end
+
+def analytics_configured?
+  File.exist?('/etc/opscode-analytics/opscode-analytics-running.json')
+end
+
+def manage_configured?
+  File.exist?('/etc/opscode-manage/opscode-manage-running.json')
 end

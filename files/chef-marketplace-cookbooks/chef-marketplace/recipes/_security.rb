@@ -1,6 +1,7 @@
 %w(openssh-clients openssh-server).each do |pkg|
   package pkg do
     action :install
+    only_if { mirrors_reachable? }
   end
 end
 
