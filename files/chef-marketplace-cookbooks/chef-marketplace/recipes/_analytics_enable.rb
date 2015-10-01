@@ -9,7 +9,7 @@ end
 template '/etc/cron.d/actions-trimmer' do
   trimmer = node['chef-marketplace']['analytics']['trimmer']
   source 'actions-trimmer.erb'
-  mode '0600'
+  mode '0644'
   owner 'root'
   group 'root'
   variables(

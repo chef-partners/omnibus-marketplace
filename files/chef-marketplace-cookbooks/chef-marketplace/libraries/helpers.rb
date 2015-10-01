@@ -42,10 +42,26 @@ module Marketplace
       end
     end
 
+    def cron_package
+      case node['platform']
+      when 'redhat', 'centos', 'oracle' then 'cronie'
+      when 'debian', 'ubuntu' then 'cron'
+      end
+    end
+
+    def default_package_mirror_uri
+      case node['platform']
+      when 'redhat' then 'http://mirrorlist.centos.org'
+      when 'centos' then 'http://mirrorlist.centos.org'
+      when 'ubuntu' then 'http://us.archive.ubuntu.com/ubuntu/'
+      end
+    end
+
     # When the Chef Server is in a private VPC some recipes will wait for a very
     # long time for yum to timeout and then eventually crash. Instead, we won't
     # worry about package installs/removals in that environment.
-    def mirrors_reachable?(mirror = 'http://mirrorlist.centos.org')
+    def mirrors_reachable?(mirror = nil)
+      mirror ||= default_package_mirror_uri
       return node['chef-marketplace']['mirrors_reachable'] if node['chef-marketplace'].attribute?('mirrors_reachable')
 
       # check whether or not outbound traffic is disabled

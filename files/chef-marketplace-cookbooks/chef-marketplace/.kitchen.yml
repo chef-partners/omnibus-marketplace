@@ -5,10 +5,32 @@ provisioner:
   chef_omnibus_install_options: -d /tmp/vagrant-cache/vagrant_omnibus
 
 platforms:
-  - name: vagrant-centos-6.6
+  - name: vagrant-centos-7.1
     driver_plugin: vagrant
     driver_config:
-      box: opscode-centos-6.6
+      box: opscode-centos-7.1
+      network:
+        - ["forwarded_port", {guest: 80, host: 8080, auto_correct: true}]
+        - ["forwarded_port", {guest: 443, host: 8443, auto_correct: true}]
+        - ["forwarded_port", {guest: 8443, host: 8843, auto_correct: true}]
+      customize:
+        cpus: 2
+        memory: 4096
+  - name: vagrant-rhel-7.1
+    driver_plugin: vagrant
+    driver_config:
+      box: opscode-rhel-7.1
+      network:
+        - ["forwarded_port", {guest: 80, host: 8080, auto_correct: true}]
+        - ["forwarded_port", {guest: 443, host: 8443, auto_correct: true}]
+        - ["forwarded_port", {guest: 8443, host: 8843, auto_correct: true}]
+      customize:
+        cpus: 2
+        memory: 4096
+  - name: vagrant-ubuntu-14.04
+    driver_plugin: vagrant
+    driver_config:
+      box: opscode-ubuntu-14.04
       network:
         - ["forwarded_port", {guest: 80, host: 8080, auto_correct: true}]
         - ["forwarded_port", {guest: 443, host: 8443, auto_correct: true}]

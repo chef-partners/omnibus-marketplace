@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 # Install omnibus software
 gem 'omnibus-software', github: 'opscode/omnibus-software'
 gem 'omnibus', github: 'opscode/omnibus'
-gem 'omnibus-ctl', github: 'chef/omnibus-ctl', branch: '0.3.6'
+gem 'omnibus-ctl', github: 'chef/omnibus-ctl'
 gem 'chef'
 gem 'pry'
 gem 'rubocop'
