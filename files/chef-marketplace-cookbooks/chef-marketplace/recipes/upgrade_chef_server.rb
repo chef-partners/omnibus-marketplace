@@ -5,7 +5,11 @@ unless mirrors_reachable?
   return
 end
 
-include_recipe 'yum-centos::default'
+case node['platform']
+when 'redhat','centos','fedora'
+  include_recipe 'yum-centos::default'
+when 'oracle'
+end
 
 execute 'chef-server-ctl reconfigure' do
   action :nothing

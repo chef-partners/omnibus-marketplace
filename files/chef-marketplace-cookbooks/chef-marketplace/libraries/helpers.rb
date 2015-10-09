@@ -38,6 +38,7 @@ module Marketplace
       case node['chef-marketplace']['platform']
       when 'aws' then 'Ec2 User'
       when 'openstack' then 'OpenStack User'
+      when 'oracle' then 'Oracle User'
       end
     end
 
