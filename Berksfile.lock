@@ -1,10 +1,12 @@
 DEPENDENCIES
+  apt
   omnibus
   yum-epel (~> 0.6)
 
 GRAPH
   7-zip (1.0.2)
     windows (>= 1.2.2)
+  apt (2.8.2)
   build-essential (2.2.3)
   chef-sugar (3.1.1)
   chef_handler (1.2.0)

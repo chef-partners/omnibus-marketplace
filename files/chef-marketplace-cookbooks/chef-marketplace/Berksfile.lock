@@ -18,6 +18,7 @@ GRAPH
     apt-chef (>= 0.0.0)
     yum-chef (>= 0.0.0)
   chef-marketplace (0.0.1)
+    apt (>= 0.0.0)
     chef-ingredient (>= 0.0.0)
     hostname (>= 0.0.0)
     motd (>= 0.0.0)

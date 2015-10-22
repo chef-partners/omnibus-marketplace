@@ -5,12 +5,6 @@ unless mirrors_reachable?
   return
 end
 
-case node['platform']
-when 'redhat','centos','fedora'
-  include_recipe 'yum-centos::default'
-when 'oracle'
-end
-
 chef_ingredient 'analytics' do
   action :upgrade
   notifies :run, 'execute[opscode-analytics-ctl reconfigure]', :immediately if analytics_configured?

@@ -17,3 +17,5 @@ end
 node.consume_attributes('chef-marketplace' => Marketplace.save(false))
 
 determine_api_fqdn
+
+include_recipe 'chef-marketplace::_package_mirrors'

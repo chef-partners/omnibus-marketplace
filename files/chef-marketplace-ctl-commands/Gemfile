@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
-gem 'omnibus-ctl', github: 'chef/omnibus-ctl', branch: '0.3.6'
-gem 'chef'
+gem 'omnibus-ctl', github: 'chef/omnibus-ctl'
+gem 'chef', github: 'chef/chef'
 gem 'pry'
 gem 'rubocop'
 gem 'rspec'
