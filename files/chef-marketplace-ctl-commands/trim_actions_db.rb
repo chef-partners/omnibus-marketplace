@@ -1,9 +1,4 @@
-# Hacks to get around using helpers with omnibus-ctl
-begin
-  require 'marketplace/actions_trimmer'
-rescue LoadError
-  require '/opt/chef-marketplace/embedded/service/omnibus-ctl/marketplace/actions_trimmer'
-end
+require 'marketplace/actions_trimmer'
 
 add_command_under_category 'trim-actions-db', 'Configuration', 'Trim the Chef Analytics actions database', 2 do
   @options = { db_size: 1, interval: 4 }

@@ -1,6 +1,6 @@
-require_relative '../../marketplace/setup'
 require 'spec_helper'
 require 'ostruct'
+require 'marketplace/setup'
 
 describe Marketplace::Setup do
   subject { described_class.new(options, omnibus_ctl) }
@@ -26,19 +26,24 @@ describe Marketplace::Setup do
     before do
       allow(subject).to receive(:role).and_return(role)
       allow(subject).to receive(:redirect_to_webui).and_return(true)
-      allow(subject).to receive(:reconfigure_marketplace).and_return(true)
+      allow(subject).to receive(:reconfigure).and_return(true)
       allow(subject).to receive(:update_software).and_return(true)
       allow(subject).to receive(:validate_options).and_return(true)
       allow(subject).to receive(:agree_to_eula).and_return(true)
       allow(subject).to receive(:validate_payment).and_return(true)
+      allow(subject).to receive(:create_default_user).and_return(true)
+      allow(subject).to receive(:create_default_org).and_return(true)
     end
 
     context 'when the role is server' do
       let(:role) { 'server' }
 
       it 'sets up the chef server' do
-        allow(subject).to receive(:setup_server).and_return(true)
-        expect(subject).to receive(:setup_server)
+        expect(subject).to receive(:reconfigure).with(:server).once
+        expect(subject).to receive(:reconfigure).with(:manage).once
+        expect(subject).to receive(:reconfigure).with(:reporting).once
+        expect(subject).to_not receive(:reconfigure).with(:compliance)
+        expect(subject).to_not receive(:reconfigure).with(:analytics)
 
         subject.setup
       end
@@ -48,8 +53,11 @@ describe Marketplace::Setup do
       let(:role) { 'analytics' }
 
       it 'sets up chef analytics' do
-        allow(subject).to receive(:setup_analytics).and_return(true)
-        expect(subject).to receive(:setup_analytics)
+        expect(subject).to receive(:reconfigure).with(:analytics).once
+        expect(subject).to_not receive(:reconfigure).with(:server)
+        expect(subject).to_not receive(:reconfigure).with(:manage)
+        expect(subject).to_not receive(:reconfigure).with(:reporting)
+        expect(subject).to_not receive(:reconfigure).with(:compliance)
 
         subject.setup
       end
@@ -59,8 +67,11 @@ describe Marketplace::Setup do
       let(:role) { 'aio' }
 
       it 'sets up chef server and analytics' do
-        allow(subject).to receive(:setup_aio).and_return(true)
-        expect(subject).to receive(:setup_aio)
+        expect(subject).to receive(:reconfigure).with(:server).once
+        expect(subject).to receive(:reconfigure).with(:manage).once
+        expect(subject).to receive(:reconfigure).with(:reporting).once
+        expect(subject).to receive(:reconfigure).with(:analytics).once
+        expect(subject).to_not receive(:reconfigure).with(:compliance)
 
         subject.setup
       end

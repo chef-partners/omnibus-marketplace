@@ -1,11 +1,6 @@
 require 'ostruct'
 require 'highline/import'
-# Hacks to get around using helpers with omnibus-ctl
-begin
-  require 'helpers'
-rescue LoadError
-  require '/opt/chef-marketplace/embedded/service/omnibus-ctl/marketplace/helpers'
-end
+require 'marketplace/helpers'
 
 class Marketplace
   class Options
@@ -48,7 +43,9 @@ class Marketplace
               q.responses[:not_valid] = 'Your entry was not a valid email address'
             end
           else
-            ui.ask("Please enter your #{opt}:", ->(org) { normalize_option(org) })
+            ui.ask("Please enter your #{opt.gsub('_', ' ')}:", ->(org) { normalize_option(org) }) do |q|
+              q.validate = ->(o) { o =~ /[a-z0-9\-_]+/ && o.length >= 1 && o.length <= 255 }
+            end
           end
       end
     end
@@ -68,6 +65,8 @@ class Marketplace
         []
       when 'aio'
         %w(first_name last_name username email organization password).freeze
+      when 'compliance'
+        %w(first_name last_name username email organization).freeze
       end
     end
 

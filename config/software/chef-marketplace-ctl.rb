@@ -2,6 +2,8 @@ name 'chef-marketplace-ctl'
 
 dependency 'omnibus-ctl'
 dependency 'bundler'
+dependency 'chef-marketplace-gem'
+dependency 'chef-marketplace-cookbooks'
 
 source path: "#{project.files_path}/#{name}-commands"
 
@@ -19,7 +21,7 @@ build do
       mode: 0755,
       vars: { install_dir: install_dir }
 
-  sync project_dir, "#{install_dir}/embedded/service/omnibus-ctl/"
+  sync project_dir, "#{install_dir}/embedded/service/chef-marketplace-ctl/"
 
   bundle 'install --without development', env: with_standard_compiler_flags(with_embedded_path)
 

@@ -1,18 +1,8 @@
 require 'chef/json_compat'
-require 'ohai/system'
 require 'shellwords'
 require 'highline/import'
-# Hacks to get around using helpers with omnibus-ctl
-begin
-  require 'payment'
-rescue LoadError
-  require '/opt/chef-marketplace/embedded/service/omnibus-ctl/marketplace/payment'
-end
-begin
-  require 'options'
-rescue LoadError
-  require '/opt/chef-marketplace/embedded/service/omnibus-ctl/marketplace/options'
-end
+require 'marketplace/payment'
+require 'marketplace/options'
 
 # Setup the Marketplace Appliance
 class Marketplace
@@ -22,7 +12,7 @@ class Marketplace
 
   # Setup class
   class Setup
-    attr_accessor :options, :ohai, :ui
+    attr_accessor :options, :ui
 
     def initialize(options, ctl_context)
       options.role = role
@@ -32,22 +22,14 @@ class Marketplace
     end
 
     def setup
-      reconfigure_marketplace
+      reconfigure(:marketplace)
       reload_config!
       validate_payment
       validate_options
       agree_to_eula
       update_software
-
-      case role
-      when 'server' then setup_server
-      when 'analytics' then setup_analytics
-      when 'aio' then setup_aio
-      else
-        fail "'#{role}' is not a valid role."
-      end
-
-      redirect_to_webui if role =~ /aio|server/
+      configure_software
+      redirect_to_webui if role =~ /aio|server|compliance/
     end
 
     private
@@ -57,23 +39,28 @@ class Marketplace
       @ctl_context.respond_to?(meth) ? @ctl_context.send(meth, *args, &block) : super
     end
 
-    def setup_server
-      reconfigure_chef_server
-      create_default_user
-      create_default_org
-      reconfigure_webui
-      reconfigure_reporting
-    end
-
-    def setup_analytics
-      # The preflight-check is currently broken because curl isn't in the package
-      # run_analytics_preflight_check
-      reconfigure_analytics
-    end
-
-    def setup_aio
-      setup_server
-      setup_analytics
+    def configure_software
+      case role.to_s
+      when 'server'
+        reconfigure(:server)
+        create_default_user
+        create_default_org
+        reconfigure(:manage)
+        reconfigure(:reporting)
+      when 'analytics'
+        reconfigure(:analytics)
+      when 'aio'
+        reconfigure(:server)
+        create_default_user
+        create_default_org
+        reconfigure(:manage)
+        reconfigure(:reporting)
+        reconfigure(:analytics)
+      when 'compliance'
+        reconfigure(:compliance)
+      else
+        fail "'#{role}' is not a valid role."
+      end
     end
 
     def reload_config!
@@ -136,29 +123,32 @@ class Marketplace
       end
     end
 
-    def reconfigure_chef_server
-      log 'Please wait while we set up the Chef Server. This may take a few minutes to complete...'
-      run_command('chef-server-ctl reconfigure')
-    end
+    def reconfigure(product)
+      case product.to_s
+      when 'marketplace'
+        service_name = 'Chef Marketplace'
+        ctl_command = 'chef-marketplace-ctl'
+      when 'server'
+        service_name = 'Chef Server'
+        ctl_command = 'chef-server-ctl'
+      when 'manage'
+        service_name = 'Chef Manage'
+        ctl_command = 'opscode-manage-ctl'
+      when 'reporting'
+        service_name = 'Chef Reporting'
+        ctl_command = 'opscode-reporting-ctl'
+      when 'analytics'
+        service_name = 'Chef Analytics'
+        ctl_command = 'opscode-analytics-ctl'
+      when 'compliance'
+        service_name = 'Chef Compliance'
+        ctl_command = 'chef-compliance-ctl'
+      else
+        fail "Unknown product: #{product}"
+      end
 
-    def reconfigure_reporting
-      log 'Please wait while we set up Chef Reporting...'
-      run_command('opscode-reporting-ctl reconfigure')
-    end
-
-    def reconfigure_webui
-      log 'Please wait while we set up Chef Manage...'
-      run_command('opscode-manage-ctl reconfigure')
-    end
-
-    def reconfigure_analytics
-      log 'Please wait while we set up Chef Analytics. This may take a few minutes to complete...'
-      run_command('opscode-analytics-ctl reconfigure')
-    end
-
-    def reconfigure_marketplace
-      log 'Please wait while we set up Chef Marketplace...'
-      run_command('chef-marketplace-ctl reconfigure')
+      log "Please wait while we set up the #{service_name}. This may take a few minutes to complete..."
+      run_command("#{ctl_command} reconfigure")
     end
 
     def run_analytics_preflight_check

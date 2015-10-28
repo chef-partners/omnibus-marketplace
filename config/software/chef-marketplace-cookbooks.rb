@@ -3,6 +3,7 @@ name 'chef-marketplace-cookbooks'
 source path: "#{project.files_path}/#{name}"
 
 dependency 'berkshelf'
+dependency 'chef-marketplace-gem'
 
 build do
   command "#{install_dir}/embedded/bin/berks vendor #{install_dir}/embedded/cookbooks --berksfile=./chef-marketplace/Berksfile",

@@ -1,5 +1,5 @@
-require_relative '../../marketplace/hostname'
 require 'spec_helper'
+require 'marketplace/hostname'
 require 'json'
 
 describe Marketplace::Hostname do

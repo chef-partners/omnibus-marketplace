@@ -1,9 +1,4 @@
-# Hacks to get around using helpers with omnibus-ctl
-begin
-  require 'marketplace/setup'
-rescue LoadError
-  require '/opt/chef-marketplace/embedded/service/omnibus-ctl/marketplace/setup'
-end
+require 'marketplace/setup'
 
 add_command_under_category 'setup', 'Configuration', 'Set up the Chef Server Marketplace Appliance', 2 do
   options = OpenStruct.new

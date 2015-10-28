@@ -1,9 +1,4 @@
-# Hacks to get around using helpers with omnibus-ctl
-begin
-  require 'marketplace/hostname'
-rescue LoadError
-  require '/opt/chef-marketplace/embedded/service/omnibus-ctl/marketplace/hostname'
-end
+require 'marketplace/hostname'
 
 add_command_under_category 'hostname', 'Configuration', 'Query and modify the hostname', 2 do
   @eip = false

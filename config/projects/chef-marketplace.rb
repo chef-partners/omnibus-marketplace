@@ -16,6 +16,7 @@ override :bundler, version: '1.10.7.depsolverfix.0'
 dependency 'preparation'
 dependency 'postgresql92' # only the client
 dependency 'chef-marketplace-ctl'
+dependency 'chef-marketplace-gem'
 dependency 'chef-marketplace-cookbooks'
 dependency 'chef'
 dependency 'sequel-gem'

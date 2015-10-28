@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'marketplace/hostname'
 
 describe 'chef-marketplace-ctl hostname' do
   let(:marketplace_ctl) { OmnibusCtlTest.new('hostname') }

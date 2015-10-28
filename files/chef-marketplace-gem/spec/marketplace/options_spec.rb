@@ -1,7 +1,7 @@
-require_relative '../../marketplace/options'
-require 'ostruct'
 require 'spec_helper'
+require 'ostruct'
 require 'securerandom'
+require 'marketplace/options'
 
 def test_normalization_for(param)
   allow(subject).to receive(:required_options).and_return([param])

@@ -1,17 +1,11 @@
+# Add the gem source to the load path for the specs
+lib = File.expand_path('../../../chef-marketplace-gem/lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib) if File.directory?(lib)
+
 require 'rspec'
-require 'highline'
 require 'omnibus-ctl'
 require 'pathname'
-
-def with_user_input(string = '')
-  stdin = StringIO.new
-  stdout = StringIO.new
-  stdin << string
-  stdin << ("\n")
-  stdin.rewind
-  allow(subject).to receive(:ui).and_return(HighLine.new(stdin, stdout))
-  yield(stdin, stdout) if block_given?
-end
+require 'marketplace'
 
 class OmnibusCtlTest
   attr_accessor :plugin, :name
