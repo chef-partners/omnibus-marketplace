@@ -5,11 +5,6 @@ unless mirrors_reachable?
   return
 end
 
-chef_ingredient 'chef-marketplace' do
-  action :upgrade
-  notifies :run, 'execute[chef-marketplace-ctl reconfigure]'
-end
-
-execute 'chef-marketplace-ctl reconfigure' do
-  action :nothing
+node['chef-marketplace']['upgrade_packages'].each do |pkg|
+  include_recipe "chef-marketplace::_upgrade_#{pkg.tr('-', '_')}"
 end

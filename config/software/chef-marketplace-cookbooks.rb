@@ -21,18 +21,6 @@ build do
       dest: "#{install_dir}/embedded/cookbooks/show-config.json",
       vars: { recipe: 'chef-marketplace::show_config' }
 
-  erb source: 'single-recipe.json.erb',
-      dest: "#{install_dir}/embedded/cookbooks/upgrade-marketplace.json",
-      vars: { recipe: 'chef-marketplace::upgrade_marketplace' }
-
-  erb source: 'single-recipe.json.erb',
-      dest: "#{install_dir}/embedded/cookbooks/upgrade-chef-server.json",
-      vars: { recipe: 'chef-marketplace::upgrade_chef_server' }
-
-  erb source: 'single-recipe.json.erb',
-      dest: "#{install_dir}/embedded/cookbooks/upgrade-analytics.json",
-      vars: { recipe: 'chef-marketplace::upgrade_analytics' }
-
   erb source: 'solo.rb.erb',
       dest: "#{install_dir}/embedded/cookbooks/solo.rb"
 end

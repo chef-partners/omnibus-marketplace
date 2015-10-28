@@ -76,6 +76,20 @@ suites:
     driver:
       network:
         - ["public_network", {ip: 10.10.0.88, bridge: "en3: Thunderbolt Ethernet"}]
+  - name: compliance-aws
+    run_list: chef-marketplace::default
+    attributes:
+      chef-marketplace:
+        role: compliance
+        platform: aws
+        user: ec2-user
+        documentation:
+          url: https://docs.chef.io/aws_marketplace.html
+        support:
+          email: aws@chef.io
+    driver:
+      network:
+        - ["public_network", {ip: 10.10.0.88, bridge: "en3: Thunderbolt Ethernet"}]
   - name: server-openstack
     run_list: chef-marketplace::default
     attributes:

@@ -1,5 +1,7 @@
 # Hook into the Chef Server as a plugin
 
+return unless node['chef-marketplace']['role'] =~ /server|aio/
+
 marketplace_dir = '/var/opt/opscode/chef-marketplace'
 plugin_dir = '/var/opt/opscode/plugins'
 

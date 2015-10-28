@@ -25,14 +25,15 @@ describe Marketplace::Setup do
   describe '#setup' do
     before do
       allow(subject).to receive(:role).and_return(role)
-      allow(subject).to receive(:redirect_to_webui).and_return(true)
+      allow(subject).to receive(:redirect_user).and_return(true)
       allow(subject).to receive(:reconfigure).and_return(true)
       allow(subject).to receive(:update_software).and_return(true)
       allow(subject).to receive(:validate_options).and_return(true)
       allow(subject).to receive(:agree_to_eula).and_return(true)
       allow(subject).to receive(:validate_payment).and_return(true)
-      allow(subject).to receive(:create_default_user).and_return(true)
-      allow(subject).to receive(:create_default_org).and_return(true)
+      allow(subject).to receive(:create_server_user).and_return(true)
+      allow(subject).to receive(:create_server_org).and_return(true)
+      allow(subject).to receive(:create_compliance_user).and_return(true)
     end
 
     context 'when the role is server' do

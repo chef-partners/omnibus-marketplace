@@ -29,7 +29,7 @@ class Marketplace
       agree_to_eula
       update_software
       configure_software
-      redirect_to_webui if role =~ /aio|server|compliance/
+      redirect_user
     end
 
     private
@@ -43,21 +43,22 @@ class Marketplace
       case role.to_s
       when 'server'
         reconfigure(:server)
-        create_default_user
-        create_default_org
+        create_server_user
+        create_server_org
         reconfigure(:manage)
         reconfigure(:reporting)
       when 'analytics'
         reconfigure(:analytics)
       when 'aio'
         reconfigure(:server)
-        create_default_user
-        create_default_org
+        create_server_user
+        create_server_org
         reconfigure(:manage)
         reconfigure(:reporting)
         reconfigure(:analytics)
       when 'compliance'
         reconfigure(:compliance)
+        create_compliance_user
       else
         fail "'#{role}' is not a valid role."
       end
@@ -95,8 +96,17 @@ class Marketplace
       marketplace_config['api_fqdn']
     end
 
-    def analytics_ssl_port
-      marketplace_config['analytics']['ssl_port']
+    def ssl_port_for(service)
+      case service.to_sym
+      when :compliance
+        marketplace_config['compliance']['ssl_port']
+      when :analytics
+        marketplace_config['analytics']['ssl_port']
+      when :server
+        marketplace_config['api_ssl_port']
+      else
+        fail "Unknown service: #{service}"
+      end
     end
 
     # Some marketplaces have ways for the instance to determine if the instance
@@ -147,7 +157,7 @@ class Marketplace
         fail "Unknown product: #{product}"
       end
 
-      log "Please wait while we set up the #{service_name}. This may take a few minutes to complete..."
+      log "Please wait while we set up #{service_name}. This may take a few minutes to complete..."
       run_command("#{ctl_command} reconfigure")
     end
 
@@ -163,7 +173,7 @@ class Marketplace
       run_command('chef-marketplace-ctl upgrade -y')
     end
 
-    def create_default_user
+    def create_server_user
       cmd = [
         'chef-server-ctl user-create',
         options.username.to_s.shellescape,
@@ -176,7 +186,17 @@ class Marketplace
       retry_command(cmd)
     end
 
-    def create_default_org
+    def create_compliance_user
+      cmd = [
+        'chef-compliance-ctl user-create',
+        options.username.to_s.shellescape,
+        options.password.to_s.shellescape
+      ].join(' ')
+
+      retry_command(cmd)
+    end
+
+    def create_server_org
       cmd = [
         'chef-server-ctl org-create',
         options.organization.to_s.shellescape,
@@ -210,22 +230,37 @@ class Marketplace
       end
     end
 
-    def redirect_to_webui
-      msg = [
-        "\n\nYou're all set!\n",
-        "Next you'll want to log into the Chef management console and download the Starter Kit:",
-        "https://#{fqdn}/organizations/#{options.organization}/getting_started\n",
-        "Use your username '#{options.username}' instead of your email address to login\n",
-        'In order to use Transport Layer Security (TLS) we had to generate a self-signed certificate which',
-        "might cause a warning in your browser, you can safely ignore it.\n"
-      ].join("\n")
+    def redirect_user
+      msg = ["\n\nYou're all set!\n"]
+
+      case role
+      when 'server', 'aio'
+        msg << ["Next you'll want to log into the Chef management console and download the Starter Kit:",
+                "https://#{fqdn}:#{ssl_port_for(:server)}/organizations/#{options.organization}/getting_started\n",
+                "Use your username '#{options.username}' instead of your email address to login\n"
+               ]
+      when 'compliance'
+        msg << ["Next you'll want to log into the Chef Compliance Web UI",
+                "https://#{fqdn}:#{ssl_port_for(:compliance)}\n",
+                "Use your username '#{options.username}' to login\n"
+               ]
+      when 'analytics'
+        msg << ["Next you'll want to log into the Chef Analytics Web UI",
+                "https://#{fqdn}\n",
+
+                "Use your Chef Server username instead of your email address to login\n"
+               ]
+      end
+
+      msg << 'In order to use Transport Layer Security (TLS) we had to generate a self-signed certificate which'
+      msg << "might cause a warning in your browser, you can safely ignore it.\n"
 
       if role == 'aio'
         msg << "\nGain insight into your infrastructure in the Chef Analytics UI:\n"
-        msg << "https://#{fqdn}:#{analytics_ssl_port}\n\n"
+        msg << "https://#{fqdn}:#{ssl_port_for(:analytics)}\n\n"
       end
 
-      log(msg)
+      log(msg.flatten.join("\n"))
     end
   end
 end

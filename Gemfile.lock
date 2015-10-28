@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/chef/omnibus-ctl.git
-  revision: b50ec04557fccf3a591334fe818436d07b40bbde
+  revision: bf3cc959ca882c642d90f2d39b045281a9382c96
   specs:
     omnibus-ctl (0.4.2)
 

@@ -119,6 +119,10 @@ module Marketplace
       File.exist?('/etc/opscode-analytics/opscode-analytics-running.json')
     end
 
+    def compliance_configured?
+      File.exist?('/etc/chef-compliance/chef-compliance-running.json')
+    end
+
     def manage_url
       "https://#{node['chef-marketplace']['api_fqdn']}"
     end
@@ -128,18 +132,61 @@ module Marketplace
     end
 
     def motd_variables
+      role = node['chef-marketplace']['role']
+      case role
+      when 'server', 'aio'
+        role_name = 'Chef Server'
+        analytics_href = analytics_url
+      when 'analytics'
+        role_name = 'Chef Analytics'
+        analytics_href = manage_url
+      when 'compliance'
+        role_name = 'Chef Compliance'
+      end
+
       vars = {
-        role: node['chef-marketplace']['role'],
+        role_name: role_name,
         support_email: node['chef-marketplace']['support']['email'],
         doc_url: node['chef-marketplace']['documentation']['url']
       }
 
       vars.merge!(
-        manage_url: manage_url,
-        analytics_url: node['chef-marketplace']['role'] == 'aio' ? analytics_url : false
+        compliance_url: role == 'compliance' ? manage_url : false,
+        manage_url: role =~ /aio|server/ ? manage_url : false,
+        analytics_url: role =~ /aio|analytics/ ? analytics_href : false
       ) unless security_enabled?
 
       vars
+    end
+
+    # Returns a hash of which omnibus commands should be enabled/disabled
+    def omnibus_commands
+      service_dir = '/opt/chef-marketplace/embedded/service'
+
+      case node['chef-marketplace']['role']
+      when 'server', 'compliance'
+        enabled_commands = %w(setup.rb hostname.rb test.rb upgrade.rb)
+        disabled_commands = %w(trim_actions_db.rb)
+      when 'aio', 'analytics'
+        enabled_commands = %w(setup.rb hostname.rb test.rb upgrade.rb trim_actions_db.rb)
+        disabled_commands = []
+      end
+
+      enabled_commands.map! do |cmd|
+        { source: "#{service_dir}/chef-marketplace-ctl/#{cmd}",
+          destination: "#{service_dir}/omnibus-ctl/#{cmd}",
+          action: :create
+        }
+      end
+
+      disabled_commands.map! do |cmd|
+        { source: "#{service_dir}/chef-marketplace-ctl/#{cmd}",
+          destination: "#{service_dir}/omnibus-ctl/#{cmd}",
+          action: :delete
+        }
+      end
+
+      enabled_commands + disabled_commands
     end
 
     def determine_api_fqdn

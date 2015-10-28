@@ -5,7 +5,7 @@ Style/GuardClause:
 Metrics/LineLength:
   Max: 120
 Metrics/ClassLength:
-  Max: 200
+  Max: 250
 Metrics/ModuleLength:
   Max: 200
 Metrics/CyclomaticComplexity:

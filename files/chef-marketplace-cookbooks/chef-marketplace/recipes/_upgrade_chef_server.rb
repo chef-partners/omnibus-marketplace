@@ -1,10 +1,3 @@
-include_recipe 'chef-marketplace::config'
-
-unless mirrors_reachable?
-  Chef::Log.warn 'Skipping package upgrade because mirrors are not available or outboud traffic is disabled...'
-  return
-end
-
 execute 'chef-server-ctl reconfigure' do
   action :nothing
 end

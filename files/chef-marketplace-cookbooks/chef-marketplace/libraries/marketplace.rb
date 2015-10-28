@@ -31,16 +31,21 @@ module Marketplace
     default :url, 'https://docs.chef.io/aws_marketplace.html'
   end
 
+  # Which port and FQDN the Chef Server LB will listen on
   default :api_fqdn, nil
+  default :api_ssl_port, 443
 
+  # How many nodes are licensed
   default :license_count, 5
 
-  # Which role the marketplace addition is to play, eg: 'server', 'aio', 'analytics'
+  # Which role the marketplace addition is to play:
+  # 'server', 'aio', 'analytics', 'compliance'
   default :role, 'server'
 
   # The marketplace platform, eg: 'aws', 'openstack', 'azure', 'gce', etc.
   default :platform, 'aws'
 
+  # The default SSH user
   default :user, 'ec2-user'
 
   # Set to true if you don't want to use outbound networks, eg: package mirrors
@@ -85,5 +90,9 @@ module Marketplace
       # The allowed max size of the actiongs database in Gigs
       default :max_db_size, 1
     end
+  end
+
+  config_context :compliance do
+    default :ssl_port, 443
   end
 end

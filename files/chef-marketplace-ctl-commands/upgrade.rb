@@ -1,43 +1,45 @@
-require 'ostruct'
+require 'json'
 
-add_command_under_category 'upgrade', 'Configuration', 'Upgrade or install Chef Server software', 2 do
-  options = OpenStruct.new
-  options.upgrade_marketplace = false
-  options.upgrade_chef_server = false
-  options.upgrade_analytics = false
-  role = 'aio'
+add_command_under_category 'upgrade', 'Configuration', 'Upgrade or install Chef software', 2 do
+  config = default_config
 
   if File.exist?('/etc/chef-marketplace/chef-marketplace-running.json')
-    role = JSON.parse(IO.read('/etc/chef-marketplace/chef-marketplace-running.json'))['chef-marketplace']['role']
+    config['chef-marketplace']['role'] = JSON.parse(IO.read('/etc/chef-marketplace/chef-marketplace-running.json'))['chef-marketplace']['role']
   end
 
   OptionParser.new do |opts|
     opts.banner = 'Usage: chef-marketplace-ctl upgrade [options]'
 
-    opts.on('-y', '--yes', 'Upgrade all installed Chef packages') do
-      options.upgrade_marketplace = true
+    opts.on('-y', '--yes', 'Upgrade all installed Chef packages for the configured role') do
+      config['chef-marketplace']['upgrade_packages'] << 'chef-marketplace'
 
-      case role
+      case config['chef-marketplace']['role']
       when 'server'
-        options.upgrade_chef_server = true
+        config['chef-marketplace']['upgrade_packages'] << 'chef-server'
       when 'analytics'
-        options.upgrade_analytics = true
+        config['chef-marketplace']['upgrade_packages'] << 'analytics'
+      when 'compliance'
+        config['chef-marketplace']['upgrade_packages'] << 'chef-compliance'
       when 'aio'
-        options.upgrade_chef_server = true
-        options.upgrade_analytics = true
+        config['chef-marketplace']['upgrade_packages'] << 'chef-server'
+        config['chef-marketplace']['upgrade_packages'] << 'analytics'
       end
     end
 
     opts.on('-s', '--server', 'Upgrade Chef Server, Chef Reporting and Chef Manage') do
-      options.upgrade_chef_server = true
+      config['chef-marketplace']['upgrade_packages'] << 'chef-server'
     end
 
     opts.on('-a', '--analytics', 'Upgrade Chef Analytics') do
-      options.upgrade_analytics = true
+      config['chef-marketplace']['upgrade_packages'] << 'analytics'
+    end
+
+    opts.on('-c', '--compliance', 'Upgrade Chef Compliance') do
+      config['chef-marketplace']['upgrade_packages'] << 'chef-compliance'
     end
 
     opts.on('-m', '--marketplace', 'Upgrade Chef Marketplace') do
-      options.upgrade_marketplace = true
+      config['chef-marketplace']['upgrade_packages'] << 'chef-marketplace'
     end
 
     opts.on('-h', '--help', 'Show this message') do
@@ -46,27 +48,24 @@ add_command_under_category 'upgrade', 'Configuration', 'Upgrade or install Chef 
     end
   end.parse!(ARGV)
 
-  unless options.upgrade_marketplace || options.upgrade_chef_server || options.upgrade_analytics
+  if config['chef-marketplace']['upgrade_packages'].empty?
     puts 'Please specify the component you wish to upgrade.  Run `chef-marketplace-ctl -h` for more information' && exit(1)
   end
 
-  if options.upgrade_marketplace
-    puts 'Upgrading Chef Marketplace...'
-    marketplace_status = run_chef("#{base_path}/embedded/cookbooks/upgrade-marketplace.json", '--lockfile /tmp/chef-client-upgrade.lock')
-    exit(1) unless marketplace_status.success?
-  end
+  puts "Upgrading packages: #{config['chef-marketplace']['upgrade_packages']}.."
 
-  if options.upgrade_chef_server
-    puts 'Upgrading Chef Server, Chef Manage and Chef Reporting...'
-    chef_server_status = run_chef("#{base_path}/embedded/cookbooks/upgrade-chef-server.json", '--lockfile /tmp/chef-client-upgrade.lock')
-    exit(1) unless chef_server_status.success?
-  end
+  upgrade_json_file = '/opt/chef-marketplace/embedded/cookbooks/upgrade.json'
+  File.write(upgrade_json_file, JSON.pretty_generate(config))
+  status = run_chef(upgrade_json_file, '--lockfile /tmp/chef-client-upgrade.lock')
+  status.success? ? exit(0) : exit(1)
+end
 
-  if options.upgrade_analytics
-    puts 'Upgrading Chef Analytics...'
-    analytics = run_chef("#{base_path}/embedded/cookbooks/upgrade-analytics.json", '--lockfile /tmp/chef-client-upgrade.lock')
-    exit(1) unless analytics.success?
-  end
-
-  exit(0)
+def default_config
+  {
+    'chef-marketplace' => {
+      'role' => 'aio',
+      'upgrade_packages' => []
+    },
+    'run_list' => ['chef-marketplace::upgrade']
+  }
 end

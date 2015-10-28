@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'json'
 
 def config_file_for(product)
   "/opt/upgrade/embedded/cookbooks/upgrade-#{product.tr('_', '-')}.json"
@@ -8,30 +9,39 @@ describe 'chef-marketplace-ctl upgrade' do
   let(:marketplace_ctl) { OmnibusCtlTest.new('upgrade') }
   let(:omnibus_ctl) { marketplace_ctl.plugin }
   let(:process_success) { double('Process::Status', success?: true, exitstatus: 0) }
+  let(:role) { 'aio' }
+  let(:upgrade_json_file) { '/opt/chef-marketplace/embedded/cookbooks/upgrade.json' }
+  let(:upgrade_json_config) do
+    {
+      'chef-marketplace' => {
+        'role' => role,
+        'upgrade_packages' => required_packages
+      },
+      'run_list' => ['chef-marketplace::upgrade']
+    }
+  end
 
   before do
-    allow(marketplace_ctl.plugin).to receive(:run_chef).and_return(process_success)
+    allow(omnibus_ctl).to receive(:run_chef).and_return(process_success)
     allow(File)
       .to receive(:exist?)
       .with('/etc/chef-marketplace/chef-marketplace-running.json')
       .and_return(false)
+    allow(File)
+      .to receive(:write)
+      .with('/opt/chef-marketplace/embedded/cookbooks/upgrade.json')
+      .and_return(true)
   end
 
   shared_examples 'a proper upgrade' do
-    let(:unexpected_products) { %w(aio chef_server marketplace analytics) - required_products }
+    it 'converges writes the config, converges, and exists properly' do
+      expect(File)
+        .to receive(:write)
+        .with(upgrade_json_file, JSON.pretty_generate(upgrade_json_config))
 
-    it "converges the right recipes and exit's cleanly" do
-      required_products.each do |product|
-        expect(omnibus_ctl)
-          .to receive(:run_chef)
-          .with(config_file_for(product), '--lockfile /tmp/chef-client-upgrade.lock')
-      end
-
-      unexpected_products.each do |product|
-        expect(omnibus_ctl)
-          .to_not receive(:run_chef)
-          .with(config_file_for(product), '--lockfile /tmp/chef-client-upgrade.lock')
-      end
+      expect(omnibus_ctl)
+        .to receive(:run_chef)
+        .with(upgrade_json_file, '--lockfile /tmp/chef-client-upgrade.lock')
 
       expect { marketplace_ctl.execute(command) }
         .to raise_error(SystemExit) { |e| expect(e.status).to eq(0) }
@@ -39,7 +49,7 @@ describe 'chef-marketplace-ctl upgrade' do
   end
 
   context 'when no arguments are given' do
-    it 'raises an error' do
+    it 'raises an error exits properly' do
       expect { marketplace_ctl.execute('upgrade') }
         .to raise_error(SystemExit) { |e| expect(e.status).to eq(1) }
     end
@@ -64,28 +74,35 @@ describe 'chef-marketplace-ctl upgrade' do
 
       context 'when the role is analytics' do
         let(:role) { 'analytics' }
-        let(:required_products) { %w(analytics marketplace) }
+        let(:required_packages) { %w(chef-marketplace analytics) }
 
         it_behaves_like 'a proper upgrade'
       end
 
       context 'when the role is a chef server' do
         let(:role) { 'server' }
-        let(:required_products) { %w(chef_server marketplace) }
+        let(:required_packages) { %w(chef-marketplace chef-server) }
 
         it_behaves_like 'a proper upgrade'
       end
 
       context 'when the role is an All-In-One' do
         let(:role) { 'aio' }
-        let(:required_products) { %w(chef_server analytics marketplace) }
+        let(:required_packages) { %w(chef-marketplace chef-server analytics) }
+
+        it_behaves_like 'a proper upgrade'
+      end
+
+      context 'when the role is compliance' do
+        let(:role) { 'compliance' }
+        let(:required_packages) { %w(chef-marketplace chef-compliance) }
 
         it_behaves_like 'a proper upgrade'
       end
     end
 
     context 'when there is no role configured' do
-      let(:required_products) { %w(chef_server analytics marketplace) }
+      let(:required_packages) { %w(chef-marketplace chef-server analytics) }
 
       it_behaves_like 'a proper upgrade'
     end
@@ -93,21 +110,28 @@ describe 'chef-marketplace-ctl upgrade' do
 
   context 'with -s' do
     let(:command) { 'upgrade -s' }
-    let(:required_products) { %w(chef_server) }
+    let(:required_packages) { %w(chef-server) }
 
     it_behaves_like 'a proper upgrade'
   end
 
   context 'with -m' do
     let(:command) { 'upgrade -m' }
-    let(:required_products) { %w(marketplace) }
+    let(:required_packages) { %w(chef-marketplace) }
 
     it_behaves_like 'a proper upgrade'
   end
 
   context 'with -a' do
     let(:command) { 'upgrade -a' }
-    let(:required_products) { %w(analytics) }
+    let(:required_packages) { %w(analytics) }
+
+    it_behaves_like 'a proper upgrade'
+  end
+
+  context 'with -c' do
+    let(:command) { 'upgrade -c' }
+    let(:required_packages) { %w(chef-compliance) }
 
     it_behaves_like 'a proper upgrade'
   end

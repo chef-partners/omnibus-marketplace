@@ -43,7 +43,7 @@ class Marketplace
               q.responses[:not_valid] = 'Your entry was not a valid email address'
             end
           else
-            ui.ask("Please enter your #{opt.gsub('_', ' ')}:", ->(org) { normalize_option(org) }) do |q|
+            ui.ask("Please enter your #{opt.tr('_', ' ')}:", ->(org) { normalize_option(org) }) do |q|
               q.validate = ->(o) { o =~ /[a-z0-9\-_]+/ && o.length >= 1 && o.length <= 255 }
             end
           end
@@ -59,14 +59,10 @@ class Marketplace
 
     def required_options
       case options.role
-      when 'server'
+      when 'server', 'aio', 'compliance'
         %w(first_name last_name username email organization password).freeze
       when 'analytics'
         []
-      when 'aio'
-        %w(first_name last_name username email organization password).freeze
-      when 'compliance'
-        %w(first_name last_name username email organization).freeze
       end
     end
 
