@@ -91,14 +91,14 @@ chef-marketplace-ctl
 Manage, Reporting and Analytics with user provided configuration options.
 
 #### Options
-`-y, --yes` Agree to the Chef End User License Agreement
-`-u USERNAME, --username USERNAME` Admin username
-`-p PASSWORD, --password PASSWORD` Admin password
-`-f FIRSTNAME, --firstname FIRSTNAME` Admin first name
-`-l LASTNAME, --lastname LASTNAME` Admin last name
-`-e EMAIL, --email EMAIL` Admin email address
-`-o ORGNAME, --org ORGNAME` Default organization name
-`-h, --help` Display help information
+* `-y, --yes` Agree to the Chef End User License Agreement
+* `-u USERNAME, --username USERNAME` Admin username
+* `-p PASSWORD, --password PASSWORD` Admin password
+* `-f FIRSTNAME, --firstname FIRSTNAME` Admin first name
+* `-l LASTNAME, --lastname LASTNAME` Admin last name
+* `-e EMAIL, --email EMAIL` Admin email address
+* `-o ORGNAME, --org ORGNAME` Default organization name
+* `-h, --help` Display help information
 
 ### Reconfigure
 After package installation `chef-marketplace-ctl reconfigure` is run to execute
