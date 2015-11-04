@@ -46,6 +46,9 @@ support['email'] = 'some@email.com'
 # Marketplace specific documentation
 documentation['url'] = 'http://myorg.com/docs'
 
+# The amount of nodes this Chef server is licensed for
+license_count '25'
+
 # Which role the instance is supposed to play
 role 'aio' # or 'server'
 
@@ -134,10 +137,10 @@ accidental over-filling of the disk.  This command is run on regular intervals
 via cron.
 
 #### Options
-`-s, --size` The desired size of the Analytics database
+* `-s, --size` The desired size of the Analytics database
   configured role
-`-l, --log` The location of the trimmer log file
-`-i, --interval` How often the trimmer is running
+* `-l, --log` The location of the trimmer log file
+* `-i, --interval` How often the trimmer is running
 
 ### Test
 `chef-marketplace-ctl test` Perform's unit and functional tests to validate a
