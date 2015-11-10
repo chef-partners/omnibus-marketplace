@@ -1,5 +1,31 @@
 # Chef Marketplace Changelog
 
+# 0.0.4 (2015-11-09)
+## omnibus-marketplace
+* Add shim server-plugin cookbooks to please the Chef Server plugin design
+
+## chef-marketplace-cookbooks
+* Remove converging chef-marketplace cookbooks during chef-server-ctl reconfigure
+
+# 0.0.3 (2015-11-03)
+## omnibus-marketplace
+* Add chef-marketplace-gem
+* Add initial support for RHEL, Oracle, and Ubuntu 14.04
+* Update Ruby to 2.2.3
+* Update Rubygems to 2.4.8
+* Update Chef gem to use master
+
+## chef-marketplace-gem
+* Add initial Chef Compliance support
+
+## chef-marketplace-ctl
+* Add chef-compliance to upgrade command
+* Refactor upgrade command to use a single chef run
+* Dynamically link ctl commands depending on configured role
+
+## chef-marketplace-cookbooks
+* Refactor upgrade recipe
+
 # 0.0.2 (2015-09-09)
 ## omnibus-marketplace
 * Add CHANGELOG.md
