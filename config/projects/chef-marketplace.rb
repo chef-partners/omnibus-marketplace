@@ -18,6 +18,7 @@ dependency 'postgresql92' # only the client
 dependency 'chef-marketplace-ctl'
 dependency 'chef-marketplace-gem'
 dependency 'chef-marketplace-cookbooks'
+dependency 'server-plugin-cookbooks'
 dependency 'chef'
 dependency 'sequel-gem'
 dependency 'pg-gem'
