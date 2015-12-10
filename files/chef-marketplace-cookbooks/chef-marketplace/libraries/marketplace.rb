@@ -16,7 +16,7 @@
 require 'mixlib/config'
 require 'chef/mash'
 
-module Marketplace
+class Marketplace
   extend Mixlib::Config
 
   config_context :motd do
@@ -94,5 +94,9 @@ module Marketplace
 
   config_context :compliance do
     default :ssl_port, 443
+  end
+
+  config_context :marketplace_api do
+    default :address, 'https://marketplace.chef.io'
   end
 end

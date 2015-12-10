@@ -2,7 +2,7 @@ require 'resolv'
 require 'net/http'
 require 'timeout'
 
-module Marketplace
+class Marketplace
   module Helpers
     def motd_action
       node['chef-marketplace']['motd']['enabled'] ? :create : :delete
@@ -84,6 +84,10 @@ module Marketplace
       node.set['chef-marketplace']['mirrors_reachable'] = false
     end
 
+    def outbound_traffic_disabled?
+      node['chef-marketplace']['disable_outbound_traffic']
+    end
+
     # We only want to run the security in two scenarios:
     #   1) Security is explicitly enabled
     #   2) We're publishing for the first time
@@ -163,13 +167,21 @@ module Marketplace
     def omnibus_commands
       service_dir = '/opt/chef-marketplace/embedded/service'
 
+      enabled_commands = %w(
+        setup.rb
+        hostname.rb
+        test.rb
+        upgrade.rb
+        trim_actions_db.rb
+        register_node.rb
+      )
+      disabled_commands = []
+
       case node['chef-marketplace']['role']
       when 'server', 'compliance'
-        enabled_commands = %w(setup.rb hostname.rb test.rb upgrade.rb)
-        disabled_commands = %w(trim_actions_db.rb)
+        disabled_commands << enabled_commands.delete('trim_actions_db.rb')
       when 'aio', 'analytics'
-        enabled_commands = %w(setup.rb hostname.rb test.rb upgrade.rb trim_actions_db.rb)
-        disabled_commands = []
+        # Keep em all
       end
 
       enabled_commands.map! do |cmd|

@@ -40,8 +40,9 @@ describe 'chef-marketplace-ctl setup' do
       opts = OpenStruct.new
       opts[option_name] = option_value
 
-      # agree_to_eula is set by default so expect it unless --yes is passed
+      # agree_to_eula and register_node are false by default
       opts['agree_to_eula'] = false unless option_name == 'agree_to_eula'
+      opts['register_node'] = false unless option_name == 'register_node'
 
       expect(Marketplace).to receive(:setup).with(opts, omnibus_ctl)
       expect(Kernel).to_not receive(:eval)
@@ -52,7 +53,8 @@ describe 'chef-marketplace-ctl setup' do
 
   # rubocop:disable Style/SpaceInsideBrackets
   [
-    ['-y',                      'agree_to_eula',  true                ],
+    ['--eula',                  'agree_to_eula',  true                ],
+    ['--register',              'register_node',  true                ],
     [ '-u julia',               'username',       'julia'             ],
     [ '-p drowssap',            'password',       'drowssap'          ],
     [ '-f julia',               'first_name',     'julia'             ],
