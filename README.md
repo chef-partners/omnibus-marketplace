@@ -15,6 +15,7 @@ All The Things
   * [chef-marketplace-ctl upgrade](#upgrade)
   * [chef-marketplace-ctl hostname](#hostname)
   * [chef-marketplace-ctl trim-actions-db](#trim-actions-db)
+  * [chef-marketplace-ctl register-node](#register-node)
   * [chef-marketplace-ctl test](#test)
 1. [Kitchen-Based Build Environment](#kitchen-based-build-environment)
 1. [Contributing](#contributing)
@@ -94,13 +95,15 @@ chef-marketplace-ctl
 Manage, Reporting and Analytics with user provided configuration options.
 
 #### Options
-* `-y, --yes` Agree to the Chef End User License Agreement
 * `-u USERNAME, --username USERNAME` Admin username
 * `-p PASSWORD, --password PASSWORD` Admin password
 * `-f FIRSTNAME, --firstname FIRSTNAME` Admin first name
 * `-l LASTNAME, --lastname LASTNAME` Admin last name
 * `-e EMAIL, --email EMAIL` Admin email address
 * `-o ORGNAME, --org ORGNAME` Default organization name
+* `-y, --yes` Agree to all setup questions
+* `--register` Agree to register the node with Chef Software
+* `--eula` Agree to Chef Software's End User License Agreement
 * `-h, --help` Display help information
 
 ### Reconfigure
@@ -141,6 +144,18 @@ via cron.
   configured role
 * `-l, --log` The location of the trimmer log file
 * `-i, --interval` How often the trimmer is running
+
+### Register Node
+`chef-marketplace-ctl register-node` will register the Marketplace node with
+Chef Software to enable support.  This command is automatically run during the
+setup command or via the WebUI during the Chef Compliance setup.
+
+#### Options
+* `-f, --first` The support contacts first name
+* `-l, --last` The support contacts last name
+* `-e, --email` The support contacts email address
+* `-o, --organization` The name of the organization the contact represents
+* `-s, --server` The address of the marketplace registration API
 
 ### Test
 `chef-marketplace-ctl test` Perform's unit and functional tests to validate a
