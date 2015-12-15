@@ -1,10 +1,6 @@
 require 'spec_helper'
 require 'json'
 
-def config_file_for(product)
-  "/opt/upgrade/embedded/cookbooks/upgrade-#{product.tr('_', '-')}.json"
-end
-
 describe 'chef-marketplace-ctl upgrade' do
   let(:marketplace_ctl) { OmnibusCtlTest.new('upgrade') }
   let(:omnibus_ctl) { marketplace_ctl.plugin }
@@ -34,7 +30,7 @@ describe 'chef-marketplace-ctl upgrade' do
   end
 
   shared_examples 'a proper upgrade' do
-    it 'converges writes the config, converges, and exists properly' do
+    it 'writes the config json, converges the upgrade recipe, and exits properly' do
       expect(File)
         .to receive(:write)
         .with(upgrade_json_file, JSON.pretty_generate(upgrade_json_config))

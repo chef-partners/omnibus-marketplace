@@ -26,9 +26,11 @@ class Marketplace
       reload_config!
       validate_payment
       validate_options
+      ask_for_node_registration
       agree_to_eula
       update_software
       configure_software
+      register_node
       redirect_user
     end
 
@@ -131,6 +133,28 @@ class Marketplace
         log('You must agree to the Chef Software, Inc License Agreement in order to continue.', :error)
         exit 1
       end
+    end
+
+    def ask_for_node_registration
+      return if options.register_node
+      msg = "Would you like to register this node with Chef Software to enable Support?\n"
+      msg << "Type 'yes' if you agree"
+
+      options.register_node = true if ui.ask("<%= color(%Q(#{msg}), :yellow) %>") =~ /y/i
+    end
+
+    def register_node
+      return unless options.register_node
+
+      cmd = [
+        'chef-marketplace-ctl register-node',
+        "-f #{options.first_name.to_s.shellescape}",
+        "-l #{options.last_name.to_s.shellescape}",
+        "-e #{options.email.to_s.shellescape}",
+        "-o #{options.organization.to_s.shellescape}"
+      ].join(' ')
+
+      retry_command(cmd, 2, 10)
     end
 
     def reconfigure(product)

@@ -34,6 +34,8 @@ describe Marketplace::Setup do
       allow(subject).to receive(:create_server_user).and_return(true)
       allow(subject).to receive(:create_server_org).and_return(true)
       allow(subject).to receive(:create_compliance_user).and_return(true)
+      allow(subject).to receive(:register_node).and_return(true)
+      allow(subject).to receive(:ask_for_node_registration).and_return(true)
     end
 
     context 'when the role is server' do

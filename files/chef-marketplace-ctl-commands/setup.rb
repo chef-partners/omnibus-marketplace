@@ -3,12 +3,22 @@ require 'marketplace/setup'
 add_command_under_category 'setup', 'Configuration', 'Set up the Chef Server Marketplace Appliance', 2 do
   options = OpenStruct.new
   options.agree_to_eula = false
+  options.register_node = false
 
   OptionParser.new do |opts|
     opts.banner = 'Usage: chef-marketplace-ctl setup [options]'
 
-    opts.on('-y', '--yes', 'Agree to the Chef End User License Agreement') do
+    opts.on('-y', '--yes', 'Agree to all setup prompts') do
       options.agree_to_eula = true
+      options.register_node = true
+    end
+
+    opts.on('--eula', 'Agree to the Chef Software End User License Agreement') do
+      options.agree_to_eula = true
+    end
+
+    opts.on('--register', 'Register the node with Chef Software to enable support') do
+      options.register_node = true
     end
 
     opts.on('-u USERNAME', '--username USERNAME', String, 'Your Admin username') do |username|

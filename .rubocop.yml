@@ -1,6 +1,7 @@
 AllCops:
   Exclude:
     - '**/bin/*'
+    - 'Guardfile'
 Metrics/LineLength:
   Enabled: false
 Metrics/MethodLength:
@@ -11,11 +12,15 @@ Metrics/ModuleLength:
   Max: 200
 Metrics/AbcSize:
   Max: 50
-Style/GuardClause:
-  Enabled: false
 Metrics/CyclomaticComplexity:
   Enabled: false
 Metrics/PerceivedComplexity:
+  Enabled: false
+Metrics/AbcSize:
+  Max: 40
+Style/GuardClause:
+  Enabled: false
+Style/ClassAndModuleChildren:
   Enabled: false
 Style/Documentation:
   Enabled: false

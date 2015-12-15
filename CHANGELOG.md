@@ -1,5 +1,20 @@
 # Chef Marketplace Changelog
 
+# 0.0.5 (UNRELEASED)
+## omnibus-marketplace
+* Update README.md
+
+## chef-marketplace-ctl
+* Add chef-marketplace-ctl register-node command
+
+## chef-marketplace-gem
+* Add Marketplace Api client
+* Add Node registration to setup
+
+## chef-marketplace-cookbooks
+* Add node registration recipe
+* Add marketplace_api config context to marketplace.rb
+
 # 0.0.4 (2015-11-09)
 ## omnibus-marketplace
 * Add shim server-plugin cookbooks to please the Chef Server plugin design

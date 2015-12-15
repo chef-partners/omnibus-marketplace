@@ -6,6 +6,7 @@ require 'rspec'
 require 'omnibus-ctl'
 require 'pathname'
 require 'marketplace'
+require 'shellwords'
 
 class OmnibusCtlTest
   attr_accessor :plugin, :name
@@ -26,7 +27,7 @@ class OmnibusCtlTest
     ARGV << '/embedded/service/omnibus-ctl'
 
     # Separate command and args and add args to ARGV
-    args = command_with_args.split
+    args = Shellwords.split(command_with_args)
     command = args.shift
 
     args.each { |a| ARGV << a }
