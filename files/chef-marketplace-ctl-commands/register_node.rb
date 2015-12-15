@@ -1,7 +1,15 @@
 require 'highline/import'
 
 add_command_under_category 'register-node', 'Configuration', 'Register node with Chef to enable support', 2 do
-  config = default_config
+  config = {
+    'chef-marketplace' => {
+      'registration' => {
+        'address' => 'marketplace.chef.io'
+      }
+    },
+    'run_list' => ['chef-marketplace::register_node']
+  }
+
   ui = HighLine.new
 
   if File.exist?('/etc/chef-marketplace/chef-marketplace-running.json')
@@ -56,15 +64,4 @@ add_command_under_category 'register-node', 'Configuration', 'Register node with
   File.write(register_json_file, JSON.pretty_generate(config))
   status = run_chef(register_json_file, '--lockfile /tmp/chef-client-register-node.lock')
   status.success? ? exit(0) : exit(1)
-end
-
-def default_config
-  {
-    'chef-marketplace' => {
-      'registration' => {
-        'address' => 'marketplace.chef.io'
-      }
-    },
-    'run_list' => ['chef-marketplace::register_node']
-  }
 end

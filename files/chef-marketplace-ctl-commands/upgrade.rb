@@ -1,10 +1,17 @@
 require 'json'
 
 add_command_under_category 'upgrade', 'Configuration', 'Upgrade or install Chef software', 2 do
-  config = default_config
+  config = {
+    'chef-marketplace' => {
+      'role' => 'aio',
+      'upgrade_packages' => []
+    },
+    'run_list' => ['chef-marketplace::upgrade']
+  }
 
   if File.exist?('/etc/chef-marketplace/chef-marketplace-running.json')
-    config['chef-marketplace']['role'] = JSON.parse(IO.read('/etc/chef-marketplace/chef-marketplace-running.json'))['chef-marketplace']['role']
+    running_config = JSON.parse(IO.read('/etc/chef-marketplace/chef-marketplace-running.json'))
+    config['chef-marketplace']['role'] = running_config['chef-marketplace']['role']
   end
 
   OptionParser.new do |opts|
@@ -58,14 +65,4 @@ add_command_under_category 'upgrade', 'Configuration', 'Upgrade or install Chef 
   File.write(upgrade_json_file, JSON.pretty_generate(config))
   status = run_chef(upgrade_json_file, '--lockfile /tmp/chef-client-upgrade.lock')
   status.success? ? exit(0) : exit(1)
-end
-
-def default_config
-  {
-    'chef-marketplace' => {
-      'role' => 'aio',
-      'upgrade_packages' => []
-    },
-    'run_list' => ['chef-marketplace::upgrade']
-  }
 end
