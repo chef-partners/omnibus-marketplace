@@ -36,6 +36,22 @@ package 'cloud-init' do
   only_if { mirrors_reachable? && currently_publishing? }
 end
 
+directory '/var/lib/cloud/scripts/per-instance' do
+  owner 'root'
+  group 'root'
+  mode '0755'
+  recursive true
+  action :create
+end
+
+# Kick off the reconfigures with cloud-init so setup takes less time
+template '/var/lib/cloud/scripts/per-instance/chef-marketplace-setup' do
+  source 'chef-marketplace-cloud-init-setup.erb'
+  owner 'root'
+  group 'root'
+  mode '0755'
+end
+
 directory '/etc/cloud' do
   owner 'root'
   group 'root'

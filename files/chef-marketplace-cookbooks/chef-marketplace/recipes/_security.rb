@@ -65,6 +65,11 @@ directory '/tmp' do
   action :create
 end
 
+directory '/var/opt/chef-marketplace' do
+  action :delete
+  recursive true
+end
+
 execute 'rm -rf /tmp/*' do
   not_if { Dir['/tmp/*'].empty? }
 end

@@ -236,17 +236,26 @@ class Marketplace
         /var/opt/opscode-analytics/notifier_config/sys.config
         /var/opt/opscode-analytics/storm/topology/alaska/alaska.conf
         /var/opt/opscode-analytics/storm/topology/alaska/truststore.jks
+        /var/opt/opscode/nginx/etc/nginx.d/analytics.conf
         /etc/opscode-analytics/actions-source.json
         /etc/opscode-analytics/alaska-tools.rb
         /etc/opscode-analytics/opscode-analytics-running.json
         /etc/opscode-analytics/opscode-analytics-secrets.json
         /etc/opscode-analytics/webui_priv.pem
-        /var/opt/opscode/nginx/etc/nginx.d/analytics.conf
+        /opt/opscode-analytics/embedded/service/actions_messages/sys.config
+        /opt/opscode-analytics/embedded/service/actions/config/initializers/assets.rb
+        /opt/opscode-analytics/embedded/service/notifier/sys.config
+        /opt/opscode-analytics/embedded/service/notifier_config/sys.config
+        /opt/opscode-analytics/embedded/bin/storm
+        /opt/opscode-analytics/embedded/bin/alaska
       )
     end
 
     def analytics_state_directories
       %w(
+        /opt/opscode-analytics/sv
+        /opt/opscode-analytics/init
+        /opt/opscode-analytics/service
         /var/opt/opscode-analytics/postgresql
         /var/opt/opscode-analytics/ssl
         /var/opt/opscode-analytics/zookeeper/data
@@ -266,6 +275,20 @@ class Marketplace
         /etc/opscode-reporting/opscode-reporting-running.json
         /etc/opscode-reporting/opscode-reporting-secrets.json
         /etc/chef-manage/secrets.rb
+        /opt/opscode/embedded/service/oc_bifrost/sys.config
+        /opt/opscode/embedded/service/oc_id/config/settings/production.yml
+        /opt/opscode/embedded/service/oc_id/config/initializers/secret_token.rb
+        /opt/opscode/embedded/service/oc_id/config/database.yml
+        /opt/opscode/embedded/service/opscode-solr4/jetty/etc/jetty.xml
+        /opt/opscode/embedded/service/opscode-solr4/jetty/contexts/solr-jetty-context.xml
+        /opt/opscode/embedded/service/opscode-erchef/sys.config
+        /opt/opscode/embedded/service/bookshelf/sys.config
+        /opt/opscode/embedded/service/chef-server-bootstrap/bootstrapper-config/pivotal.yml
+        /opt/opscode/embedded/service/opscode-chef-mover/sys.config
+        /opt/opscode-reporting/embedded/service/opscode-reporting/db/permissions.sql
+        /opt/opscode-reporting/embedded/service/opscode-reporting/etc/sys.config
+        /opt/chef-manage/embedded/service/chef-manage/config/settings/production.yml
+        /opt/chef-manage/embedded/service/chef-manage/config/newrelic.yml
         /var/opt/opscode/bootstrapped
         /var/opt/opscode/bookshelf/sys.config
         /var/opt/opscode/oc_bifrost/sys.config
@@ -280,6 +303,12 @@ class Marketplace
 
     def server_state_directories
       %w(
+        /opt/opscode/sv
+        /opt/opscode/service
+        /opt/opscode/init
+        /opt/chef-manage/sv
+        /opt/chef-manage/init
+        /opt/chef-manage/service
         /var/opt/opscode/nginx/ca
         /var/opt/opscode/nginx/scripts
         /var/opt/opscode/pc_id/config

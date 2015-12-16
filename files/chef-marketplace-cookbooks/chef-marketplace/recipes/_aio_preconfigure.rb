@@ -31,3 +31,7 @@ analytics_state_directories.each do |state_dir|
     recursive true
   end
 end
+
+execute 'recreate server and add on runit directories' do
+  command 'mkdir -p /opt/{opscode,opscode-analytics,chef-manage}/{sv,init,service}'
+end

@@ -12,7 +12,7 @@ describe 'chef-marketplace-ctl register-node' do
     {
       'chef-marketplace' => {
         'registration' => {
-          'address' => 'marketplace.chef.io',
+          'address' => 'https://marketplace.chef.io',
           'first_name' => contact_first_name,
           'last_name' => contact_last_name,
           'organization' => contact_org_name,

@@ -38,7 +38,7 @@ ruby_block 'register node' do
         case node['cloud_v2']['provider']
         when 'gce'
           node['gce']['instance']['id']
-        when 'aws'
+        when 'ec2'
           node['ec2']['instance_id']
         else # azure, etc..
           node['chef-marketplace']['api_fqdn']

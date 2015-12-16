@@ -13,3 +13,7 @@ analytics_state_directories.each do |state_dir|
     recursive true
   end
 end
+
+execute 'recreate analytics runit directories' do
+  command 'mkdir -p /opt/opscode-analytics/{sv,init,service}'
+end
