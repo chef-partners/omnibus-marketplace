@@ -96,13 +96,16 @@ class Marketplace
     def security_enabled?
       if node['chef-marketplace'].attribute?('security') && node['chef-marketplace']['security']['enabled']
         true
-      elsif previously_published?
-        false
-      elsif publishing_enabled?
+      elsif currently_publishing?
         true
       else
         false
       end
+    end
+
+    # Is publishing enabled and we haven't published yet?
+    def currently_publishing?
+      publishing_enabled? && !previously_published?
     end
 
     def publishing_enabled?
@@ -163,7 +166,7 @@ class Marketplace
       vars
     end
 
-    # Returns a hash of which omnibus commands should be enabled/disabled
+    # Returns an array of hashes of which omnibus commands should be enabled/disabled
     def omnibus_commands
       service_dir = '/opt/chef-marketplace/embedded/service'
 
@@ -221,6 +224,89 @@ class Marketplace
         else
           node['fqdn']
         end
+    end
+
+    def analytics_state_files
+      %w(
+        /var/opt/opscode-analytics/bootstrapped
+        /var/opt/opscode-analytics/actions/config/secrets.yml
+        /var/opt/opscode-analytics/actions/config/database.yml
+        /var/opt/opscode-analytics/actions-messages/sys.config
+        /var/opt/opscode-analytics/notifier/sys.config
+        /var/opt/opscode-analytics/notifier_config/sys.config
+        /var/opt/opscode-analytics/storm/topology/alaska/alaska.conf
+        /var/opt/opscode-analytics/storm/topology/alaska/truststore.jks
+        /etc/opscode-analytics/actions-source.json
+        /etc/opscode-analytics/alaska-tools.rb
+        /etc/opscode-analytics/opscode-analytics-running.json
+        /etc/opscode-analytics/opscode-analytics-secrets.json
+        /etc/opscode-analytics/webui_priv.pem
+        /var/opt/opscode/nginx/etc/nginx.d/analytics.conf
+      )
+    end
+
+    def analytics_state_directories
+      %w(
+        /var/opt/opscode-analytics/postgresql
+        /var/opt/opscode-analytics/ssl
+        /var/opt/opscode-analytics/zookeeper/data
+      )
+    end
+
+    def server_state_files
+      %w(
+        /etc/opscode/chef-server.rb
+        /etc/opscode/webui_pub.pem
+        /etc/opscode/worker-public.pem
+        /etc/opscode/chef-server-running.json
+        /etc/opscode/pivotal.pem
+        /etc/opscode/private-chef-secrets.json
+        /etc/opscode/webui_priv.pem
+        /etc/opscode/worker-private.pem
+        /etc/opscode-reporting/opscode-reporting-running.json
+        /etc/opscode-reporting/opscode-reporting-secrets.json
+        /etc/chef-manage/secrets.rb
+        /var/opt/opscode/bootstrapped
+        /var/opt/opscode/bookshelf/sys.config
+        /var/opt/opscode/oc_bifrost/sys.config
+        /var/opt/opscode/opscode-account-mover/sys.config
+        /var/opt/opscode/opscode-erchef/sys.config
+        /var/opt/opscode-reporting/bootstrapped
+        /var/opt/opscode-reporting/etc/sys.config
+        /var/opt/chef-manage/etc/chef-manage-running.json
+        /var/opt/chef-manage/etc/settings.yml
+      )
+    end
+
+    def server_state_directories
+      %w(
+        /var/opt/opscode/nginx/ca
+        /var/opt/opscode/nginx/scripts
+        /var/opt/opscode/pc_id/config
+        /var/opt/opscode/opscode-account-mover/data
+        /var/opt/opscode/opscode-expander/etc
+        /var/opt/opscode/opscode-solr4
+        /var/opt/opscode/postgresql
+        /var/opt/opscode/rabbitmq
+        /var/opt/opscode/redis_lb
+        /var/opt/opscode/upgrades
+        /var/opt/opscode/local-mode-cache
+      )
+    end
+
+    def compliance_state_files
+      %w(
+        /etc/chef-compliance/chef-compliance-running.json
+        /etc/chef-compliance/chef-compliance-secrets.json
+        /etc/chef-compliance/server-config.json
+      )
+    end
+
+    def compliance_state_directories
+      %w(
+        /var/opt/chef-compliance/postgresql
+        /var/opt/chef-compliance/ssl
+      )
     end
   end
 end
