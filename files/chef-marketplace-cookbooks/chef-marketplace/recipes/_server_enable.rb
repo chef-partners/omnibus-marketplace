@@ -38,5 +38,5 @@ end
 file '/etc/opscode/chef-server.rb' do
   owner 'root'
   group 'root'
-  action :create
+  action :create_if_missing
 end

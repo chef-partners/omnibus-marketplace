@@ -91,7 +91,7 @@ describe 'chef-marketplace-ctl upgrade' do
 
       context 'when the role is compliance' do
         let(:role) { 'compliance' }
-        let(:required_packages) { %w(chef-marketplace chef-compliance) }
+        let(:required_packages) { %w(chef-marketplace compliance) }
 
         it_behaves_like 'a proper upgrade'
       end
@@ -127,7 +127,7 @@ describe 'chef-marketplace-ctl upgrade' do
 
   context 'with -c' do
     let(:command) { 'upgrade -c' }
-    let(:required_packages) { %w(chef-compliance) }
+    let(:required_packages) { %w(compliance) }
 
     it_behaves_like 'a proper upgrade'
   end

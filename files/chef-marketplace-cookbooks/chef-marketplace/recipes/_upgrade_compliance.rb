@@ -1,4 +1,4 @@
-chef_ingredient 'chef-compliance' do
+chef_ingredient 'compliance' do
   action :upgrade
   notifies :run, 'execute[chef-compliance-ctl reconfigure]', :immediately if compliance_configured?
 end

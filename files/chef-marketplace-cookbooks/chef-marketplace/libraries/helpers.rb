@@ -264,7 +264,6 @@ class Marketplace
 
     def server_state_files
       %w(
-        /etc/opscode/chef-server.rb
         /etc/opscode/webui_pub.pem
         /etc/opscode/worker-public.pem
         /etc/opscode/chef-server-running.json
@@ -333,6 +332,9 @@ class Marketplace
 
     def compliance_state_directories
       %w(
+        /opt/chef-compliance/sv
+        /opt/chef-compliance/init
+        /opt/chef-compliance/service
         /var/opt/chef-compliance/postgresql
         /var/opt/chef-compliance/ssl
       )

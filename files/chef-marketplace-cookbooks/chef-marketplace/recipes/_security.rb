@@ -61,7 +61,7 @@ end
 directory '/tmp' do
   owner 'root'
   group 'root'
-  mode '0777'
+  mode '1777'
   action :create
 end
 
