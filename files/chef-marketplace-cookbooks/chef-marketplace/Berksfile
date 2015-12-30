@@ -1,6 +1,6 @@
 source 'https://supermarket.chef.io'
 
 cookbook 'hostname', github: '3ofcoins/chef-cookbook-hostname', branch: 'v0.4.0'
-cookbook 'chef-ingredient', github: 'chef-cookbooks/chef-ingredient', branch: 'ryan/compliance'
+cookbook 'chef-ingredient'
 
 metadata

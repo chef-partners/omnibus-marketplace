@@ -13,3 +13,7 @@ compliance_state_directories.each do |state_dir|
     recursive true
   end
 end
+
+execute 'recreate complinace runit directories' do
+  command 'mkdir -p /opt/chef-compliance/{sv,init,service}'
+end

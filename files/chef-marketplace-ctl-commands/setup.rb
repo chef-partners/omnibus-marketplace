@@ -4,6 +4,7 @@ add_command_under_category 'setup', 'Configuration', 'Set up the Chef Server Mar
   options = OpenStruct.new
   options.agree_to_eula = false
   options.register_node = false
+  options.preconfigure = false
 
   OptionParser.new do |opts|
     opts.banner = 'Usage: chef-marketplace-ctl setup [options]'
@@ -43,6 +44,10 @@ add_command_under_category 'setup', 'Configuration', 'Set up the Chef Server Mar
 
     opts.on('-o ORGNAME', '--org ORGNAME', String, 'Your organization name') do |org|
       options.organization = org
+    end
+
+    opts.on('--preconfigure', 'Preconfigure option used by cloud-init during boot') do
+      options.preconfigure = true
     end
 
     opts.on('-h', '--help', 'Show this message') do

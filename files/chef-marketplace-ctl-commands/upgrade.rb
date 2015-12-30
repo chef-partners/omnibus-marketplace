@@ -26,7 +26,7 @@ add_command_under_category 'upgrade', 'Configuration', 'Upgrade or install Chef 
       when 'analytics'
         config['chef-marketplace']['upgrade_packages'] << 'analytics'
       when 'compliance'
-        config['chef-marketplace']['upgrade_packages'] << 'chef-compliance'
+        config['chef-marketplace']['upgrade_packages'] << 'compliance'
       when 'aio'
         config['chef-marketplace']['upgrade_packages'] << 'chef-server'
         config['chef-marketplace']['upgrade_packages'] << 'analytics'
@@ -42,7 +42,7 @@ add_command_under_category 'upgrade', 'Configuration', 'Upgrade or install Chef 
     end
 
     opts.on('-c', '--compliance', 'Upgrade Chef Compliance') do
-      config['chef-marketplace']['upgrade_packages'] << 'chef-compliance'
+      config['chef-marketplace']['upgrade_packages'] << 'compliance'
     end
 
     opts.on('-m', '--marketplace', 'Upgrade Chef Marketplace') do

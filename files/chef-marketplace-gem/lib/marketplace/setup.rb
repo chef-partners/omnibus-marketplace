@@ -3,6 +3,7 @@ require 'shellwords'
 require 'highline/import'
 require 'marketplace/payment'
 require 'marketplace/options'
+require 'timeout'
 
 # Setup the Marketplace Appliance
 class Marketplace
@@ -24,12 +25,19 @@ class Marketplace
     def setup
       reconfigure(:marketplace)
       reload_config!
+      if options.preconfigure
+        # Just configure software if we're preconfiguring
+        configure_software
+        return
+      end
       validate_payment
       validate_options
       ask_for_node_registration
       agree_to_eula
+      wait_for_cloud_init_preconfigure
       update_software
-      configure_software
+      configure_software unless preconfigured?
+      create_default_users
       register_node
       redirect_user
     end
@@ -45,22 +53,29 @@ class Marketplace
       case role.to_s
       when 'server'
         reconfigure(:server)
-        create_server_user
-        create_server_org
         reconfigure(:manage)
         reconfigure(:reporting)
       when 'analytics'
         reconfigure(:analytics)
       when 'aio'
         reconfigure(:server)
-        create_server_user
-        create_server_org
         reconfigure(:manage)
         reconfigure(:reporting)
         reconfigure(:analytics)
       when 'compliance'
         reconfigure(:compliance)
-        create_compliance_user
+      else
+        fail "'#{role}' is not a valid role."
+      end
+    end
+
+    def create_default_users
+      case role.to_s
+      when 'server', 'aio'
+        create_server_user
+        create_server_org
+      when 'compliance'
+      when 'analytics'
       else
         fail "'#{role}' is not a valid role."
       end
@@ -167,7 +182,7 @@ class Marketplace
         ctl_command = 'chef-server-ctl'
       when 'manage'
         service_name = 'Chef Manage'
-        ctl_command = 'opscode-manage-ctl'
+        ctl_command = 'chef-manage-ctl'
       when 'reporting'
         service_name = 'Chef Reporting'
         ctl_command = 'opscode-reporting-ctl'
@@ -182,7 +197,15 @@ class Marketplace
       end
 
       log "Please wait while we set up #{service_name}. This may take a few minutes to complete..."
-      run_command("#{ctl_command} reconfigure")
+
+      # As of 12/29/15 opscode-analytics and opscode-reporting both don't set
+      # up these environment variables during the reconfigure chef-client runs.
+      # Failing to do so isn't usually a problem because reconfiguring is usually
+      # done by a user whose shell environment is passed through.  However, when
+      # the command is run by a system user lacking such variables (rc/cloud-init),
+      # the reconfigure will fail because rabbitmqctl needs them to be set.
+      # Until both packages have been fixed this is our workaround.
+      system({ 'HOME' => '/root', 'USER' => 'root' }, "#{ctl_command} reconfigure")
     end
 
     def run_analytics_preflight_check
@@ -204,16 +227,6 @@ class Marketplace
         options.first_name.to_s.shellescape,
         options.last_name.to_s.shellescape,
         options.email.to_s.shellescape,
-        options.password.to_s.shellescape
-      ].join(' ')
-
-      retry_command(cmd)
-    end
-
-    def create_compliance_user
-      cmd = [
-        'chef-compliance-ctl user-create',
-        options.username.to_s.shellescape,
         options.password.to_s.shellescape
       ].join(' ')
 
@@ -254,6 +267,28 @@ class Marketplace
       end
     end
 
+    # If the instance auto reconfigures at boot via cloud-init then wait
+    # until it's finished
+    def wait_for_cloud_init_preconfigure
+      return unless cloud_init_running?
+
+      log('Please wait for software configuration. This may take a few minutes to complete..')
+      Timeout.timeout(900) do
+        sleep 5 while cloud_init_running?
+      end
+    rescue Timeout::Error
+      log('Timed out waiting for background configuration to complete', :error)
+      exit(1)
+    end
+
+    def preconfigured?
+      File.exist?('/var/opt/chef-marketplace/preconfigured')
+    end
+
+    def cloud_init_running?
+      File.exist?('/var/opt/chef-marketplace/cloud_init_running')
+    end
+
     def redirect_user
       msg = ["\n\nYou're all set!\n"]
 
@@ -265,8 +300,7 @@ class Marketplace
                ]
       when 'compliance'
         msg << ["Next you'll want to log into the Chef Compliance Web UI",
-                "https://#{fqdn}:#{ssl_port_for(:compliance)}\n",
-                "Use your username '#{options.username}' to login\n"
+                "https://#{fqdn}:#{ssl_port_for(:compliance)}/#/setup\n"
                ]
       when 'analytics'
         msg << ["Next you'll want to log into the Chef Analytics Web UI",

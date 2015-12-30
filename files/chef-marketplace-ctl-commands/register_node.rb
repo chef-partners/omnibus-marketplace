@@ -4,7 +4,7 @@ add_command_under_category 'register-node', 'Configuration', 'Register node with
   config = {
     'chef-marketplace' => {
       'registration' => {
-        'address' => 'marketplace.chef.io'
+        'address' => 'https://marketplace.chef.io'
       }
     },
     'run_list' => ['chef-marketplace::register_node']
@@ -14,7 +14,12 @@ add_command_under_category 'register-node', 'Configuration', 'Register node with
 
   if File.exist?('/etc/chef-marketplace/chef-marketplace-running.json')
     running_config = JSON.parse(IO.read('/etc/chef-marketplace/chef-marketplace-running.json'))
-    config['chef-marketplace']['registration']['address'] = running_config['chef-marketplace']['marketplace_api']['address']
+    begin
+      configured_address = running_config['chef-marketplace']['marketplace_api']['address']
+    rescue NoMethodError
+      configured_address = nil
+    end
+    config['chef-marketplace']['registration']['address'] = configured_address if configured_address
   end
 
   OptionParser.new do |opts|

@@ -1,2 +1,3 @@
 fqdn '<%= node['chef-marketplace']['api_fqdn'] %>'
 nginx['ssl_port'] = <%= node['chef-marketplace']['compliance']['ssl_port'] %>
+setup.registration.required = true

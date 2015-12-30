@@ -18,11 +18,11 @@ execute 'opscode-reporting-ctl reconfigure' do
   action :nothing
 end
 
-execute 'opscode-manage-ctl reconfigure' do
+execute 'chef-manage-ctl reconfigure' do
   action :nothing
 end
 
-execute 'opscode-manage-ctl restart' do
+execute 'chef-manage-ctl restart' do
   action :nothing
 end
 
@@ -41,8 +41,8 @@ chef_ingredient 'manage' do
 
   if chef_server_configured?
     notifies :run, 'execute[chef-server-ctl start]', :immediately
-    notifies :run, 'execute[opscode-manage-ctl reconfigure]', :immediately
-    notifies :run, 'execute[opscode-manage-ctl restart]', :immediately
+    notifies :run, 'execute[chef-manage-ctl reconfigure]', :immediately
+    notifies :run, 'execute[chef-manage-ctl restart]', :immediately
     notifies :run, 'execute[chef-server-ctl restart]'
   end
 end

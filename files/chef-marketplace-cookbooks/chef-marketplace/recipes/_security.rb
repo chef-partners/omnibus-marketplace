@@ -61,8 +61,13 @@ end
 directory '/tmp' do
   owner 'root'
   group 'root'
-  mode '0777'
+  mode '1777'
   action :create
+end
+
+directory '/var/opt/chef-marketplace' do
+  action :delete
+  recursive true
 end
 
 execute 'rm -rf /tmp/*' do

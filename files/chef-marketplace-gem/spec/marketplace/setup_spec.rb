@@ -20,6 +20,7 @@ describe Marketplace::Setup do
       .to receive(:read)
       .with('/etc/chef-marketplace/chef-marketplace-running.json')
       .and_return(json)
+    allow(options).to receive(:preconfigure).and_return(false)
   end
 
   describe '#setup' do
@@ -36,45 +37,113 @@ describe Marketplace::Setup do
       allow(subject).to receive(:create_compliance_user).and_return(true)
       allow(subject).to receive(:register_node).and_return(true)
       allow(subject).to receive(:ask_for_node_registration).and_return(true)
+      allow(subject).to receive(:wait_for_cloud_init_preconfigure).and_return(true)
+      allow(subject).to receive(:create_default_users).and_return(true)
     end
 
-    context 'when the role is server' do
-      let(:role) { 'server' }
+    context 'when the server has not been preconfigured' do
+      before { allow(subject).to receive(:preconfigured?).and_return(false) }
 
-      it 'sets up the chef server' do
-        expect(subject).to receive(:reconfigure).with(:server).once
-        expect(subject).to receive(:reconfigure).with(:manage).once
-        expect(subject).to receive(:reconfigure).with(:reporting).once
-        expect(subject).to_not receive(:reconfigure).with(:compliance)
-        expect(subject).to_not receive(:reconfigure).with(:analytics)
+      context 'when the role is server' do
+        let(:role) { 'server' }
 
-        subject.setup
+        it 'sets up the chef server' do
+          expect(subject).to receive(:reconfigure).with(:server).once
+          expect(subject).to receive(:reconfigure).with(:manage).once
+          expect(subject).to receive(:reconfigure).with(:reporting).once
+          expect(subject).to_not receive(:reconfigure).with(:compliance)
+          expect(subject).to_not receive(:reconfigure).with(:analytics)
+
+          subject.setup
+        end
+      end
+
+      context 'when the role is analytics' do
+        let(:role) { 'analytics' }
+
+        it 'sets up chef analytics' do
+          expect(subject).to receive(:reconfigure).with(:analytics).once
+          expect(subject).to_not receive(:reconfigure).with(:server)
+          expect(subject).to_not receive(:reconfigure).with(:manage)
+          expect(subject).to_not receive(:reconfigure).with(:reporting)
+          expect(subject).to_not receive(:reconfigure).with(:compliance)
+
+          subject.setup
+        end
+      end
+
+      context 'when the role is aio' do
+        let(:role) { 'aio' }
+
+        it 'sets up chef server and analytics' do
+          expect(subject).to receive(:reconfigure).with(:server).once
+          expect(subject).to receive(:reconfigure).with(:manage).once
+          expect(subject).to receive(:reconfigure).with(:reporting).once
+          expect(subject).to receive(:reconfigure).with(:analytics).once
+          expect(subject).to_not receive(:reconfigure).with(:compliance)
+
+          subject.setup
+        end
       end
     end
 
-    context 'when the role is analytics' do
-      let(:role) { 'analytics' }
+    context 'when the server has been preconfigured' do
+      before { allow(subject).to receive(:preconfigured?).and_return(true) }
 
-      it 'sets up chef analytics' do
-        expect(subject).to receive(:reconfigure).with(:analytics).once
-        expect(subject).to_not receive(:reconfigure).with(:server)
-        expect(subject).to_not receive(:reconfigure).with(:manage)
-        expect(subject).to_not receive(:reconfigure).with(:reporting)
-        expect(subject).to_not receive(:reconfigure).with(:compliance)
+      context 'when the role is server' do
+        let(:role) { 'server' }
 
-        subject.setup
+        it 'does not set up the chef server' do
+          expect(subject).to_not receive(:reconfigure).with(:server)
+          expect(subject).to_not receive(:reconfigure).with(:manage)
+          expect(subject).to_not receive(:reconfigure).with(:reporting)
+          expect(subject).to_not receive(:reconfigure).with(:compliance)
+          expect(subject).to_not receive(:reconfigure).with(:analytics)
+
+          subject.setup
+        end
+      end
+
+      context 'when the role is analytics' do
+        let(:role) { 'analytics' }
+
+        it 'does not set up chef analytics' do
+          expect(subject).to_not receive(:reconfigure).with(:analytics)
+          expect(subject).to_not receive(:reconfigure).with(:server)
+          expect(subject).to_not receive(:reconfigure).with(:manage)
+          expect(subject).to_not receive(:reconfigure).with(:reporting)
+          expect(subject).to_not receive(:reconfigure).with(:compliance)
+
+          subject.setup
+        end
+      end
+
+      context 'when the role is aio' do
+        let(:role) { 'aio' }
+
+        it 'does not set up chef server and analytics' do
+          expect(subject).to_not receive(:reconfigure).with(:server)
+          expect(subject).to_not receive(:reconfigure).with(:manage)
+          expect(subject).to_not receive(:reconfigure).with(:reporting)
+          expect(subject).to_not receive(:reconfigure).with(:analytics)
+          expect(subject).to_not receive(:reconfigure).with(:compliance)
+
+          subject.setup
+        end
       end
     end
 
-    context 'when the role is aio' do
+    context 'when the preconfigure option is passed' do
       let(:role) { 'aio' }
 
-      it 'sets up chef server and analytics' do
-        expect(subject).to receive(:reconfigure).with(:server).once
-        expect(subject).to receive(:reconfigure).with(:manage).once
-        expect(subject).to receive(:reconfigure).with(:reporting).once
-        expect(subject).to receive(:reconfigure).with(:analytics).once
-        expect(subject).to_not receive(:reconfigure).with(:compliance)
+      before { allow(options).to receive(:preconfigure).and_return(true) }
+
+      it 'only preconfigures the software' do
+        expect(subject).to receive(:configure_software).once
+        expect(subject).to_not receive(:create_default_users)
+        expect(subject).to_not receive(:update_software)
+        expect(subject).to_not receive(:agree_to_eula)
+        expect(subject).to_not receive(:redirect_user)
 
         subject.setup
       end
