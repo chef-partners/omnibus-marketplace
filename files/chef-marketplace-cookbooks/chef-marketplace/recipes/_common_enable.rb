@@ -68,6 +68,7 @@ template '/etc/cloud/cloud.cfg' do
     gecos: gecos
   )
   action :create
+  not_if { node['chef-marketplace']['platform'] == 'azure' }
 end
 
 package cron_package do
