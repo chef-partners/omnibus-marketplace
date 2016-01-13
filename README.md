@@ -16,6 +16,7 @@ All The Things
   * [chef-marketplace-ctl hostname](#hostname)
   * [chef-marketplace-ctl trim-actions-db](#trim-actions-db)
   * [chef-marketplace-ctl register-node](#register-node)
+  * [chef-marketplace-ctl prepare-for-publishing](#prepare-for-publishing)
   * [chef-marketplace-ctl test](#test)
 1. [Kitchen-Based Build Environment](#kitchen-based-build-environment)
 1. [Contributing](#contributing)
@@ -39,13 +40,13 @@ topology 'chef-marketplace'
 #### Example Marketplace Config
 ```ruby
 # Enable or disable changing the motd
-motd['enable'] = true
+motd.enable = true
 
 # Marketplace specific support email address
-support['email'] = 'some@email.com'
+support.email = 'some@email.com'
 
 # Marketplace specific documentation
-documentation['url'] = 'http://myorg.com/docs'
+documentation.url = 'http://myorg.com/docs'
 
 # The amount of nodes this Chef server is licensed for
 license_count '25'
@@ -64,23 +65,30 @@ user 'ec2-user'
 disable_outboud_traffic true
 
 # Configure which port the Analytics UI binds to
-analytics['ssl_port'] = 8443
+analytics.ssl_port = 8443
 
 # Enable or disable the actions auto trim
-analytics['trimmer']['enabled'] = true
+analytics.trimmer.enabled = true
 
 # How often in hours to run (1-23)
-analytics['trimmer']['interval'] = 4
+analytics.trimmer.interval = 4
 
 # Enable or disable the reporting auto clean-up
-reporting['cron']['enabled'] = true
+reporting.cron.enabled = true
 
 # Standard crontab expression
-reporting['cron']['expression'] = '*/2 * * * *'
+reporting.cron.expression = '*/2 * * * *'
 
 # The latest year/month in the reporting database that you want to preserve
-reporting['cron']['year'] = 'date +%Y'
-reporting['cron']['month'] = 'date +%m'
+reporting.cron.year = 'date +%Y'
+reporting.cron.month = 'date +%m'
+
+# Enable/Disable the Reckoner billing daemon
+reckoner.enable = true
+
+# Set the ec2 product code for the ec2 updater
+reckoner.enable = true
+reckoner.product_code = 'XXXXXXXXXXXXXXXXXXXX'
 ```
 
 chef-marketplace-ctl
@@ -238,7 +246,7 @@ Contributions are always welcome!  If you'd like to send up any fixes or changes
 1. Fork it ( https://github.com/chef-partners/omnibus-marketplace/fork )
 1. Create your feature branch (`git checkout -b my-new-feature`)
 1. Test your changes (`cd omnibus-marketplace && bundle install && bundle exec
-  rake`)
+  rake spec`)
 1. Commit your changes (`git commit -am 'Add some feature'`)
 1. Push to the branch (`git push origin my-new-feature`)
 1. Create a new Pull Request
