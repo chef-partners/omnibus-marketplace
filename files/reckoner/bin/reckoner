@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+STDERR.sync = STDOUT.sync = true
+
+require 'clockwork'
+require 'marketplace/reckoner'
+
+module Clockwork
+  Marketplace::Reckoner::Config.from_file(File.expand_path('../../conf/reckoner.rb', __FILE__))
+
+  every(1.hour, 'update.usage') { Marketplace::Reckoner.update_usage }
+end
+
+trap('INT') do
+  puts "\rExiting"
+  exit
+end
+
+Clockwork.run

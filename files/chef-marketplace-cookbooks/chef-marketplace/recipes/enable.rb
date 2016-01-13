@@ -7,6 +7,9 @@ role = node['chef-marketplace']['role']
 # Base recipes
 include_recipe "chef-marketplace::_#{role}_enable"
 
+# Setup billing daemon
+include_recipe 'chef-marketplace::_reckoner'
+
 # Setup omnibus commands
 include_recipe 'chef-marketplace::_omnibus_commands'
 

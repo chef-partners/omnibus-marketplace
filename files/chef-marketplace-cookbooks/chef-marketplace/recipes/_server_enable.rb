@@ -35,8 +35,15 @@ directory '/etc/opscode' do
   action :create
 end
 
-file '/etc/opscode/chef-server.rb' do
+template '/etc/opscode/chef-server.rb' do
   owner 'root'
   group 'root'
+  action :create_if_missing
+end
+
+file '/etc/chef-manage/manage.rb' do
+  owner 'root'
+  group 'root'
+  content 'disable_sign_up true'
   action :create_if_missing
 end

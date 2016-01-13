@@ -24,7 +24,22 @@ default['chef-marketplace'].tap do |m|
   m['analytics']['trimmer']['log_file'] = '/var/log/opscode-analytics/actions-trimmer.log'
   m['analytics']['trimmer']['max_db_size'] = 1
   m['compliance']['ssl_port'] = 443
+  m['runit']['user']['username'] = 'opscode'
+  m['runit']['user']['shell'] = '/bin/sh'
+  m['runit']['user']['home'] = '/opt/opscode/embedded'
+  # These are used by the enterprise-chef-common cookbook
+  m['sysvinit_id'] = 'MP'
+  m['install_path'] = '/opt/chef-marketplace'
+  m['reckoner']['log_directory'] = '/var/log/chef-marketplace/reckoner'
+  m['reckoner']['log_rotation']['file_maxbytes'] = 104_857_600
+  m['reckoner']['log_rotation']['num_to_keep'] = 10
+  # Reckoner defaults
+  m['reckoner']['free_node_count'] = 0
+  m['reckoner']['region'] = 'us-east-1'
+  m['reckoner']['usage_dimension'] = 'ProvisionedHosts'
 end
+
+default['enterprise']['name'] = 'chef-marketplace'
 
 default['openssh']['server'].tap do |server|
   server['protocol'] = 2

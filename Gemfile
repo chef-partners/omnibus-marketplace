@@ -9,6 +9,10 @@ gem 'pry'
 gem 'rubocop'
 gem 'rspec'
 
+# Reckoner Deps
+gem 'sequel'
+gem 'aws-sdk'
+
 group :development do
   # Use Berkshelf for resolving cookbook dependencies
   gem 'berkshelf', '~> 3.1'

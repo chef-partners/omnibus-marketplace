@@ -26,4 +26,4 @@ do
   unset $ruby_env_var
 done
 
-<%= install_dir %>/embedded/bin/omnibus-addon-ctl <%= project_name %> <%= install_dir %>/embedded/service/omnibus-ctl $@
+<%= embedded_bin %>/omnibus-ctl chef-marketplace <%= embedded_service %>/omnibus-ctl $@

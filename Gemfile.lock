@@ -224,6 +224,7 @@ GEM
       addressable (~> 2.3.5)
       faraday (~> 0.8, < 0.10)
     semverse (1.2.1)
+    sequel (4.30.0)
     serverspec (2.24.1)
       multi_json
       rspec (~> 3.0)
@@ -259,6 +260,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  aws-sdk
   berkshelf (~> 3.1)
   chef
   kitchen-vagrant (~> 0.14)
@@ -268,4 +270,5 @@ DEPENDENCIES
   pry
   rspec
   rubocop
+  sequel
   test-kitchen (~> 1.3)

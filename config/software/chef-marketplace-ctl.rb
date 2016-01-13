@@ -4,6 +4,7 @@ dependency 'omnibus-ctl'
 dependency 'bundler'
 dependency 'chef-marketplace-gem'
 dependency 'chef-marketplace-cookbooks'
+dependency 'runit'
 
 source path: "#{project.files_path}/#{name}-commands"
 
@@ -12,14 +13,9 @@ build do
       dest: "#{install_dir}/bin/#{name}",
       mode: 0755,
       vars: {
-        install_dir: install_dir,
-        project_name: project.name
+        embedded_bin: "#{install_dir}/embedded/bin",
+        embedded_service: "#{install_dir}/embedded/service"
       }
-
-  erb source: 'omnibus-addon-ctl.erb',
-      dest: "#{install_dir}/embedded/bin/omnibus-addon-ctl",
-      mode: 0755,
-      vars: { install_dir: install_dir }
 
   sync project_dir, "#{install_dir}/embedded/service/chef-marketplace-ctl/"
 
