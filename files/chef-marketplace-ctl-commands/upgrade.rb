@@ -1,6 +1,6 @@
 require 'json'
 
-add_command_under_category 'upgrade', 'Configuration', 'Upgrade or install Chef software', 2 do
+add_command_under_category 'upgrade', 'Maintenance', 'Upgrade or install Chef software', 2 do
   config = {
     'chef-marketplace' => {
       'role' => 'aio',

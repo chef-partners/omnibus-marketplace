@@ -12,7 +12,6 @@ default['chef-marketplace'].tap do |m|
   m['license_count'] = 5
   m['platform'] = 'aws'
   m['user'] = 'ec2-user'
-  m['publishing']['enabled'] = false
   m['api_ssl_port'] = 443
   m['reporting']['cron']['enabled'] = true
   m['reporting']['cron']['expression'] = '0 0 * * *'

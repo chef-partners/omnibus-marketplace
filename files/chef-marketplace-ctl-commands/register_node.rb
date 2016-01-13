@@ -1,6 +1,6 @@
 require 'highline/import'
 
-add_command_under_category 'register-node', 'Configuration', 'Register node with Chef to enable support', 2 do
+add_command_under_category 'register-node', 'Setup', 'Register node with Chef to enable support', 2 do
   config = {
     'chef-marketplace' => {
       'registration' => {

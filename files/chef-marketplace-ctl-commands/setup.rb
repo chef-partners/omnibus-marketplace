@@ -1,6 +1,6 @@
 require 'marketplace/setup'
 
-add_command_under_category 'setup', 'Configuration', 'Set up the Chef Server Marketplace Appliance', 2 do
+add_command_under_category 'setup', 'Setup', 'Set up the Chef Server Marketplace Appliance', 2 do
   options = OpenStruct.new
   options.agree_to_eula = false
   options.register_node = false
