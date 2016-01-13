@@ -29,7 +29,7 @@ based and the file should be located at `/etc/chef-marketplace/marketplace.rb`
 
 ** Configuration is required to enable the chef-marketplace plugin: **
 * The `role` **_must_** be configured in the `marketplace.rb` file
-* The `topology` ** _must_** be set to `chef-marketplace` in the
+* The `topology` **_must_** be set to `chef-marketplace` in the
   `chef-server.rb` configuration file
 
 #### Example Server Config
@@ -87,7 +87,6 @@ reporting.cron.month = 'date +%m'
 reckoner.enable = true
 
 # Set the ec2 product code for the ec2 updater
-reckoner.enable = true
 reckoner.product_code = 'XXXXXXXXXXXXXXXXXXXX'
 ```
 
