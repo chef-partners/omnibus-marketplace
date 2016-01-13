@@ -63,11 +63,6 @@ user 'ec2-user'
 # Changing this setting will disable certain features
 disable_outboud_traffic true
 
-# If the instance is going to be bundled/published into the cloud marketplace
-# this option will run will enable security recipe to make sure we don't leave
-# around sensitive data.
-publishing['enabled'] = true
-
 # Configure which port the Analytics UI binds to
 analytics['ssl_port'] = 8443
 
@@ -104,6 +99,7 @@ Manage, Reporting and Analytics with user provided configuration options.
 * `-y, --yes` Agree to all setup questions
 * `--register` Agree to register the node with Chef Software
 * `--eula` Agree to Chef Software's End User License Agreement
+* `--preconfigure` Preconfigure the requires services
 * `-h, --help` Display help information
 
 ### Reconfigure
@@ -156,6 +152,12 @@ setup command or via the WebUI during the Chef Compliance setup.
 * `-e, --email` The support contacts email address
 * `-o, --organization` The name of the organization the contact represents
 * `-s, --server` The address of the marketplace registration API
+
+### Prepare For Publishing
+`chef-marketplace-ctl prepare-for-publishing` Will setup the node for Marketplace
+publishing.  This ensures all cloud-init and ssh packages are installed and
+configured.  It also removes all default ssh keys, chef package config, default
+state, and shell history.
 
 ### Test
 `chef-marketplace-ctl test` Perform's unit and functional tests to validate a

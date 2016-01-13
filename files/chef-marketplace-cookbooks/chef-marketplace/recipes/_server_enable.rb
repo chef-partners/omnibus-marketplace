@@ -1,5 +1,3 @@
-include_recipe 'chef-marketplace::_common_enable'
-
 # Add chef-server-ctl marketplace-setup shim for backwards compatability
 directory '/opt/opscode/embedded/service/omnibus-ctl' do
   owner 'root'

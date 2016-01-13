@@ -11,6 +11,7 @@
 * Add chef-marketplace-ctl register-node command
 * Add --preconfigure switch to chef-marketplace-ctl setup
 * Use standard omnibus-ctl to get service commands
+* Add chef-marketplace-ctl prepare-for-publishing command
 
 ## chef-marketplace-gem
 * Add Marketplace Api client
@@ -23,6 +24,7 @@
 * Add marketplace_api config context to marketplace.rb
 * Add preconfigure recipes
 * Add reckoner and runit recipes
+* Restructure common, security, and publishing recipes for the new publish command
 
 # 0.0.4 (2015-11-09)
 ## omnibus-marketplace

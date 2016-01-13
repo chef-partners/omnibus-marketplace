@@ -62,11 +62,6 @@ class Marketplace
   # Set to true if you don't want to use outbound networks, eg: package mirrors
   default :disable_outboud_traffic, false
 
-  config_context :publishing do
-    # Prep the node for publishing
-    default :enabled, false
-  end
-
   config_context :security do
     # Force enable or disable the security recipe
     default :enabled, false
@@ -109,5 +104,13 @@ class Marketplace
 
   config_context :marketplace_api do
     default :address, 'https://marketplace.chef.io'
+  end
+
+  # Deprecated config options
+  def self.publishing
+    puts 'WARNING: The publishing config option is no longer used and will be removed in a future release'
+    puts 'WARNING: Please remove all references to it /etc/chef-marketplace/marketplace.rb'
+    @publishing ||= Mash.new
+    @publishing
   end
 end

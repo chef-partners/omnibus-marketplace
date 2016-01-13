@@ -88,34 +88,8 @@ class Marketplace
       node['chef-marketplace']['disable_outbound_traffic']
     end
 
-    # We only want to run the security in two scenarios:
-    #   1) Security is explicitly enabled
-    #   2) We're publishing for the first time
-    #
-    # We do this because the security recipe will blow away the SSH keys.
     def security_enabled?
-      if node['chef-marketplace'].attribute?('security') && node['chef-marketplace']['security']['enabled']
-        true
-      elsif currently_publishing?
-        true
-      else
-        false
-      end
-    end
-
-    # Is publishing enabled and we haven't published yet?
-    def currently_publishing?
-      publishing_enabled? && !previously_published?
-    end
-
-    def publishing_enabled?
-      node['chef-marketplace']['publishing']['enabled']
-    rescue NoMethodError
-      false
-    end
-
-    def previously_published?
-      node.attribute?('previous_run') && node['previous_run'].attribute?('publishing') && node['previous_run']['publishing']['enabled']
+      node['chef-marketplace'].attribute?('security') && node['chef-marketplace']['security']['enabled']
     end
 
     def chef_server_configured?
@@ -132,6 +106,8 @@ class Marketplace
 
     def flexible_spending_enabled?
       node['chef-marketplace']['reckoner']['enabled']
+    rescue NoMethodError
+      false
     end
 
     def manage_url
@@ -181,6 +157,7 @@ class Marketplace
         upgrade.rb
         trim_actions_db.rb
         register_node.rb
+        prepare_for_publishing.rb
       )
       disabled_commands = []
 

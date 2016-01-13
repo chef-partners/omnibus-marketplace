@@ -1,5 +1,3 @@
-include_recipe 'chef-marketplace::_common_enable'
-
 directory '/etc/chef-compliance' do
   owner 'root'
   group 'root'

@@ -1,5 +1,3 @@
-include_recipe 'chef-marketplace::_common_disable'
-
 directory '/opt/opscode/embedded/service/omnibus-ctl' do
   action :delete
 end

@@ -33,7 +33,7 @@ end
 
 package 'cloud-init' do
   action :install
-  only_if { mirrors_reachable? && currently_publishing? }
+  only_if { mirrors_reachable? }
 end
 
 directory '/var/lib/cloud/scripts/per-instance' do
@@ -75,6 +75,6 @@ package cron_package do
   only_if do
     (node['chef-marketplace']['reporting']['cron']['enabled'] ||
      node['chef-marketplace']['actions']['trimmer']['enabled']
-    ) && mirrors_reachable? && currently_publishing?
+    ) && mirrors_reachable?
   end
 end
