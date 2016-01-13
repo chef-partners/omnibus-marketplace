@@ -5,20 +5,24 @@
 * Update README.md
 * Use cloud-init to configure instances at boot time
 * 'preconfigure' marketplace images to make setup times shorter
+* Add reckoner
 
 ## chef-marketplace-ctl
 * Add chef-marketplace-ctl register-node command
 * Add --preconfigure switch to chef-marketplace-ctl setup
+* Use standard omnibus-ctl to get service commands
 
 ## chef-marketplace-gem
 * Add Marketplace Api client
 * Add Node registration to setup
 * Update setup to support preconfiguring
+* Add initial reckoner support
 
 ## chef-marketplace-cookbooks
 * Add node registration recipe
 * Add marketplace_api config context to marketplace.rb
 * Add preconfigure recipes
+* Add reckoner and runit recipes
 
 # 0.0.4 (2015-11-09)
 ## omnibus-marketplace

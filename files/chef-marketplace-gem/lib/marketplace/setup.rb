@@ -28,9 +28,9 @@ class Marketplace
       if options.preconfigure
         # Just configure software if we're preconfiguring
         configure_software
+        restart_reckoner
         return
       end
-      validate_payment
       validate_options
       ask_for_node_registration
       agree_to_eula
@@ -38,6 +38,7 @@ class Marketplace
       update_software
       configure_software unless preconfigured?
       create_default_users
+      restart_reckoner
       register_node
       redirect_user
     end
@@ -126,11 +127,8 @@ class Marketplace
       end
     end
 
-    # Some marketplaces have ways for the instance to determine if the instance
-    # is running a paid image.  At build time we'll drop a validatation file
-    # onto the filesystem that implements a class that will do the validations.
-    def validate_payment
-      Marketplace::Payment.validate if defined?(Marketplace::Payment)
+    def restart_reckoner
+      system('chef-marketplace-ctl restart reckoner')
     end
 
     def validate_options

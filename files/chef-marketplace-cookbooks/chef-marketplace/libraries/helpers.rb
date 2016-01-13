@@ -130,6 +130,10 @@ class Marketplace
       File.exist?('/etc/chef-compliance/chef-compliance-running.json')
     end
 
+    def flexible_spending_enabled?
+      node['chef-marketplace']['reckoner']['enabled']
+    end
+
     def manage_url
       "https://#{node['chef-marketplace']['api_fqdn']}"
     end

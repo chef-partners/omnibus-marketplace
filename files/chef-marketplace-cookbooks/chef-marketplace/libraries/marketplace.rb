@@ -48,6 +48,17 @@ class Marketplace
   # The default SSH user
   default :user, 'ec2-user'
 
+  # The reckoner billing daemon
+  config_context :reckoner do
+    default :enabled, false
+    default :free_node_count, 5
+
+    # AWS specific config
+    configurable :product_code
+    default :region, 'us-east-1'
+    default :usage_dimension, 'ProvisionedHosts'
+  end
+
   # Set to true if you don't want to use outbound networks, eg: package mirrors
   default :disable_outboud_traffic, false
 
