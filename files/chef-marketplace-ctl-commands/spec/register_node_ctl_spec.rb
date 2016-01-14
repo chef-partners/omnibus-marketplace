@@ -1,13 +1,14 @@
 require 'spec_helper'
 require 'shellwords'
 require 'json'
+require 'tempfile'
 
 describe 'chef-marketplace-ctl register-node' do
   let(:marketplace_ctl) { OmnibusCtlTest.new('register_node') }
   let(:omnibus_ctl) { marketplace_ctl.plugin }
   let(:process_success) { double('Process::Status', success?: true, exitstatus: 0) }
   let(:role) { 'aio' }
-  let(:register_json_file) { '/opt/chef-marketplace/embedded/cookbooks/register_node.json' }
+  let(:register_json_file) { Tempfile.new('register.json') }
   let(:register_json_config) do
     {
       'chef-marketplace' => {
@@ -24,24 +25,21 @@ describe 'chef-marketplace-ctl register-node' do
   end
 
   before do
-    allow(omnibus_ctl).to receive(:run_chef).and_return(process_success)
+    allow(omnibus_ctl).to receive(:run_chef_non_root).and_return(process_success)
     allow(File)
       .to receive(:exist?)
       .with('/etc/chef-marketplace/chef-marketplace-running.json')
       .and_return(false)
-    allow(File)
-      .to receive(:write)
-      .with(register_json_file, JSON.pretty_generate(register_json_config))
-      .and_return(true)
+    allow(Tempfile).to receive(:open).and_yield(register_json_file)
   end
 
   shared_examples 'a proper registration' do
     it 'writes the config json, converges the registration recipe, and exits properly' do
-      expect(File)
+      expect(register_json_file)
         .to receive(:write)
       expect(omnibus_ctl)
-        .to receive(:run_chef)
-        .with(register_json_file, '--lockfile /tmp/chef-client-register-node.lock')
+        .to receive(:run_chef_non_root)
+        .with(register_json_file.path, '--lockfile /tmp/chef-client-register-node.lock')
       expect { marketplace_ctl.execute(command) }
         .to raise_error(SystemExit) { |e| expect(e.status).to eq(0) }
     end
