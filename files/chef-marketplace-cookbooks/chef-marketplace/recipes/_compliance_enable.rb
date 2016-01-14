@@ -10,3 +10,11 @@ template '/etc/chef-compliance/chef-compliance.rb' do
   group 'root'
   action :create
 end
+
+file '/etc/sudoers.d/chef-compliance' do
+  source 'chef-compliance-sudoers'
+  owner 'root'
+  group 'root'
+  mode 0440
+  action :create
+end
