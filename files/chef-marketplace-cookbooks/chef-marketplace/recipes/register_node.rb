@@ -1,4 +1,10 @@
-include_recipe 'chef-marketplace::config'
+if File.exist?('/etc/chef-marketplace/marketplace.rb')
+  Marketplace.from_file('/etc/chef-marketplace/marketplace.rb')
+end
+
+node.consume_attributes('chef-marketplace' => Marketplace.save(false))
+
+determine_api_fqdn
 
 if outbound_traffic_disabled?
   Chef::Log.warn 'Skipping node registration because outbound traffic is disabled'

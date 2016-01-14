@@ -138,7 +138,7 @@ class Marketplace
       }
 
       vars.merge!(
-        compliance_url: role == 'compliance' ? manage_url : false,
+        compliance_url: role == 'compliance' ? "#{manage_url}/#/setup" : false,
         manage_url: role =~ /aio|server/ ? manage_url : false,
         analytics_url: role =~ /aio|analytics/ ? analytics_href : false
       ) unless security_enabled?
