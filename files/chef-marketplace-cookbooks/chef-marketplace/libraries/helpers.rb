@@ -34,6 +34,14 @@ class Marketplace
       Dir['/etc/sudoers.d/*']
     end
 
+    def our_sudoers
+      %w(chef-compliance)
+    end
+
+    def unexpected_sudoers
+      current_sudoers - our_sudoers
+    end
+
     def gecos
       case node['chef-marketplace']['platform']
       when 'aws' then 'Ec2 User'

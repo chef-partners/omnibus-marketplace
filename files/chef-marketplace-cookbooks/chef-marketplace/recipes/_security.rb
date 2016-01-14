@@ -39,7 +39,7 @@ system_ssh_keys.each do |key|
   end
 end
 
-current_sudoers.each do |sudo_user|
+unexpected_sudoers.each do |sudo_user|
   file sudo_user do
     action :delete
   end

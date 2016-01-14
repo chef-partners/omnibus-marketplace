@@ -1,0 +1,3 @@
+Cmnd_Alias REGISTER = /usr/bin/chef-marketplace-ctl register-node *
+chef-compliance ALL=(root) NOPASSWD: REGISTER
+Defaults!REGISTER !requiretty
