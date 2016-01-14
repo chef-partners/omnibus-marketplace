@@ -1,6 +1,18 @@
 require 'highline/import'
+require 'tempfile'
 
 add_command_under_category 'register-node', 'Setup', 'Register node with Chef to enable support', 2 do
+  def run_chef_non_root(dna, args = '')
+    FileUtils.mkdir_p('/tmp/chef-marketplace/local-mode-cache/nodes')
+    FileUtils.rm_rf('/tmp/chef-marketplace/local-mode-cache/nodes/*')
+    cmd = "#{base_path}/embedded/bin/chef-client -z"
+    cmd << "-c #{base_path}/embedded/cookbooks/non_root_solo.rb -j #{dna}"
+    cmd << " #{args}" unless args.empty?
+    status = run_command(cmd)
+    FileUtils.rm_rf('/tmp/chef-marketplace/local-mode-cache/')
+    status
+  end
+
   config = {
     'chef-marketplace' => {
       'registration' => {
@@ -65,8 +77,11 @@ add_command_under_category 'register-node', 'Setup', 'Register node with Chef to
 
   puts 'Registering the node with Chef Software...'
 
-  register_json_file = '/opt/chef-marketplace/embedded/cookbooks/register_node.json'
-  File.write(register_json_file, JSON.pretty_generate(config))
-  status = run_chef(register_json_file, '--lockfile /tmp/chef-client-register-node.lock')
-  status.success? ? exit(0) : exit(1)
+  Tempfile.open('register_node.json') do |file|
+    file.write(JSON.pretty_generate(config))
+    file.rewind
+    @status = run_chef_non_root(file.path, '--lockfile /tmp/chef-client-register-node.lock')
+  end
+
+  @status.success? ? exit(0) : exit(1)
 end

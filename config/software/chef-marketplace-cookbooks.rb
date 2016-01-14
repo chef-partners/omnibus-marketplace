@@ -23,4 +23,7 @@ build do
 
   erb source: 'solo.rb.erb',
       dest: "#{install_dir}/embedded/cookbooks/solo.rb"
+
+  erb source: 'non_root_solo.rb.erb',
+      dest: "#{install_dir}/embedded/cookbooks/non_root_solo.rb"
 end

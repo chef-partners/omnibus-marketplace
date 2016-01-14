@@ -5,6 +5,13 @@ directory '/etc/chef-marketplace' do
   action :create
 end
 
+file '/etc/chef-marketplace/marketplace.rb' do
+  owner 'root'
+  group 'root'
+  mode '0644'
+  action :create_if_missing
+end
+
 if File.exist?('/etc/chef-marketplace/marketplace.rb')
   Marketplace.from_file('/etc/chef-marketplace/marketplace.rb')
 end
