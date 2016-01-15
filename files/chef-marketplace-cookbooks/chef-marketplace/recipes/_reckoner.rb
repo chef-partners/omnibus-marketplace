@@ -1,6 +1,6 @@
-if flexible_spending_enabled?
-  include_recipe 'chef-marketplace::_runit_prepare'
+include_recipe 'chef-marketplace::_runit_prepare'
 
+if flexible_spending_enabled?
   directory '/var/opt/chef-marketplace/reckoner/etc' do
     owner 'opscode'
     group 'opscode'
