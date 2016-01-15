@@ -38,6 +38,9 @@ class Marketplace
   # How many nodes are licensed
   default :license_count, 5
 
+  # Licensing model, eg: 'fixed' or 'flexible'
+  default :license_type, 'fixed'
+
   # Which role the marketplace addition is to play:
   # 'server', 'aio', 'analytics', 'compliance'
   default :role, 'server'

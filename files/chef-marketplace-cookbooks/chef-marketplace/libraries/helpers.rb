@@ -104,8 +104,8 @@ class Marketplace
       File.exist?('/etc/chef-compliance/chef-compliance-running.json')
     end
 
-    def flexible_spending_enabled?
-      node['chef-marketplace']['reckoner']['enabled']
+    def reckoner_enabled?
+      node['chef-marketplace']['license_type'] == 'flexible' || node['chef-marketplace']['reckoner']['enabled']
     rescue NoMethodError
       false
     end

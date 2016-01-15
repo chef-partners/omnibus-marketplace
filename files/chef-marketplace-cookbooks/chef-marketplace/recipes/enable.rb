@@ -1,4 +1,5 @@
 include_recipe 'chef-marketplace::config'
+
 include_recipe 'chef-marketplace::_register_plugin'
 
 # 'server', 'analytics', 'aio', 'compliance'
@@ -12,3 +13,10 @@ include_recipe 'chef-marketplace::_reckoner'
 
 # Setup omnibus-ctl commands
 include_recipe 'chef-marketplace::_omnibus_commands'
+
+motd '50-chef-marketplace-appliance' do
+  source 'motd.erb'
+  cookbook 'chef-marketplace'
+  variables motd_variables
+  action motd_action
+end

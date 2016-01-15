@@ -1,11 +1,11 @@
 # Chef Marketplace Changelog
 
-# 0.0.5 (UNRELEASED)
+# 0.0.5 (2016-01-15)
 ## omnibus-marketplace
 * Update README.md
 * Use cloud-init to configure instances at boot time
 * 'preconfigure' marketplace images to make setup times shorter
-* Add reckoner
+* Add reckoner billing daemon and support for Flexible Consumption
 
 ## chef-marketplace-ctl
 * Add chef-marketplace-ctl register-node command

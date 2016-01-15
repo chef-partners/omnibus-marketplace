@@ -28,6 +28,7 @@ class Marketplace
       if options.preconfigure
         # Just configure software if we're preconfiguring
         configure_software
+        reconfigure(:marketplace)
         restart_reckoner
         return
       end

@@ -3,13 +3,6 @@ when 'oracle'
   include_recipe 'chef-marketplace::_oracle_common_enable'
 end
 
-motd '50-chef-marketplace-appliance' do
-  source 'motd.erb'
-  cookbook 'chef-marketplace'
-  variables motd_variables
-  action motd_action
-end
-
 directory '/etc/chef/ohai/hints' do
   owner 'root'
   group 'root'

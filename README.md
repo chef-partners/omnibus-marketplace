@@ -50,6 +50,7 @@ documentation.url = 'http://myorg.com/docs'
 
 # The amount of nodes this Chef server is licensed for
 license_count '25'
+license_type 'fixed'
 
 # Which role the instance is supposed to play
 role 'aio' # or 'server'

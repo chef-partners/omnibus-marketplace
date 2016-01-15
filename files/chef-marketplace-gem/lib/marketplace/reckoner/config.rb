@@ -6,8 +6,9 @@ class Marketplace
       extend Mixlib::Config
 
       config_context :license do
-        configurable :count
-        configurable :free
+        default :free, 0
+        default :count, 0
+        default :type, 'fixed'
       end
 
       config_context :updater do

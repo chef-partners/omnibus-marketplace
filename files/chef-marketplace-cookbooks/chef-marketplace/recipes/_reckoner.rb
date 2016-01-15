@@ -1,6 +1,6 @@
 include_recipe 'chef-marketplace::_runit_prepare'
 
-if flexible_spending_enabled?
+if reckoner_enabled?
   directory '/var/opt/chef-marketplace/reckoner/etc' do
     owner 'opscode'
     group 'opscode'
@@ -18,7 +18,6 @@ if flexible_spending_enabled?
   end
 
   template '/var/opt/chef-marketplace/reckoner/etc/reckoner.rb' do
-    # TODO: we need to pass 'user' and 'password' db variables for compliance
     source 'reckoner.rb.erb'
     owner 'root'
     group 'root'
