@@ -28,7 +28,7 @@ class Marketplace
 
         def init(opts = {})
           @db = Sequel.postgres(
-            'compliance',
+            'chef_compliance',
             host: opts[:host] || Marketplace::Reckoner::Config['db']['host'],
             port: opts[:port] || Marketplace::Reckoner::Config['db']['port'],
             user: opts[:user] || Marketplace::Reckoner::Config['db']['user'],

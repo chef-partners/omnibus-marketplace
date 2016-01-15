@@ -2,6 +2,7 @@ name 'chef-marketplace-gem'
 
 dependency 'ruby'
 dependency 'bundler'
+dependency 'pg-gem'
 
 source path: "#{project.files_path}/#{name}"
 
@@ -11,6 +12,7 @@ build do
   delete 'chef-marketplace-*.gem'
 
   gem 'build chef-marketplace.gemspec', env: env
+
   gem 'install chef-marketplace-*.gem --without development', env: env
   gem "install chef-marketplace-*.gem -i #{install_dir}/embedded/service/gem/ruby/2.2.0 --without development", env: env
 

@@ -19,6 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'sequel'
+  spec.add_dependency 'pg'
   spec.add_dependency 'highline'
   spec.add_dependency 'chef'
   spec.add_dependency 'aws-sdk'
