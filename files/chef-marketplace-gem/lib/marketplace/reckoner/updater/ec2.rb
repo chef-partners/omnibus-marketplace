@@ -13,7 +13,7 @@ class Marketplace
           @usage_dimension = opts[:usage_dimension] || Marketplace::Reckoner::Config['aws']['usage_dimension']
           @free_node_count = opts[:free_node_count] || Marketplace::Reckoner::Config['license']['free'] || 0
           @credentails = load_credentials(opts)
-          @client = Aws::MeteringService::Client.new(region: @region)
+          @client = Aws::MarketplaceMetering::Client.new(region: @region)
         end
 
         def update(count)

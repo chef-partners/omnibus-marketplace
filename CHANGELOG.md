@@ -1,5 +1,9 @@
 # Chef Marketplace Changelog
 
+# 0.0.5 (UNRELEASED)
+## chef-marketplace-gem
+* Update AWS SDK marketplace metering API specification
+
 # 0.0.5 (2016-01-15)
 ## omnibus-marketplace
 * Update README.md

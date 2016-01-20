@@ -1,16 +1,15 @@
 {
   "version":"2.0",
   "metadata":{
-    "apiVersion":"2015-11-17",
-    "endpointPrefix":"fcp",
+    "apiVersion":"2016-01-14",
+    "endpointPrefix":"metering.marketplace",
     "jsonVersion":"1.1",
-    "serviceFullName":"AWSMarketplace Metering Service",
+    "serviceFullName":"AWSMarketplace Metering",
     "signatureVersion":"v4",
     "signingName":"aws-marketplace",
     "targetPrefix":"AWSMPMeteringService",
     "protocol":"json"
   },
-  "documentation":"https://w.amazon.com/index.php/AWSMarketplace/FlexibleConsumptionPricing",
   "operations":{
     "MeterUsage":{
       "name":"MeterUsage",
@@ -43,7 +42,7 @@
           "exception":true
         },
         {
-          "shape":"TooManyRequestsException",
+          "shape":"ThrottlingException",
           "exception":true
         }
       ]
@@ -100,7 +99,7 @@
     "MeterUsageResult":{
       "type":"structure",
       "members":{
-        "ResponseId":{"shape":"String"}
+        "MeteringRecordId":{"shape":"String"}
       }
     },
     "ProductCode":{
@@ -109,15 +108,15 @@
       "max":255
     },
     "String":{"type":"string"},
-    "Timestamp":{"type":"timestamp"},
-    "TimestampOutOfBoundsException":{
+    "ThrottlingException":{
       "type":"structure",
       "members":{
         "message":{"shape":"errorMessage"}
       },
       "exception":true
     },
-    "TooManyRequestsException":{
+    "Timestamp":{"type":"timestamp"},
+    "TimestampOutOfBoundsException":{
       "type":"structure",
       "members":{
         "message":{"shape":"errorMessage"}
@@ -135,7 +134,5 @@
       "max":10000
     },
     "errorMessage":{"type":"string"}
-  },
-  "examples":{
   }
 }
