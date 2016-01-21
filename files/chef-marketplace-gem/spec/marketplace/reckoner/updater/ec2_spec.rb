@@ -6,7 +6,7 @@ require 'time'
 describe Marketplace::Reckoner::Updater::Ec2 do
   subject { described_class.new }
 
-  let(:usage_meter) { double('Aws::MeteringService::Client') }
+  let(:usage_meter) { double('Aws::MarketplaceMetering::Client') }
   let(:free_node_count) { 5 }
   let(:time) { Time.parse('2016-01-12 23:04:02 UTC') }
 
@@ -18,7 +18,7 @@ describe Marketplace::Reckoner::Updater::Ec2 do
     Marketplace::Reckoner::Config['updater']['driver'] = 'ec2'
     Marketplace::Reckoner::Config['license']['free'] = free_node_count
 
-    allow(Aws::MeteringService::Client).to receive(:new).with(region: 'us-west-1').and_return(usage_meter)
+    allow(Aws::MarketplaceMetering::Client).to receive(:new).with(region: 'us-west-1').and_return(usage_meter)
     allow(Time).to receive_message_chain(:now, :utc).and_return(time)
     allow(subject).to receive(:load_credentials).and_return(true)
   end
