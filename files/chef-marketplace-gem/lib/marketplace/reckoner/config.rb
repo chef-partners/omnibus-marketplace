@@ -37,7 +37,7 @@ class Marketplace
 
       config_context :aws do
         default :region, 'us-east-1'
-        default :usage_dimension, 'ProvisionedHosts'
+        default :usage_dimension, 'ChefNodes'
 
         configurable :product_code
       end

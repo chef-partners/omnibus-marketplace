@@ -1,8 +1,10 @@
 # Chef Marketplace Changelog
 
-# 0.0.5 (UNRELEASED)
+# 0.0.6 (UNRELEASED)
 ## chef-marketplace-gem
 * Update AWS SDK marketplace metering API specification
+* Update Reckoner usage dimensions for AIO and Compliance types
+* Please Rubocop
 
 # 0.0.5 (2016-01-15)
 ## omnibus-marketplace

@@ -110,6 +110,14 @@ class Marketplace
       false
     end
 
+    def set_reckoner_usage_dimension
+      if node['chef-marketplace']['role'] =~ /aio|server/
+        node.set['chef-marketplace']['reckoner']['usage_dimension'] = 'ChefNodes'
+      elsif node['chef-marketplace']['role'] == 'compliance'
+        node.set['chef-marketplace']['reckoner']['usage_dimension'] = 'ComplianceNodes'
+      end
+    end
+
     def manage_url
       "https://#{node['chef-marketplace']['api_fqdn']}"
     end
@@ -119,29 +127,25 @@ class Marketplace
     end
 
     def motd_variables
-      role = node['chef-marketplace']['role']
-      case role
-      when 'server', 'aio'
-        role_name = 'Chef Server'
-        analytics_href = analytics_url
-      when 'analytics'
-        role_name = 'Chef Analytics'
-        analytics_href = manage_url
-      when 'compliance'
-        role_name = 'Chef Compliance'
-      end
-
       vars = {
-        role_name: role_name,
-        support_email: node['chef-marketplace']['support']['email'],
-        doc_url: node['chef-marketplace']['documentation']['url']
+        doc_url: node['chef-marketplace']['documentation']['url'],
+        support_email: node['chef-marketplace']['support']['email']
       }
 
-      vars.merge!(
-        compliance_url: role == 'compliance' ? "#{manage_url}/#/setup" : false,
-        manage_url: role =~ /aio|server/ ? manage_url : false,
-        analytics_url: role =~ /aio|analytics/ ? analytics_href : false
-      ) unless security_enabled?
+      case node['chef-marketplace']['role']
+      when 'server', 'aio'
+        vars[:role_name] = 'Chef Server'
+        unless security_enabled?
+          vars[:analytics_href] = analytics_url
+          vars[:manage_url] = manage_url
+        end
+      when 'analytics'
+        vars[:role_name] = 'Chef Analytics'
+        vars[:analytics_href] = manage_url unless security_enabled?
+      when 'compliance'
+        vars[:role_name] = 'Chef Compliance'
+        vars[:compliance_url] = "#{manage_url}/#/setup" unless security_enabled?
+      end
 
       vars
     end
