@@ -39,6 +39,12 @@ template '/etc/opscode/chef-server.rb' do
   action :create_if_missing
 end
 
+directory '/etc/chef-manage' do
+  owner 'root'
+  group 'root'
+  action :create
+end
+
 file '/etc/chef-manage/manage.rb' do
   owner 'root'
   group 'root'
