@@ -59,7 +59,7 @@ class Marketplace
     # AWS specific config
     configurable :product_code
     default :region, 'us-east-1'
-    default :usage_dimension, 'ProvisionedHosts'
+    default :usage_dimension, 'ChefNodes'
   end
 
   # Set to true if you don't want to use outbound networks, eg: package mirrors

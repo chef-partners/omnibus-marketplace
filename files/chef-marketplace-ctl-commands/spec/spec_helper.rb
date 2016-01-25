@@ -1,6 +1,6 @@
 # Add the gem source to the load path for the specs
 lib = File.expand_path('../../../chef-marketplace-gem/lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib) if File.directory?(lib)
+$LOAD_PATH.unshift(lib) if File.directory?(lib) && !$LOAD_PATH.include?(lib)
 
 require 'rspec'
 require 'omnibus-ctl'

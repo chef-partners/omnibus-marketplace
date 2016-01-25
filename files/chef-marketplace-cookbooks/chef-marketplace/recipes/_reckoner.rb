@@ -1,5 +1,7 @@
 include_recipe 'chef-marketplace::_runit_prepare'
 
+set_reckoner_usage_dimension
+
 if reckoner_enabled?
   directory '/var/opt/chef-marketplace/reckoner/etc' do
     owner 'opscode'

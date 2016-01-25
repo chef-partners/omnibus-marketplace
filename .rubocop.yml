@@ -17,7 +17,7 @@ Metrics/CyclomaticComplexity:
 Metrics/PerceivedComplexity:
   Enabled: false
 Metrics/AbcSize:
-  Max: 40
+  Max: 50
 Style/GuardClause:
   Enabled: false
 Style/ClassAndModuleChildren:

@@ -55,6 +55,6 @@ ruby_block 'register node' do
 
     client = Marketplace::ApiClient.new(params['user'].delete('address'))
     res = client.post('/nodes/register', params)
-    fail res.message unless (200...400).include?(res.code.to_i)
+    fail res.message unless (200...400).cover?(res.code.to_i)
   end
 end
