@@ -105,7 +105,7 @@ class Marketplace
     end
 
     def reckoner_enabled?
-      node['chef-marketplace']['license_type'] == 'flexible' || node['chef-marketplace']['reckoner']['enabled']
+      node['chef-marketplace']['license']['type'] == 'flexible' || node['chef-marketplace']['reckoner']['enabled']
     rescue NoMethodError
       false
     end

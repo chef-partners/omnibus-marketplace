@@ -36,7 +36,12 @@ ruby_block 'register node' do
     # User info gets pulled in from chef-marketplace-ctl register-node
     params['user'] = node['chef-marketplace']['registration'].to_hash
 
-    params['node']['license'] = node['chef-marketplace']['license_count'].to_s
+    params['node']['license'] =
+      if node['chef-marketplace']['license']['type'] == 'flexible'
+        'flexible'
+      else
+        node['chef-marketplace']['license']['count'].to_s
+      end
     params['node']['platform'] = node['chef-marketplace']['platform']
     params['node']['role'] = node['chef-marketplace']['role']
     params['node']['platform_uuid'] =
