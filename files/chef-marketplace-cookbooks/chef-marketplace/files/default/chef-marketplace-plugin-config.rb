@@ -4,10 +4,10 @@ gen_api_fqdn = lambda do
 
     api_fqdn marketplace['api_fqdn']
     license['nodes'] =
-      if marketplace['license_type'] == 'flexible'
+      if marketplace['license']['type'] == 'flexible'
         999_999_999
       else
-        marketplace['license_count']
+        marketplace['license']['count']
       end
 
     if marketplace['role'] == 'aio'

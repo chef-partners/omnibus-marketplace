@@ -35,11 +35,16 @@ class Marketplace
   default :api_fqdn, nil
   default :api_ssl_port, 443
 
-  # How many nodes are licensed
-  default :license_count, 5
+  config_context :license do
+    # The maximum number of allowed nodes
+    default :count, 5
 
-  # Licensing model, eg: 'fixed' or 'flexible'
-  default :license_type, 'fixed'
+    # The number of nodes that are not billable
+    default :free_node_count, 5
+
+    # Licensing model, eg: 'fixed' or 'flexible'
+    default :type, 'fixed'
+  end
 
   # Which role the marketplace addition is to play:
   # 'server', 'aio', 'analytics', 'compliance'
@@ -54,7 +59,6 @@ class Marketplace
   # The reckoner billing daemon
   config_context :reckoner do
     default :enabled, false
-    default :free_node_count, 5
 
     # AWS specific config
     configurable :product_code
@@ -115,5 +119,17 @@ class Marketplace
     puts 'WARNING: Please remove all references to it /etc/chef-marketplace/marketplace.rb'
     @publishing ||= Mash.new
     @publishing
+  end
+
+  def self.license_count(count)
+    puts 'WARNING: The license_count config option is no longer used and will be removed in a future release'
+    puts 'WARNING: Please modify it to license.count in /etc/chef-marketplace/marketplace.rb'
+    license['count'] = count
+  end
+
+  def self.license_type(type)
+    puts 'WARNING: The license_type config option is no longer used and will be removed in a future release'
+    puts 'WARNING: Please modify it to license.type in /etc/chef-marketplace/marketplace.rb'
+    license['type'] = type
   end
 end

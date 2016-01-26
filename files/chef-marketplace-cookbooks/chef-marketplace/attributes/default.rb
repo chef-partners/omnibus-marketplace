@@ -9,7 +9,9 @@ default['chef-marketplace'].tap do |m|
   m['support']['email'] = 'aws@chef.io'
   m['documentation']['url'] = 'https://docs.chef.io/aws_marketplace.html'
   m['role'] = 'server'
-  m['license_count'] = 5
+  m['license']['count'] = 5
+  m['license']['type'] = 'fixed'
+  m['license']['free_node_count'] = 5
   m['platform'] = 'aws'
   m['user'] = 'ec2-user'
   m['api_ssl_port'] = 443
@@ -33,7 +35,6 @@ default['chef-marketplace'].tap do |m|
   m['reckoner']['log_rotation']['file_maxbytes'] = 104_857_600
   m['reckoner']['log_rotation']['num_to_keep'] = 10
   # Reckoner defaults
-  m['reckoner']['free_node_count'] = 0
   m['reckoner']['region'] = 'us-east-1'
   m['reckoner']['usage_dimension'] = 'ProvisionedHosts'
 end
