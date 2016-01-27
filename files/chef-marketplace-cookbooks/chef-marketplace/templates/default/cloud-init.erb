@@ -36,7 +36,9 @@ cloud_config_modules:
  - package-update-upgrade-install
  - timezone
  - chef
+<% if @platform == 'aws' %>
  - disable-ec2-metadata
+<% end %>
  - runcmd
 
 cloud_final_modules:
@@ -51,6 +53,7 @@ cloud_final_modules:
  - power-state-change
 
 system_info:
+<% unless @platform == 'gce' %>
   default_user:
     name: <%= @default_user %>
     lock_passwd: true
@@ -58,6 +61,7 @@ system_info:
     groups: [wheel, adm]
     sudo: ["ALL=(ALL) NOPASSWD:ALL"]
     shell: /bin/bash
+<% end %>
   distro: rhel
   paths:
     cloud_dir: /var/lib/cloud

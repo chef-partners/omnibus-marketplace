@@ -11,7 +11,7 @@ directory '/etc/chef/ohai/hints' do
   action :create
 end
 
-file "etc/chef/ohai/hints/#{node['chef-marketplace']['platform']}.json" do
+file "/etc/chef/ohai/hints/#{node['chef-marketplace']['platform']}.json" do
   owner 'root'
   group 'root'
   mode '0755'
@@ -58,7 +58,8 @@ template '/etc/cloud/cloud.cfg' do
   cookbook 'chef-marketplace'
   variables(
     default_user: node['chef-marketplace']['user'],
-    gecos: gecos
+    gecos: gecos,
+    platform: node['chef-marketplace']['platform']
   )
   action :create
 end
