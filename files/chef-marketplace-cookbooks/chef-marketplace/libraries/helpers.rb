@@ -129,19 +129,20 @@ class Marketplace
     def motd_variables
       vars = {
         doc_url: node['chef-marketplace']['documentation']['url'],
-        support_email: node['chef-marketplace']['support']['email']
+        support_email: node['chef-marketplace']['support']['email'],
+        role: node['chef-marketplace']['role']
       }
 
       case node['chef-marketplace']['role']
       when 'server', 'aio'
         vars[:role_name] = 'Chef Server'
         unless security_enabled?
-          vars[:analytics_href] = analytics_url
+          vars[:analytics_url] = analytics_url
           vars[:manage_url] = manage_url
         end
       when 'analytics'
         vars[:role_name] = 'Chef Analytics'
-        vars[:analytics_href] = manage_url unless security_enabled?
+        vars[:analytics_url] = manage_url unless security_enabled?
       when 'compliance'
         vars[:role_name] = 'Chef Compliance'
         vars[:compliance_url] = "#{manage_url}/#/setup" unless security_enabled?

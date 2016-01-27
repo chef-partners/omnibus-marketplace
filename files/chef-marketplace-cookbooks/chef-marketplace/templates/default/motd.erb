@@ -17,10 +17,15 @@ ________/\\\\\\\\\__/\\\________/\\\__/\\\\\\\\\\\\\\\__/\\\\\\\\\\\\\\\_
 
         Welcome to the <%= @role_name %> Marketplace Appliance!
 
+<% if @role == 'compliance' %>
+If this your first time logging in you'll need to set up Chef Compliance:
+<%= @compliance_url %>
+<% else %>
 If this your first time logging in you'll need to set up <%= @role_name %> by
 running the following command:
 
 sudo chef-marketplace-ctl setup
+<% end -%>
 
 Read Chef documentation: <%= @doc_url %>
 Email the Chef support team: <%= @support_email %>
