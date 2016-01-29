@@ -203,7 +203,7 @@ class Marketplace
           when 'gce'
             node['cloud_v2']['public_ipv4']
           when 'azure'
-            node['cloud_v2']['public_hostname'] ? "#{node['cloud_v2']['public_hostname']}.cloudapp.net" : node['fqdn']
+            node['fqdn']
           else # aws, etc..
             node['cloud_v2']['public_hostname'] || node['cloud_v2']['local_hostname'] || node['fqdn']
           end
