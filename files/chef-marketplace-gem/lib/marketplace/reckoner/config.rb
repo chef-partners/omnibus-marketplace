@@ -36,7 +36,6 @@ class Marketplace
       end
 
       config_context :aws do
-        default :region, 'us-east-1'
         default :usage_dimension, 'ChefNodes'
 
         configurable :product_code

@@ -16,7 +16,10 @@ syslog_fix_perms: ~
 
 cloud_init_modules:
  - migrator
+ <% if node['platform'] == 'ubuntu' %>
  - seed-random
+ - ca-certs
+ <% end %>
  - bootcmd
  - write-files
  - growpart
@@ -24,7 +27,6 @@ cloud_init_modules:
  - set-hostname
  - update-hostname
  - update-etc-hosts
- - ca-certs
  - rsyslog
  - users-groups
  - ssh
@@ -32,33 +34,26 @@ cloud_init_modules:
 cloud_config_modules:
  <% if node['platform'] == 'ubuntu' %>
  - emit_upstart
- <% end %>
  - disk_setup
- - mounts
  - ssh-import-id
- - locale
- <% if @ssh_pwauth %>
- - set-passwords
- <% end %>
- <% if node['platform'] == 'ubuntu' %>
  - grub-dpkg
  - apt-pipelining
  - apt-configure
- <% end %>
+ - landscape
+ - byobu
+<% end %>
+ - mounts
+ - locale
+ - set-passwords
  <% if node['platform_family'] == 'rhel' %>
- - yum-configure
  - yum-add-repo
  <% end %>
  - package-update-upgrade-install
- - landscape
  - timezone
- - chef
  - disable-ec2-metadata
  - runcmd
- - byobu
 
 cloud_final_modules:
- - rightscale_userdata
  - scripts-per-once
  - scripts-per-boot
  - scripts-per-instance
@@ -107,3 +102,5 @@ system_info:
         primary: http://ports.ubuntu.com/ubuntu-ports
         security: http://ports.ubuntu.com/ubuntu-ports
   <% end %>
+
+#vim:syntax=yaml
