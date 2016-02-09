@@ -1,12 +1,13 @@
 # Chef Marketplace Changelog
 
-# 0.0.6 (UNRELEASED)
+# 0.0.6 (2016-02-09)
 ## omnibus-marketplace
 * Please Rubocop
 
 ## chef-marketplace-gem
 * Update AWS SDK marketplace metering API specification
 * Update Reckoner usage dimensions for AIO and Compliance types
+* Automatically detect AWS Region for Ec2 usage updater
 
 ## chef-marketplace-cookbooks
 * Update license config options for marketplace.rb
