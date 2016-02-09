@@ -1,4 +1,9 @@
-%w(openssh-clients openssh-server).each do |pkg|
+ssh_client_package = 'openssh-clients'
+ssh_client_package.gsub!(/s$/, '') if node['platform_family'] == 'debian'
+sshd_service_name = node['platform_family'] == 'rhel' ? 'sshd' : 'ssh'
+sshd_config_mode = node['platform_family'] == 'rhel' ? '0600' : '0644'
+
+[ssh_client_package, 'openssh-server'].each do |pkg|
   package pkg do
     action :install
     only_if { mirrors_reachable? }
@@ -7,12 +12,12 @@ end
 
 template '/etc/ssh/sshd_config' do
   source 'sshd-config.erb'
-  mode '0600'
+  mode sshd_config_mode
   owner 'root'
   group 'root'
 end
 
-service 'sshd' do
+service sshd_service_name do
   supports [:restart, :reload, :status]
   action [:enable, :start]
 end
@@ -26,6 +31,7 @@ current_user_directories.each do |usr, dir|
 
   user usr do
     action :lock
+    not_if { node['chef-marketplace']['platform'] == 'azure' }
   end
 
   file ::File.join(dir, '.bash_history') do

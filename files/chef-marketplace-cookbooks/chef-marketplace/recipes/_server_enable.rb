@@ -48,6 +48,7 @@ end
 file '/etc/chef-manage/manage.rb' do
   owner 'root'
   group 'root'
-  content 'disable_sign_up true'
-  action :create_if_missing
+  # TODO: enable the marketplace sign_up after it's released
+  #  content 'marketplace.sign_up.enabled = true'
+  action :create
 end

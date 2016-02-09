@@ -11,7 +11,9 @@
 end
 
 %w(chef-server-ctl chef-manage-ctl).each do |ctl_cmd|
-  execute "#{ctl_cmd} stop"
+  execute "#{ctl_cmd} stop" do
+    ignore_failure true
+  end
 end
 
 server_state_files.each do |state_file|

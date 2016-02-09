@@ -31,15 +31,32 @@ class Marketplace
     end
 
     def current_sudoers
-      Dir['/etc/sudoers.d/*']
+      Dir['/etc/sudoers.d/*'].delete_if { |entry| entry =~ /cloud-init/ }
     end
 
-    def gecos
+    def cloud_cfg_gecos
       case node['chef-marketplace']['platform']
       when 'aws' then 'Ec2 User'
+      when 'azure' then 'Ubuntu'
       when 'openstack' then 'OpenStack User'
       when 'oracle' then 'Oracle User'
       end
+    end
+
+    def cloud_cfg_default_user
+      node['chef-marketplace']['platform'] == 'azure' ? 'ubuntu' : node['chef-marketplace']['user']
+    end
+
+    def cloud_cfg_ssh_pwauth
+      node['chef-marketplace']['platform'] == 'azure' ? true : false
+    end
+
+    def cloud_cfg_locale_configfile
+      node['platform_family'] == 'rhel' ? '/etc/sysconfig/i18n' : '/etc/default/locale'
+    end
+
+    def cloud_cfg_distro
+      node['platform_family'] == 'rhel' ? 'rhel' : node['platform']
     end
 
     def cron_package
@@ -202,9 +219,7 @@ class Marketplace
           case node['cloud_v2']['provider']
           when 'gce'
             node['cloud_v2']['public_ipv4']
-          when 'azure'
-            node['cloud_v2']['public_hostname'] ? "#{node['cloud_v2']['public_hostname']}.cloudapp.net" : node['fqdn']
-          else # aws, etc..
+          else # aws, azure, etc..
             node['cloud_v2']['public_hostname'] || node['cloud_v2']['local_hostname'] || node['fqdn']
           end
         else

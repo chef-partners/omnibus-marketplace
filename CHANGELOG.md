@@ -10,6 +10,8 @@
 
 ## chef-marketplace-cookbooks
 * Update license config options for marketplace.rb
+* Update cookbooks for Ubuntu 14.04 support
+* Update cookbooks for Azure support
 
 # 0.0.5 (2016-01-15)
 ## omnibus-marketplace

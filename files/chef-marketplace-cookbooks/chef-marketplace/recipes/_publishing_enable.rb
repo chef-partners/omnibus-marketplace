@@ -54,13 +54,16 @@ directory '/etc/cloud' do
 end
 
 template '/etc/cloud/cloud.cfg' do
-  source 'cloud-init.erb'
+  source 'cloud.cfg.erb'
   cookbook 'chef-marketplace'
   variables(
-    default_user: node['chef-marketplace']['user'],
-    gecos: gecos,
-    platform: node['chef-marketplace']['platform']
+    default_user: cloud_cfg_default_user,
+    gecos: cloud_cfg_gecos,
+    ssh_pwauth: cloud_cfg_ssh_pwauth,
+    locale_configfile: cloud_cfg_locale_configfile,
+    distro: cloud_cfg_distro
   )
+  not_if { node['chef-marketplace']['platform'] == 'azure' }
   action :create
 end
 
