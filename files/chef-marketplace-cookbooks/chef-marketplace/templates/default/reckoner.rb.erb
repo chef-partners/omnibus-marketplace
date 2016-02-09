@@ -16,6 +16,5 @@ db.password = '<%= node['chef-compliance']['postgresql']['db_superuser_password'
 <% end %>
 <% if node['chef-marketplace']['platform'] == 'aws' %>
 aws.product_code = '<%= node['chef-marketplace']['reckoner']['product_code'] %>'
-aws.region = '<%= node['chef-marketplace']['reckoner']['region'] %>'
 aws.usage_dimension = '<%= node['chef-marketplace']['reckoner']['usage_dimension'] %>'
 <% end %>
