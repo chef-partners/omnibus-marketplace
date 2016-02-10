@@ -8,3 +8,4 @@ pkg/*
 bin/*
 files/**/cache/
 vendor/cookbooks
+files/chef-marketplace-gem/Gemfile.lock

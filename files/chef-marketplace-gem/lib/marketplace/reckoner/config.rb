@@ -12,6 +12,7 @@ class Marketplace
       end
 
       config_context :updater do
+        default :enabled, true
         default :driver, 'ec2'
       end
 
@@ -39,6 +40,24 @@ class Marketplace
         default :usage_dimension, 'ChefNodes'
 
         configurable :product_code
+      end
+
+      config_context :phone_home do
+        default :enabled, false
+        configurable :endpoint
+        configurable :platform
+
+        config_context :metrics do
+          default :daily, %w(
+            analytics_access_logs
+            chef_node_count
+            chef_nodes_per_org
+            chef_org_count
+            chef_user_count
+            erchef_crashes
+            manage_access_logs
+          )
+        end
       end
     end
   end

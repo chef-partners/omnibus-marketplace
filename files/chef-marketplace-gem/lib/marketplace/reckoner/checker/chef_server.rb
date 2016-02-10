@@ -22,6 +22,22 @@ class Marketplace
           api.get('license')['limit_exceeded']
         end
 
+        def user_count
+          api.get('users').count
+        end
+
+        def org_count
+          orgs.count
+        end
+
+        def orgs
+          api.get('organizations')
+        end
+
+        def org_node_count(org)
+          api.get("organizations/#{org}/nodes").count
+        end
+
         def reset!
           @api = nil
           init

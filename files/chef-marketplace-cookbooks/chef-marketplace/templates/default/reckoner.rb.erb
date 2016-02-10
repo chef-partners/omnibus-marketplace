@@ -1,3 +1,8 @@
+<% if node['chef-marketplace']['platform'] == 'aws' %>
+updater.enabled = true
+<% else %>
+updater.enabled = false
+<% end %>
 updater.driver = '<%= node['chef-marketplace']['platform'] == 'aws' ? 'ec2' : node['chef-marketplace']['platform'] %>'
 checker.driver = '<%= node['chef-marketplace']['role'] == 'aio' ? 'chef_server' : 'compliance' %>'
 license.count = <%= node['chef-marketplace']['license']['count'] %>
@@ -18,3 +23,21 @@ db.password = '<%= node['chef-compliance']['postgresql']['db_superuser_password'
 aws.product_code = '<%= node['chef-marketplace']['reckoner']['product_code'] %>'
 aws.usage_dimension = '<%= node['chef-marketplace']['reckoner']['usage_dimension'] %>'
 <% end %>
+
+# phone home configurations
+<% if node['chef-marketplace']['platform'] == 'gce' %>
+phone_home.enabled true
+<% else %>
+phone_home.enabled false
+<% end %>
+phone_home.endpoint 'https://0pg896lyqi.execute-api.us-east-1.amazonaws.com/test/eetee'
+phone_home.platform '<%= node['chef-marketplace']['platform'] %>'
+phone_home.metrics.daily %w(
+  analytics_access_logs
+  chef_node_count
+  chef_nodes_per_org
+  chef_org_count
+  chef_user_count
+  erchef_crashes
+  manage_access_logs
+)
