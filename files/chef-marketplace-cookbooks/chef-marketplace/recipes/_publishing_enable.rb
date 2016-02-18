@@ -75,3 +75,8 @@ package cron_package do
     ) && mirrors_reachable?
   end
 end
+
+package 'walinuxagent' do
+  action [:install, :upgrade]
+  only_if { node['chef-marketplace']['platform'] == 'azure' && mirrors_reachable? }
+end
