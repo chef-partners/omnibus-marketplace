@@ -78,10 +78,10 @@ directory '/var/opt/chef-marketplace' do
   recursive true
 end
 
-execute 'rm -rf /tmp/*' do
+bash 'rm -rf /tmp/*' do
   not_if { Dir['/tmp/*'].empty? }
 end
 
-execute 'rm -rf /var/log/*' do
+bash 'rm -rf /var/log/*' do
   not_if { Dir['/var/log/*'].empty? }
 end

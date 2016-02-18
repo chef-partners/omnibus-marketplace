@@ -7,11 +7,11 @@
 # in compliance with the cloud marketplace rules.
 
 %w(chef-server-ctl opscode-reporting-ctl chef-manage-ctl).each do |ctl_cmd|
-  execute "#{ctl_cmd} reconfigure"
+  bash "#{ctl_cmd} reconfigure"
 end
 
 %w(chef-server-ctl chef-manage-ctl).each do |ctl_cmd|
-  execute "#{ctl_cmd} stop" do
+  bash "#{ctl_cmd} stop" do
     ignore_failure true
   end
 end
@@ -29,6 +29,6 @@ server_state_directories.each do |state_dir|
   end
 end
 
-execute 'recreate server runit directories' do
+bash 'recreate server runit directories' do
   command 'mkdir -p /opt/{opscode,chef-manage}/{sv,init,service}'
 end
