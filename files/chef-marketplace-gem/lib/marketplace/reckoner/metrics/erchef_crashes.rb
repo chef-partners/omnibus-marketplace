@@ -3,11 +3,7 @@ require 'marketplace/reckoner/metrics/base'
 class Marketplace::Reckoner::Metrics
   class ErchefCrashes < LogParser
     def filenames
-      [
-        '/var/log/opscode/opscode-erchef/crash.log',
-        '/var/log/opscode/opscode-erchef/crash.log.0',
-        '/var/log/opscode/opscode-erchef/crash.log.1'
-      ]
+      '/var/log/opscode/opscode-erchef/crash.log*'
     end
 
     def metric_matchers

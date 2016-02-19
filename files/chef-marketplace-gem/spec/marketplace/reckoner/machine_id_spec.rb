@@ -10,14 +10,14 @@ describe Marketplace::Reckoner::MachineID do
 
   describe '#machine_uuid' do
     it 'returns the machine UUID' do
-      expect(tester).to receive(:machine_id_contents).and_return({ 'machine_uuid' => 'test_uuid' })
+      expect(tester).to receive(:machine_id_contents).and_return('machine_uuid' => 'test_uuid')
       expect(tester.machine_uuid).to eq('test_uuid')
     end
   end
 
   describe '#machine_salt' do
     it 'returns the machine salt' do
-      expect(tester).to receive(:machine_id_contents).and_return({ 'machine_salt' => 'test_salt' })
+      expect(tester).to receive(:machine_id_contents).and_return('machine_salt' => 'test_salt')
       expect(tester.machine_salt).to eq('test_salt')
     end
   end
@@ -39,7 +39,7 @@ describe Marketplace::Reckoner::MachineID do
       it 'generates a new one and returns the contents' do
         expect(tester).to receive(:machine_id_file).and_return('id_file')
         expect(File).to receive(:exist?).with('id_file').and_return(false)
-        expect(tester).to receive(:generate_machine_id).and_return({ 'key2' => 'value2' })
+        expect(tester).to receive(:generate_machine_id).and_return('key2' => 'value2')
 
         machine_id_contents = tester.machine_id_contents
         expect(machine_id_contents).to be_a(Hash)

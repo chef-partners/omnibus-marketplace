@@ -3,7 +3,7 @@ require 'marketplace/reckoner/metrics/log_parser'
 class Marketplace::Reckoner::Metrics
   class ManageAccessLogs < LogParser
     def filenames
-      '/var/log/opscode/nginx/access.log'
+      '/var/log/opscode/nginx/access.log*'
     end
 
     def metric_matchers
