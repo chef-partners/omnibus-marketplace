@@ -40,16 +40,16 @@ describe Marketplace::Reckoner::Eetee do
         allow(eetee).to receive(:stop_file_exists?).and_return(false)
       end
 
-      context 'when eetee is not disabled in the config' do
+      context 'when eetee is enabled in the config' do
         it 'returns false' do
-          allow(eetee).to receive(:disabled_in_config?).and_return(false)
+          allow(eetee).to receive(:enabled_in_config?).and_return(true)
           expect(eetee.disabled?).to eq(false)
         end
       end
 
       context 'when eetee is disabled in the config' do
         it 'returns true' do
-          allow(eetee).to receive(:disabled_in_config?).and_return(true)
+          allow(eetee).to receive(:enabled_in_config?).and_return(false)
           expect(eetee.disabled?).to eq(true)
         end
       end

@@ -64,6 +64,11 @@ class Marketplace
     configurable :product_code
     default :region, 'us-east-1'
     default :usage_dimension, 'ChefNodes'
+
+    # Phone Home
+    config_context :eetee do
+      configurable :endpoint
+    end
   end
 
   # Set to true if you don't want to use outbound networks, eg: package mirrors

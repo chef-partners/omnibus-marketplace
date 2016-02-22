@@ -15,7 +15,7 @@ describe Marketplace::Reckoner do
 
     allow(Marketplace::Reckoner::Checker::ChefServer).to receive(:new).and_return(checker)
     allow(Marketplace::Reckoner::Updater::Ec2).to receive(:new).and_return(updater)
-    allow(Marketplace::Reckoner).to receive(:disabled_in_config?).and_return(false)
+    allow(Marketplace::Reckoner).to receive(:enabled_in_config?).and_return(true)
   end
 
   describe '#self.update_usage' do
@@ -28,7 +28,7 @@ describe Marketplace::Reckoner do
 
     context 'when the updater is disabled' do
       it 'does not update any usage' do
-        allow(Marketplace::Reckoner).to receive(:disabled_in_config?).and_return(true)
+        allow(Marketplace::Reckoner).to receive(:enabled_in_config?).and_return(false)
         expect(updater).not_to receive(:update)
       end
     end
@@ -44,7 +44,7 @@ describe Marketplace::Reckoner do
 
     context 'when the updater is disabled' do
       it 'does not update any usage' do
-        allow(Marketplace::Reckoner).to receive(:disabled_in_config?).and_return(true)
+        allow(Marketplace::Reckoner).to receive(:enabled_in_config?).and_return(false)
         expect(updater).not_to receive(:update)
       end
     end

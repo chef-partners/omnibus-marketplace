@@ -18,13 +18,13 @@ class Marketplace
         return if metrics_to_collect.nil? || metrics_to_collect.empty?
 
         runner = new(metrics_to_collect)
-        return if runner.disabled? || runner.endpoint.nil?
+        return if runner.disabled? || runner.endpoint.nil? || runner.endpoint.empty?
 
         runner.run
       end
 
-      def self.disabled_in_config?
-        Marketplace::Reckoner::Config.phone_home.enabled != true
+      def self.enabled_in_config?
+        Marketplace::Reckoner::Config.phone_home.enabled == true
       end
 
       def initialize(metrics_to_collect)
@@ -71,15 +71,15 @@ class Marketplace
       end
 
       def disabled?
-        stop_file_exists? || disabled_in_config?
+        stop_file_exists? || !enabled_in_config?
       end
 
       def stop_file_exists?
         File.exist?('/etc/opscode/DISABLE_PHONE_HOME')
       end
 
-      def disabled_in_config?
-        Marketplace::Reckoner::Eetee.disabled_in_config?
+      def enabled_in_config?
+        Marketplace::Reckoner::Eetee.enabled_in_config?
       end
     end
   end
