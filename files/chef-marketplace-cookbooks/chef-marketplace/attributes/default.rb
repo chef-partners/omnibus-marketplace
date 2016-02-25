@@ -34,9 +34,18 @@ default['chef-marketplace'].tap do |m|
   m['reckoner']['log_directory'] = '/var/log/chef-marketplace/reckoner'
   m['reckoner']['log_rotation']['file_maxbytes'] = 104_857_600
   m['reckoner']['log_rotation']['num_to_keep'] = 10
+  m['biscotti']['log_directory'] = '/var/log/chef-marketplace/biscotti'
+  m['biscotti']['log_rotation']['file_maxbytes'] = 104_857_600
+  m['biscotti']['log_rotation']['num_to_keep'] = 10
   # Reckoner defaults
   m['reckoner']['region'] = 'us-east-1'
   m['reckoner']['usage_dimension'] = 'ProvisionedHosts'
+  # Biscotti defaults
+  m['biscotti']['token'] = nil
+  m['biscotti']['port'] = 9666
+  m['biscotti']['listen_address'] = '127.0.0.1'
+  m['biscotti']['uuid_type'] = 'Instance ID'
+  m['biscotti']['message'] = 'Please enter the instance ID to continue to the web interface'
 end
 
 default['enterprise']['name'] = 'chef-marketplace'

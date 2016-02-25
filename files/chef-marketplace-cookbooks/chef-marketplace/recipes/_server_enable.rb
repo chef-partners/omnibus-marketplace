@@ -28,26 +28,26 @@ template '/etc/cron.d/reporting-partition-cleanup' do
 end
 
 directory '/etc/opscode' do
-  owner 'root'
-  group 'root'
+  owner 'opscode'
+  group 'opscode'
   action :create
 end
 
 template '/etc/opscode/chef-server.rb' do
-  owner 'root'
-  group 'root'
+  owner 'opscode'
+  group 'opscode'
   action :create_if_missing
 end
 
 directory '/etc/chef-manage' do
-  owner 'root'
-  group 'root'
+  owner 'opscode'
+  group 'opscode'
   action :create
 end
 
 file '/etc/chef-manage/manage.rb' do
-  owner 'root'
-  group 'root'
+  owner 'opscode'
+  group 'opscode'
   # TODO: enable the marketplace sign_up after it's released
   #  content 'marketplace.sign_up.enabled = true'
   action :create

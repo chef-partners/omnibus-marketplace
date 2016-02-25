@@ -1,0 +1,4 @@
+listen '<%= node['chef-marketplace']['biscotti']['listen_address'] %>:<%= node['chef-marketplace']['biscotti']['port'] %>', {:backlog=>1024, :tcp_nodelay=>true}
+timeout 3600
+preload_app true
+worker_processes 2

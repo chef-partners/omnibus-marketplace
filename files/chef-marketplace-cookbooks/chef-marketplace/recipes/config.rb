@@ -2,8 +2,8 @@ directory '/etc/chef-marketplace' do
   owner 'root'
   group 'root'
   mode '0775'
-  action :create
-end
+  action :nothing
+end.run_action(:create)
 
 file '/etc/chef-marketplace/marketplace.rb' do
   owner 'root'
@@ -29,5 +29,6 @@ if File.exist?('/etc/chef-compliance/chef-compliance-running.json')
 end
 
 determine_api_fqdn
+configure_biscotti
 
 include_recipe 'chef-marketplace::_package_mirrors'

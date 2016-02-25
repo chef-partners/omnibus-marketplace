@@ -71,6 +71,16 @@ class Marketplace
     end
   end
 
+  # The biscotti authorization daemon
+  config_context :biscotti do
+    configurable :token
+
+    default :port, 9666
+    default :listen_address, '127.0.0.1'
+    default :uuid_type, 'Instance ID'
+    default :message, 'Please enter the instance ID to continue to the web interface'
+  end
+
   # Set to true if you don't want to use outbound networks, eg: package mirrors
   default :disable_outboud_traffic, false
 

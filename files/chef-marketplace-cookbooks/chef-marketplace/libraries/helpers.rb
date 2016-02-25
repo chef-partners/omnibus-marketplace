@@ -1,6 +1,8 @@
 require 'resolv'
 require 'net/http'
 require 'timeout'
+require 'securerandom'
+require 'yaml'
 
 class Marketplace
   module Helpers
@@ -225,6 +227,78 @@ class Marketplace
         else
           node['fqdn']
         end
+    end
+
+    def configure_biscotti
+      configure_biscotti_nginx
+      configure_biscotti_secrets
+      uuid_type, uuid =
+        case node['chef-marketplace']['platform']
+        when 'google'
+          ['Project Name', node.gce.project.projectId]
+        # TODO: Azure
+        when 'azure'
+          ['Cloud Name', 'azure']
+        else # aws, testing
+          ['Instance ID', node.ec2.instance_id]
+        end
+      node.set['chef-marketplace']['biscotti']['uuid_type'] = uuid_type
+      node.set['chef-marketplace']['biscotti']['uuid'] = uuid
+      node.set['chef-marketplace']['biscotti']['message'] =
+        "Please enter your #{uuid_type} to continue to the web interface"
+    end
+
+    def configure_biscotti_nginx
+      case node['chef-marketplace']['role']
+      when 'aio', 'server'
+        node.set['chef-marketplace']['biscotti']['nginx']['dir'] = '/var/opt/opscode/nginx'
+      when 'compliance'
+        node.set['chef-marketplace']['biscotti']['nginx']['dir'] = '/var/opt/chef-compliance/nginx'
+      end
+
+      node.set['chef-marketplace']['biscotti']['nginx']['add_on_dir'] =
+        ::File.join(node['chef-marketplace']['biscotti']['nginx']['dir'], 'etc', 'addon.d')
+      node.set['chef-marketplace']['biscotti']['nginx']['scripts_dir'] =
+        ::File.join(node['chef-marketplace']['biscotti']['nginx']['dir'], 'etc', 'scripts')
+      node.set['chef-marketplace']['biscotti']['nginx']['biscotti_lua_file'] =
+        ::File.join(node['chef-marketplace']['biscotti']['nginx']['scripts_dir'], 'biscotti.lua')
+    end
+
+    def configure_biscotti_secrets
+      secrets_file = '/etc/chef-marketplace/chef-marketplace-secrets.json'
+      secrets =
+        if ::File.exist?(secrets_file)
+          Chef::JSONCompat.from_json(::File.read(secrets_file))
+        else
+          new_secrets = {
+            'biscotti' => {
+              'token' => SecureRandom.hex(50)
+            }
+          }
+
+          file secrets_file do
+            content Chef::JSONCompat.to_json_pretty(new_secrets)
+            sensitive true
+            action :create
+          end
+
+          new_secrets
+        end
+
+      node.consume_attributes('chef-marketplace' => secrets)
+    end
+
+    def biscotti_yml_config
+      { 'production' =>
+        { 'biscotti' =>
+          {
+            'message' => node['chef-marketplace']['biscotti']['message'],
+            'uuid' => node['chef-marketplace']['biscotti']['uuid'],
+            'uuid_type' => node['chef-marketplace']['biscotti']['uuid_type'],
+            'token' => node['chef-marketplace']['biscotti']['token']
+          }
+        }
+      }.to_yaml
     end
 
     def analytics_state_files

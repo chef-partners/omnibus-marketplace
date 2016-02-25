@@ -1,0 +1,23 @@
+gen_api_fqdn = lambda do
+  api_fqdn '<%= node['chef-marketplace']['api_fqdn'] %>'
+
+  license['nodes'] =
+  <% if node['chef-marketplace']['license']['type'] == 'flexible' %>
+    999_999_999
+  <% else %>
+    <%= node['chef-marketplace']['license']['count'] %>
+  <% end %>
+
+  <% if node['chef-marketplace']['role'] == 'aio' %>
+    redirect_uri = 'https://<%= node['chef-marketplace']['api_fqdn'] %>:<%= node['chef-marketplace']['analytics']['ssl_port'] %>'
+    oc_id['applications'] = { 'analytics' => { 'redirect_uri' => redirect_uri } }
+  <% end %>
+
+  nginx['dir'] = '<%= node['chef-marketplace']['biscotti']['nginx']['dir'] %>'
+  lb['access_by_lua_file'] = '<%= node['chef-marketplace']['biscotti']['nginx']['biscotti_lua_file'] %>'
+
+  topology 'standalone'
+  gen_api_fqdn_default
+end
+
+PrivateChef.register_extension('chef-marketplace', server_config_required: false, gen_api_fqdn: gen_api_fqdn)

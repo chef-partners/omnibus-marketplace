@@ -17,6 +17,9 @@ role = node['chef-marketplace']['role']
 # Base recipes for role
 include_recipe "chef-marketplace::_#{role}_enable"
 
+# Setup initial authorization service
+include_recipe 'chef-marketplace::_biscotti'
+
 # Setup billing daemon
 include_recipe 'chef-marketplace::_reckoner'
 

@@ -1,0 +1,17 @@
+<div class="row" style="padding:50px;">
+  <div class="small-5 small-centered columns">
+    <div class="panel">
+      <%= @biscotti['message'] %></h6>
+    </div>
+  </div>
+  <div class="small-5 small-centered columns">
+    <form action="/biscotti" method="post">
+      <div>
+        <input type="text" class="radius" name="uuid" placeholder="<%= @biscotti['uuid_type'] %>" required autofocus>
+      </div>
+      <div>
+        <button class="button" type="submit" style="float:right">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>

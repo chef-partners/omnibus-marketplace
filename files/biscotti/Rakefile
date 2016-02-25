@@ -1,0 +1,9 @@
+%w(bundler find).each { |lib| require lib }
+
+desc 'Run the console'
+task :console, :env do |_, args|
+  ENV['RACK_ENV'] ||= (args[:env] || 'development')
+  require './app'
+  require 'pry'
+  Pry.start
+end
