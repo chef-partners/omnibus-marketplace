@@ -1,5 +1,10 @@
 # Chef Marketplace Changelog
 
+# 0.0.7 (UNRELEASED)
+## chef-marketplace-cookbooks
+* Update cookbooks to use the bash resource instead of execute
+* Update cookbooks to please Azure security requirements
+
 # 0.0.6 (2016-02-09)
 ## omnibus-marketplace
 * Please Rubocop

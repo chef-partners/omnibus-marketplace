@@ -1,6 +1,6 @@
 case node['platform']
 when 'redhat'
-  execute 'subscription-manager repos --enable rhel-7-server-rh-common-rpms' do
+  bash 'subscription-manager repos --enable rhel-7-server-rh-common-rpms' do
     not_if 'subscription-manager repos --list-enabled | grep rhel-7-server-rh-common-rpms'
     only_if 'subscription-manager repos --list | grep rhel-7-server-rh-common-rpms'
   end

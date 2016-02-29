@@ -1,8 +1,8 @@
 chef_ingredient 'analytics' do
   action :upgrade
-  notifies :run, 'execute[opscode-analytics-ctl reconfigure]', :immediately if analytics_configured?
+  notifies :run, 'bash[opscode-analytics-ctl reconfigure]', :immediately if analytics_configured?
 end
 
-execute 'opscode-analytics-ctl reconfigure' do
+bash 'opscode-analytics-ctl reconfigure' do
   action :nothing
 end
