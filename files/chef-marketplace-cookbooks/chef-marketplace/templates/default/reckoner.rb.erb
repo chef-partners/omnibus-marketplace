@@ -1,20 +1,35 @@
-updater.driver = '<%= node['chef-marketplace']['platform'] == 'aws' ? 'ec2' : node['chef-marketplace']['platform'] %>'
-checker.driver = '<%= node['chef-marketplace']['role'] == 'aio' ? 'chef_server' : 'compliance' %>'
-license.count = <%= node['chef-marketplace']['license']['count'] %>
-license.type = '<%= node['chef-marketplace']['license']['type'] %>'
-license.free = <%= node['chef-marketplace']['license']['free_node_count'] %>
+updater.enabled <%= node['chef-marketplace']['platform'] == 'aws' %>
+updater.driver '<%= node['chef-marketplace']['platform'] == 'aws' ? 'ec2' : node['chef-marketplace']['platform'] %>'
+checker.driver '<%= node['chef-marketplace']['role'] == 'aio' ? 'chef_server' : 'compliance' %>'
+license.count <%= node['chef-marketplace']['license']['count'] %>
+license.type '<%= node['chef-marketplace']['license']['type'] %>'
+license.free <%= node['chef-marketplace']['license']['free_node_count'] %>
 <% if node['chef-marketplace']['role'] != 'compliance' %>
-server.endpoint = '<%= "https://#{node['chef-marketplace']['api_fqdn']}" %>'
-server.client = 'pivotal'
-server.client_key_path = '/etc/opscode/pivotal.pem'
+server.endpoint '<%= "https://#{node['chef-marketplace']['api_fqdn']}" %>'
+server.client 'pivotal'
+server.client_key_path '/etc/opscode/pivotal.pem'
 <% end %>
 <% if node['chef-marketplace']['role'] == 'compliance' && node.key?('chef-compliance') %>
-db.host = '<%= node['chef-compliance']['postgresql']['vip'] %>'
-db.port = '<%= node['chef-compliance']['postgresql']['port'] %>'
-db.user = '<%= node['chef-compliance']['postgresql']['username'] %>'
-db.password = '<%= node['chef-compliance']['postgresql']['db_superuser_password'] %>'
+db.host '<%= node['chef-compliance']['postgresql']['vip'] %>'
+db.port '<%= node['chef-compliance']['postgresql']['port'] %>'
+db.user '<%= node['chef-compliance']['postgresql']['username'] %>'
+db.password '<%= node['chef-compliance']['postgresql']['db_superuser_password'] %>'
 <% end %>
 <% if node['chef-marketplace']['platform'] == 'aws' %>
-aws.product_code = '<%= node['chef-marketplace']['reckoner']['product_code'] %>'
-aws.usage_dimension = '<%= node['chef-marketplace']['reckoner']['usage_dimension'] %>'
+aws.product_code '<%= node['chef-marketplace']['reckoner']['product_code'] %>'
+aws.usage_dimension '<%= node['chef-marketplace']['reckoner']['usage_dimension'] %>'
 <% end %>
+
+# phone home configurations
+phone_home.enabled <%= node['chef-marketplace']['platform'] == 'gce' %>
+phone_home.endpoint <%= node['chef-marketplace']['reckoner']['eetee']['endpoint'] %>
+phone_home.platform '<%= node['chef-marketplace']['platform'] %>'
+phone_home.metrics.daily %w(
+  analytics_access_logs
+  chef_node_count
+  chef_nodes_per_org
+  chef_org_count
+  chef_user_count
+  erchef_crashes
+  manage_access_logs
+)
