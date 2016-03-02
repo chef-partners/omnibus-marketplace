@@ -7,3 +7,58 @@ task :console, :env do |_, args|
   require 'pry'
   Pry.start
 end
+
+namespace :assets do
+  desc 'Vendor chef-web-core assets'
+  task :vendor, [:version, :md5] do |_, args|
+    args.with_defaults(version: '1.0.1', md5: 'fc50f0f275badab6bd9e1e9fcb77f58d')
+    vendor_assets(args)
+  end
+end
+
+def vendor_assets(args)
+  require 'digest'
+  require 'open-uri'
+  require 'time'
+
+  puts 'Vendoring chef-web-core assets...'
+  asset_dir = locate_asset_directory!
+  working_dir = File.join(Dir.pwd, 'asset_work_dir')
+  FileUtils.mkdir_p(working_dir)
+  tarball = download_assets(working_dir, args[:version], args[:md5])
+  sync_assets(tarball, asset_dir)
+  puts "Cleaning up #{working_dir}..."
+  FileUtils.rm_rf(working_dir)
+end
+
+def locate_asset_directory!
+  asset_dir = Dir["#{Dir.pwd}/*"].find { |d| File.basename(d) == 'assets' }
+  raise "Unable to locate asset directory in #{Dir.pwd}" unless asset_dir
+  asset_dir
+end
+
+def download_assets(directory, version, checksum)
+  filename = "chef-web-core-#{version}.tgz"
+  tarball_path = File.join(directory, filename)
+
+  puts "Downloading #{filename} to #{tarball_path}..."
+  remote_file = open("https://github.com/chef/chef-web-core/releases/download/#{version}/#{filename}")
+  IO.copy_stream(remote_file, tarball_path)
+
+  puts 'Validating checksum...'
+  raise 'ERROR: Checksum mismatch' unless checksum == Digest::MD5.hexdigest(File.read(tarball_path))
+
+  tarball_path
+end
+
+def sync_assets(tarball_path, asset_dir)
+  working_dir = File.dirname(tarball_path)
+  puts "Extracting tarball to #{working_dir}.."
+  system("tar zxf #{tarball_path} -C #{working_dir}")
+  %w(images javascripts stylesheets fonts).each do |asset_type|
+    system("rm -rf #{File.join(asset_dir, asset_type)}")
+    puts "Copying #{asset_type}..."
+    system("cp -r #{File.join(working_dir, 'package', 'dist', asset_type)} #{File.join(asset_dir, asset_type)}")
+    system("cp -r #{File.join(working_dir, 'package', 'dist', asset_type)} #{File.join(asset_dir, asset_type)}")
+  end
+end
