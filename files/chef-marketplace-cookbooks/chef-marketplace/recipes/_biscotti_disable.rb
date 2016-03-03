@@ -1,5 +1,3 @@
-include_recipe 'chef-marketplace::_runit_prepare'
-
-runit_service 'reckoner' do
+runit_service 'biscotti' do
   action :disable
 end

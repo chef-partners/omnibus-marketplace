@@ -9,12 +9,12 @@ return if node['chef-marketplace']['api_fqdn']
 node.set['chef-marketplace']['api_fqdn'] =
   if node.key?('cloud_v2') && !node['cloud_v2'].nil?
     if node['cloud_v2']['provider'] == 'gce'
-      node['cloud_v2']['public_ipv4'] if node['cloud_v2']['public_ipv4'] && !node['cloud_v2']['public_ipv4'].blank?
-    elsif node['cloud_v2']['public_hostname'] && !node['cloud_v2']['public_hostname'].blank?
+      node['cloud_v2']['public_ipv4'] if node['cloud_v2']['public_ipv4'] && !node['cloud_v2']['public_ipv4'].empty?
+    elsif node['cloud_v2']['public_hostname'] && !node['cloud_v2']['public_hostname'].empty?
       node['cloud_v2']['public_hostname']
-    elsif node['cloud_v2']['local_hostname'] && !node['cloud_v2']['local_hostname'].blank?
+    elsif node['cloud_v2']['local_hostname'] && !node['cloud_v2']['local_hostname'].empty?
       node['cloud_v2']['local_hostname']
     end
   end
 
-node.set['chef-marketplace']['api_fqdn'] = node['fqdn'] unless node['chef-marketplace']['api_fqdn'] && !node['chef-marketplace']['api_fqdn'].blank?
+node.set['chef-marketplace']['api_fqdn'] = node['fqdn'] unless node['chef-marketplace']['api_fqdn'] && !node['chef-marketplace']['api_fqdn'].empty?

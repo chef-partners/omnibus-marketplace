@@ -25,6 +25,11 @@ default['chef-marketplace'].tap do |m|
   m['analytics']['trimmer']['log_file'] = '/var/log/opscode-analytics/actions-trimmer.log'
   m['analytics']['trimmer']['max_db_size'] = 1
   m['compliance']['ssl_port'] = 443
+  m['manage']['ssl_port'] = 443
+  m['manage']['sign_up']['enabled'] = true
+  m['manage']['org_creation']['enabled'] = true
+  m['manage']['marketplace']['sign_up']['enabled'] = true
+  m['manage']['marketplace']['sign_up']['timeout'] = 3600
   m['runit']['user']['username'] = 'opscode'
   m['runit']['user']['shell'] = '/bin/sh'
   m['runit']['user']['home'] = '/opt/opscode/embedded'

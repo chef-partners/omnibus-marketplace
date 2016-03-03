@@ -1,4 +1,6 @@
 fqdn '<%= node['chef-marketplace']['api_fqdn'] %>'
 nginx['ssl_port'] = <%= node['chef-marketplace']['compliance']['ssl_port'] %>
+<% if node['chef-marketplace']['biscotti']['enabled'] %>
 nginx['access_by_lua_file'] = '<%= node['chef-marketplace']['biscotti']['nginx']['biscotti_lua_file'] %>'
+<% end %>
 setup.registration.required = true

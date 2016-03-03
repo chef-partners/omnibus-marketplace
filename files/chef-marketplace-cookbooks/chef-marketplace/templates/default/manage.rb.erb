@@ -1,0 +1,16 @@
+################################### WARNING ###################################
+#                                                                             #
+# This file is managed by chef-marketplace.  Please consult the documentation #
+# before editing this file as several settings may be overwritten.            #
+#                                                                             #
+###############################################################################
+
+chef_documentation_url '<%= node['chef-marketplace']['documentation']['url'] %>'
+disable_sign_up <%= node['chef-marketplace']['manage']['sign_up']['enabled'] ? 'false' : 'true' %>
+org_creation_enabled <%= node['chef-marketplace']['manage']['org_creation']['enabled'].to_s %>
+public_port <%= node['chef-marketplace']['manage']['ssl_port'] %>
+support_email_address '<%= node['chef-marketplace']['support']['email'] %>'
+<% if node['chef-marketplace']['manage']['marketplace']['sign_up']['enabled'] %>
+marketplace.sign_up.enabled true
+marketplace.sign_up.timeout <%= node['chef-marketplace']['manage']['marketplace']['sign_up']['timeout'] %>
+<% end %>

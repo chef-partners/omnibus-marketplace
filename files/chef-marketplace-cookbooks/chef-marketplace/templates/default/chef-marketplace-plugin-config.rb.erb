@@ -9,12 +9,15 @@ gen_api_fqdn = lambda do
   <% end %>
 
   <% if node['chef-marketplace']['role'] == 'aio' %>
-    redirect_uri = 'https://<%= node['chef-marketplace']['api_fqdn'] %>:<%= node['chef-marketplace']['analytics']['ssl_port'] %>'
-    oc_id['applications'] = { 'analytics' => { 'redirect_uri' => redirect_uri } }
+  redirect_uri = 'https://<%= node['chef-marketplace']['api_fqdn'] %>:<%= node['chef-marketplace']['analytics']['ssl_port'] %>'
+  oc_id['applications'] ||= {}
+  oc_id['applications']['analytics'] = { 'redirect_uri' => redirect_uri }
   <% end %>
 
+  <% if node['chef-marketplace']['biscotti']['enabled'] %>
   nginx['dir'] = '<%= node['chef-marketplace']['biscotti']['nginx']['dir'] %>'
   lb['access_by_lua_file'] = '<%= node['chef-marketplace']['biscotti']['nginx']['biscotti_lua_file'] %>'
+  <% end %>
 
   topology 'standalone'
   gen_api_fqdn_default

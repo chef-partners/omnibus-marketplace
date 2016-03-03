@@ -34,6 +34,7 @@ directory '/etc/opscode' do
 end
 
 template '/etc/opscode/chef-server.rb' do
+  source 'chef-server.rb.erb'
   owner 'opscode'
   group 'opscode'
   action :create_if_missing
@@ -45,10 +46,9 @@ directory '/etc/chef-manage' do
   action :create
 end
 
-file '/etc/chef-manage/manage.rb' do
+template '/etc/chef-manage/manage.rb' do
+  source 'manage.rb.erb'
   owner 'opscode'
   group 'opscode'
-  # TODO: enable the marketplace sign_up after it's released
-  #  content 'marketplace.sign_up.enabled = true'
-  action :create
+  action :create_if_missing
 end
