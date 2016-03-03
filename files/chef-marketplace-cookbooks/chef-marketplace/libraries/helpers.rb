@@ -123,20 +123,6 @@ class Marketplace
       File.exist?('/etc/chef-compliance/chef-compliance-running.json')
     end
 
-    def reckoner_enabled?
-      node['chef-marketplace']['license']['type'] == 'flexible' || node['chef-marketplace']['reckoner']['enabled']
-    rescue NoMethodError
-      false
-    end
-
-    def set_reckoner_usage_dimension
-      if node['chef-marketplace']['role'] =~ /aio|server/
-        node.set['chef-marketplace']['reckoner']['usage_dimension'] = 'ChefNodes'
-      elsif node['chef-marketplace']['role'] == 'compliance'
-        node.set['chef-marketplace']['reckoner']['usage_dimension'] = 'ComplianceNodes'
-      end
-    end
-
     def manage_url
       "https://#{node['chef-marketplace']['api_fqdn']}"
     end
@@ -207,85 +193,6 @@ class Marketplace
       end
 
       enabled_commands + disabled_commands
-    end
-
-    def determine_api_fqdn
-      # 1) Use the value set in marketplace.rb
-      # 2) Use the cloud public hostname
-      # 3) Use the cloud local hostname
-      # 4) Fallback on the FQDN
-      node.set['chef-marketplace']['api_fqdn'] =
-        if node['chef-marketplace']['api_fqdn']
-          node['chef-marketplace']['api_fqdn']
-        elsif node.key?('cloud_v2') && !node['cloud_v2'].nil?
-          case node['cloud_v2']['provider']
-          when 'gce'
-            node['cloud_v2']['public_ipv4']
-          else # aws, azure, etc..
-            node['cloud_v2']['public_hostname'] || node['cloud_v2']['local_hostname'] || node['fqdn']
-          end
-        else
-          node['fqdn']
-        end
-    end
-
-    def configure_biscotti
-      configure_biscotti_nginx
-      configure_biscotti_secrets
-      uuid_type, uuid =
-        case node['chef-marketplace']['platform']
-        when 'google'
-          ['Project Name', node.gce.project.projectId]
-        # TODO: Azure
-        when 'azure'
-          ['Cloud Name', 'azure']
-        else # aws, testing
-          ['Instance ID', node.ec2.instance_id]
-        end
-      node.set['chef-marketplace']['biscotti']['uuid_type'] = uuid_type
-      node.set['chef-marketplace']['biscotti']['uuid'] = uuid
-      node.set['chef-marketplace']['biscotti']['message'] =
-        "Please enter your #{uuid_type} to continue to the web interface"
-    end
-
-    def configure_biscotti_nginx
-      case node['chef-marketplace']['role']
-      when 'aio', 'server'
-        node.set['chef-marketplace']['biscotti']['nginx']['dir'] = '/var/opt/opscode/nginx'
-      when 'compliance'
-        node.set['chef-marketplace']['biscotti']['nginx']['dir'] = '/var/opt/chef-compliance/nginx'
-      end
-
-      node.set['chef-marketplace']['biscotti']['nginx']['add_on_dir'] =
-        ::File.join(node['chef-marketplace']['biscotti']['nginx']['dir'], 'etc', 'addon.d')
-      node.set['chef-marketplace']['biscotti']['nginx']['scripts_dir'] =
-        ::File.join(node['chef-marketplace']['biscotti']['nginx']['dir'], 'etc', 'scripts')
-      node.set['chef-marketplace']['biscotti']['nginx']['biscotti_lua_file'] =
-        ::File.join(node['chef-marketplace']['biscotti']['nginx']['scripts_dir'], 'biscotti.lua')
-    end
-
-    def configure_biscotti_secrets
-      secrets_file = '/etc/chef-marketplace/chef-marketplace-secrets.json'
-      secrets =
-        if ::File.exist?(secrets_file)
-          Chef::JSONCompat.from_json(::File.read(secrets_file))
-        else
-          new_secrets = {
-            'biscotti' => {
-              'token' => SecureRandom.hex(50)
-            }
-          }
-
-          file secrets_file do
-            content Chef::JSONCompat.to_json_pretty(new_secrets)
-            sensitive true
-            action :create
-          end
-
-          new_secrets
-        end
-
-      node.consume_attributes('chef-marketplace' => secrets)
     end
 
     def biscotti_yml_config

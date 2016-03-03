@@ -1,5 +1,3 @@
-include_recipe 'chef-marketplace::_runit_prepare'
-
 biscotti_config_dir = '/var/opt/chef-marketplace/biscotti/etc'
 biscotti_log_dir = '/var/log/chef-marketplace/biscotti'
 biscotti_app_config = ::File.join(biscotti_config_dir, 'config.yml')
