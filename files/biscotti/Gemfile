@@ -1,0 +1,12 @@
+source 'https://rubygems.org/'
+
+gem 'sinatra', '~> 1.4'
+gem 'sinatra-contrib'
+gem 'sinatra-flash'
+gem 'rubocop'
+gem 'unicorn'
+
+group :development do
+  gem 'pry'
+  gem 'rake', '~> 10.0'
+end

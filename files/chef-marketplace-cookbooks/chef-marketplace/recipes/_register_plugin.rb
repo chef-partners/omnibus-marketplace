@@ -21,8 +21,8 @@ cookbook_file "#{plugin_dir}/chef-marketplace.rb" do
   action :create
 end
 
-cookbook_file "#{marketplace_dir}/config.rb" do
+template "#{marketplace_dir}/config.rb" do
   manage_symlink_source true
-  source 'chef-marketplace-plugin-config.rb'
+  source 'chef-marketplace-plugin-config.rb.erb'
   action :create
 end

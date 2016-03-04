@@ -1,0 +1,12 @@
+#!/bin/sh
+export PATH=/opt/chef-marketplace/embedded/bin:$PATH
+exec 2>&1
+cd /opt/chef-marketplace/embedded/service/biscotti
+exec chpst \
+  -P \
+  -U <%= node['chef-marketplace']['runit']['user']['username'] %> \
+  -u <%= node['chef-marketplace']['runit']['user']['username'] %> \
+  bundle exec unicorn \
+    -E production \
+    -c /var/opt/chef-marketplace/biscotti/etc/unicorn.rb \
+    config.ru

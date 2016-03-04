@@ -1,6 +1,8 @@
 require 'resolv'
 require 'net/http'
 require 'timeout'
+require 'securerandom'
+require 'yaml'
 
 class Marketplace
   module Helpers
@@ -121,20 +123,6 @@ class Marketplace
       File.exist?('/etc/chef-compliance/chef-compliance-running.json')
     end
 
-    def reckoner_enabled?
-      node['chef-marketplace']['license']['type'] == 'flexible' || node['chef-marketplace']['reckoner']['enabled']
-    rescue NoMethodError
-      false
-    end
-
-    def set_reckoner_usage_dimension
-      if node['chef-marketplace']['role'] =~ /aio|server/
-        node.set['chef-marketplace']['reckoner']['usage_dimension'] = 'ChefNodes'
-      elsif node['chef-marketplace']['role'] == 'compliance'
-        node.set['chef-marketplace']['reckoner']['usage_dimension'] = 'ComplianceNodes'
-      end
-    end
-
     def manage_url
       "https://#{node['chef-marketplace']['api_fqdn']}"
     end
@@ -207,24 +195,17 @@ class Marketplace
       enabled_commands + disabled_commands
     end
 
-    def determine_api_fqdn
-      # 1) Use the value set in marketplace.rb
-      # 2) Use the cloud public hostname
-      # 3) Use the cloud local hostname
-      # 4) Fallback on the FQDN
-      node.set['chef-marketplace']['api_fqdn'] =
-        if node['chef-marketplace']['api_fqdn']
-          node['chef-marketplace']['api_fqdn']
-        elsif node.key?('cloud_v2') && !node['cloud_v2'].nil?
-          case node['cloud_v2']['provider']
-          when 'gce'
-            node['cloud_v2']['public_ipv4']
-          else # aws, azure, etc..
-            node['cloud_v2']['public_hostname'] || node['cloud_v2']['local_hostname'] || node['fqdn']
-          end
-        else
-          node['fqdn']
-        end
+    def biscotti_yml_config
+      { 'production' =>
+        { 'biscotti' =>
+          {
+            'message' => node['chef-marketplace']['biscotti']['message'],
+            'uuid' => node['chef-marketplace']['biscotti']['uuid'],
+            'uuid_type' => node['chef-marketplace']['biscotti']['uuid_type'],
+            'token' => node['chef-marketplace']['biscotti']['token']
+          }
+        }
+      }.to_yaml
     end
 
     def analytics_state_files

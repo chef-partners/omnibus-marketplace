@@ -71,6 +71,16 @@ class Marketplace
     end
   end
 
+  # The biscotti authorization daemon
+  config_context :biscotti do
+    default :enabled, true
+
+    configurable :token
+
+    default :port, 9666
+    default :listen_address, '127.0.0.1'
+  end
+
   # Set to true if you don't want to use outbound networks, eg: package mirrors
   default :disable_outboud_traffic, false
 
@@ -112,6 +122,25 @@ class Marketplace
 
   config_context :compliance do
     default :ssl_port, 443
+  end
+
+  config_context :manage do
+    default :ssl_port, 443
+
+    config_context :org_creation do
+      default :enabled, true
+    end
+
+    config_context :sign_up do
+      default :enabled, true
+    end
+
+    config_context :marketplace do
+      config_context :sign_up do
+        default :enabled, true
+        default :timeout, 3600
+      end
+    end
   end
 
   config_context :marketplace_api do

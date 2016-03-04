@@ -25,6 +25,11 @@ default['chef-marketplace'].tap do |m|
   m['analytics']['trimmer']['log_file'] = '/var/log/opscode-analytics/actions-trimmer.log'
   m['analytics']['trimmer']['max_db_size'] = 1
   m['compliance']['ssl_port'] = 443
+  m['manage']['ssl_port'] = 443
+  m['manage']['sign_up']['enabled'] = true
+  m['manage']['org_creation']['enabled'] = true
+  m['manage']['marketplace']['sign_up']['enabled'] = true
+  m['manage']['marketplace']['sign_up']['timeout'] = 3600
   m['runit']['user']['username'] = 'opscode'
   m['runit']['user']['shell'] = '/bin/sh'
   m['runit']['user']['home'] = '/opt/opscode/embedded'
@@ -34,9 +39,17 @@ default['chef-marketplace'].tap do |m|
   m['reckoner']['log_directory'] = '/var/log/chef-marketplace/reckoner'
   m['reckoner']['log_rotation']['file_maxbytes'] = 104_857_600
   m['reckoner']['log_rotation']['num_to_keep'] = 10
+  m['biscotti']['log_directory'] = '/var/log/chef-marketplace/biscotti'
+  m['biscotti']['log_rotation']['file_maxbytes'] = 104_857_600
+  m['biscotti']['log_rotation']['num_to_keep'] = 10
   # Reckoner defaults
+  m['reckoner']['enabled'] = false
   m['reckoner']['region'] = 'us-east-1'
   m['reckoner']['usage_dimension'] = 'ProvisionedHosts'
+  # Biscotti defaults
+  m['biscotti']['enabled'] = true
+  m['biscotti']['port'] = 9666
+  m['biscotti']['listen_address'] = '127.0.0.1'
 end
 
 default['enterprise']['name'] = 'chef-marketplace'

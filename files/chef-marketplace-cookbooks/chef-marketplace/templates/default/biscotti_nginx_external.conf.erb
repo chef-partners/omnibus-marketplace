@@ -1,0 +1,4 @@
+location ~ "^/biscotti/?$" {
+  proxy_redirect http://biscotti /;
+  proxy_pass http://biscotti;
+}

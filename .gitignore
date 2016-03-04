@@ -7,4 +7,5 @@ pkg/*
 .vagrant
 bin/*
 files/**/cache/
+files/biscotti/assets/*
 vendor/cookbooks

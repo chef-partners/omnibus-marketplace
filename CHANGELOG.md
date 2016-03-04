@@ -1,9 +1,17 @@
 # Chef Marketplace Changelog
 
 # 0.0.7 (UNRELEASED)
+## omnibus-marketplace
+* Add Biscotti cookie signing daemon for initial marketplace authorization
+
 ## chef-marketplace-cookbooks
 * Update cookbooks to use the bash resource instead of execute
 * Update cookbooks to please Azure security requirements
+* Update cookbooks to configure Manage with new setup and support info
+* Update Chef Server plugin config
+* Restructured initial cookbook configuration
+* Fix issue where Chef Server plugin config was overwriting oc_id config [:heart: Nell](https://github.com/orgs/chef/people/nellshamrell)
+* Fix issue where FQDN was not properly configured when Ohai cloud_v2 would return empty strings [:heart: Jeremiah](https://github.com/orgs/chef/people/jeremiahsnapp)
 
 # 0.0.6 (2016-02-09)
 ## omnibus-marketplace

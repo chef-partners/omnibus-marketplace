@@ -1,0 +1,2 @@
+#!/bin/sh
+exec <%= node['runit']['svlogd_bin'] %> -tt <%= @options[:log_directory] %>
