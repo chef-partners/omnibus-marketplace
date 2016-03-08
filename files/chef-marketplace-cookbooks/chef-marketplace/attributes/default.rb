@@ -47,7 +47,7 @@ default['chef-marketplace'].tap do |m|
   m['reckoner']['region'] = 'us-east-1'
   m['reckoner']['usage_dimension'] = 'ProvisionedHosts'
   # Biscotti defaults
-  m['biscotti']['enabled'] = true
+  m['biscotti']['enabled'] = false
   m['biscotti']['port'] = 9666
   m['biscotti']['listen_address'] = '127.0.0.1'
 end

@@ -73,7 +73,7 @@ class Marketplace
 
   # The biscotti authorization daemon
   config_context :biscotti do
-    default :enabled, true
+    default :enabled, false
 
     configurable :token
 

@@ -1,6 +1,15 @@
--- We only need to require authentication for the web ui so we'll proxy to the
--- chef-server api when the chef-client makes requests
+<% unless node['chef-marketplace']['role'] == 'compliance' %>
+-- When the http_x_ops_userid header is set we route it to the chef-server API.
+-- We only need to require authentication for the UI so we'll move on if that
+-- header is present.
 if ngx.var.http_x_ops_userid then
+    return
+end
+<% end %>
+
+-- Whitelist all requests to the biscotti upstream.  This allows us to download
+-- biscotti assets without a cookie being present.
+if ngx.re.match(ngx.var.uri,  "^/biscotti") then
     return
 end
 
@@ -8,8 +17,8 @@ local sha1 = require('sha1')
 local cookie = ngx.var.cookie_ChefMarketplaceAuth
 
 if cookie ~= nil then
-  -- Check if the HMAC in the cookie matches what we expect
-  if sha1.hmac("<%= node['chef-marketplace']['biscotti']['token'] %>", "<%= node['chef-marketplace']['biscotti']['uuid'] %>") == cookie then
+    -- Check if the HMAC in the cookie matches what we expect
+    if sha1.hmac("<%= node['chef-marketplace']['biscotti']['token'] %>", "<%= node['chef-marketplace']['biscotti']['uuid'] %>") == cookie then
         return
     end
 end
