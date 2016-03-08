@@ -46,6 +46,7 @@ default['chef-marketplace'].tap do |m|
   m['reckoner']['enabled'] = false
   m['reckoner']['region'] = 'us-east-1'
   m['reckoner']['usage_dimension'] = 'ProvisionedHosts'
+  m['reckoner']['eetee']['endpoint'] = nil
   # Biscotti defaults
   m['biscotti']['enabled'] = false
   m['biscotti']['port'] = 9666
