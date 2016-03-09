@@ -16,6 +16,10 @@ end
   end
 end
 
+file '/etc/chef-manage/manage.rb' do
+  action :delete
+end
+
 server_state_files.each do |state_file|
   file state_file do
     action :delete

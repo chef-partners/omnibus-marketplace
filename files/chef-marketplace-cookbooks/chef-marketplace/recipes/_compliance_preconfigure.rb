@@ -14,6 +14,10 @@ compliance_state_directories.each do |state_dir|
   end
 end
 
+file '/etc/chef-compliance/chef-compliance.rb' do
+  action :delete
+end
+
 bash 'recreate complinace runit directories' do
   command 'mkdir -p /opt/chef-compliance/{sv,init,service}'
 end
