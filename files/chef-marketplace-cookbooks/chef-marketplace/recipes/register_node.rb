@@ -4,7 +4,7 @@ end
 
 node.consume_attributes('chef-marketplace' => Marketplace.save(false))
 
-determine_api_fqdn
+include_recipe 'chef-marketplace::_config_api_fqdn'
 
 if outbound_traffic_disabled?
   Chef::Log.warn 'Skipping node registration because outbound traffic is disabled'
@@ -60,6 +60,6 @@ ruby_block 'register node' do
 
     client = Marketplace::ApiClient.new(params['user'].delete('address'))
     res = client.post('/nodes/register', params)
-    fail res.message unless (200...400).cover?(res.code.to_i)
+    raise res.message unless (200...400).cover?(res.code.to_i)
   end
 end

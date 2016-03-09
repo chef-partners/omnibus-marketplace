@@ -9,6 +9,7 @@
 %w(chef-server-ctl opscode-reporting-ctl chef-manage-ctl).each do |ctl_cmd|
   bash "#{ctl_cmd} reconfigure" do
     code "#{ctl_cmd} reconfigure"
+    live_stream true
   end
 end
 
