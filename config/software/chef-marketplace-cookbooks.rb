@@ -13,6 +13,9 @@ build do
                  'GEM_PATH'        => nil,
                  'GEM_HOME'        => nil }
 
+  # Ensure cookbooks are readable so non-root chef-marketplace-ctl commands work
+  command "chmod -R a+r #{install_dir}/embedded/cookbooks"
+
   erb source: 'single-recipe.json.erb',
       dest: "#{install_dir}/embedded/cookbooks/dna.json",
       vars: { recipe: 'chef-marketplace::default' }

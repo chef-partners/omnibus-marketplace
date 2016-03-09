@@ -1,6 +1,13 @@
 # Chef Marketplace Changelog
 
-# 0.0.7 (UNRELEASED)
+# 0.0.8 (2016-03-09)
+## chef-marketplace-cookbooks
+* Live stream during publishing
+
+## chef-marketplace-ctl
+* Fix node registration when run by a non-root user
+
+# 0.0.7 (2016-03-08)
 ## omnibus-marketplace
 * Add Biscotti cookie signing daemon for initial marketplace authorization
 

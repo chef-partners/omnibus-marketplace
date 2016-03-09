@@ -1,5 +1,6 @@
 bash 'opscode-analytics-ctl reconfigure' do
   code 'opscode-analytics-ctl reconfigure'
+  live_stream true
 end
 
 bash 'opscode-analytics-ctl stop' do

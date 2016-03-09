@@ -87,10 +87,16 @@ reporting.cron.year = 'date +%Y'
 reporting.cron.month = 'date +%m'
 
 # Enable/Disable the Reckoner billing daemon
-reckoner.enable = true
+reckoner.enabled = true
 
 # Set the ec2 product code for the ec2 updater
 reckoner.product_code = 'XXXXXXXXXXXXXXXXXXXX'
+
+# Enable/Disable the Biscotti initial authorization cookie signing deamon
+biscotti.enabled = true
+
+# Enable/Disable the Manage marketplace sign up
+manage.marketplace.sign_up.enabled = true
 ```
 
 chef-marketplace-ctl
@@ -98,6 +104,9 @@ chef-marketplace-ctl
 ### Setup
 `chef-marketplace-ctl setup` is a helper command that sets up the Chef server,
 Manage, Reporting and Analytics with user provided configuration options.
+
+As 0.0.8 web based setup is available for both Chef Server and Chef Analytics.
+While this command can still be used the web based setup is preferred.
 
 #### Options
 * `-u USERNAME, --username USERNAME` Admin username
