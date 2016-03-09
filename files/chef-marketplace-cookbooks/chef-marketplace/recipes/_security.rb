@@ -79,9 +79,11 @@ directory '/var/opt/chef-marketplace' do
 end
 
 bash 'rm -rf /tmp/*' do
+  code 'rm -rf /tmp/*'
   not_if { Dir['/tmp/*'].empty? }
 end
 
 bash 'rm -rf /var/log/*' do
+  code 'rm -rf /var/log/*'
   not_if { Dir['/var/log/*'].empty? }
 end

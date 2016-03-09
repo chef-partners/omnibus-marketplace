@@ -4,5 +4,6 @@ chef_ingredient 'analytics' do
 end
 
 bash 'opscode-analytics-ctl reconfigure' do
+  code 'opscode-analytics-ctl reconfigure'
   action :nothing
 end

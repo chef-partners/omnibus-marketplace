@@ -272,7 +272,7 @@ class Marketplace
       return unless cloud_init_running?
 
       log('Please wait for software configuration. This may take a few minutes to complete..')
-      Timeout.timeout(900) do
+      Timeout.timeout(1800) do
         sleep 5 while cloud_init_running?
       end
     rescue Timeout::Error

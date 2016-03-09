@@ -8,5 +8,5 @@ template '/etc/chef-compliance/chef-compliance.rb' do
   source 'chef-compliance.rb.erb'
   owner 'root'
   group 'root'
-  action :create
+  action :create_if_missing
 end

@@ -8,15 +8,13 @@ gem 'chef'
 gem 'pry'
 gem 'rubocop'
 gem 'rspec'
+gem 'berkshelf'
 
 # Reckoner Deps
 gem 'sequel'
 gem 'aws-sdk'
 
 group :development do
-  # Use Berkshelf for resolving cookbook dependencies
-  gem 'berkshelf', '~> 3.1'
-
   # Use Test Kitchen with Vagrant for converging the build environment
   gem 'test-kitchen',    '~> 1.3'
   gem 'kitchen-vagrant', '~> 0.14'

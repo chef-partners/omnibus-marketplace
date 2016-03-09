@@ -56,9 +56,9 @@ def sync_assets(tarball_path, asset_dir)
   puts "Extracting tarball to #{working_dir}.."
   system("tar zxf #{tarball_path} -C #{working_dir}")
   %w(images javascripts stylesheets fonts).each do |asset_type|
-    system("rm -rf #{File.join(asset_dir, asset_type)}")
+    system("rm -rf #{File.join(asset_dir, 'biscotti', asset_type)}")
     puts "Copying #{asset_type}..."
-    system("cp -r #{File.join(working_dir, 'package', 'dist', asset_type)} #{File.join(asset_dir, asset_type)}")
-    system("cp -r #{File.join(working_dir, 'package', 'dist', asset_type)} #{File.join(asset_dir, asset_type)}")
+    system("cp -r #{File.join(working_dir, 'package', 'dist', asset_type)} #{File.join(asset_dir, 'biscotti', asset_type)}")
+    system("cp -r #{File.join(working_dir, 'package', 'dist', asset_type)} #{File.join(asset_dir, 'biscotti', asset_type)}")
   end
 end
