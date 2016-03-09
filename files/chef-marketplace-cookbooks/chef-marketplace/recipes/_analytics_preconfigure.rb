@@ -1,5 +1,10 @@
-bash 'opscode-analytics-ctl reconfigure'
-bash 'opscode-analytics-ctl stop'
+bash 'opscode-analytics-ctl reconfigure' do
+  code 'opscode-analytics-ctl reconfigure'
+end
+
+bash 'opscode-analytics-ctl stop' do
+  code 'opscode-analytics-ctl stop'
+end
 
 analytics_state_files.each do |state_file|
   file state_file do
@@ -15,5 +20,5 @@ analytics_state_directories.each do |state_dir|
 end
 
 bash 'recreate analytics runit directories' do
-  command 'mkdir -p /opt/opscode-analytics/{sv,init,service}'
+  code 'mkdir -p /opt/opscode-analytics/{sv,init,service}'
 end

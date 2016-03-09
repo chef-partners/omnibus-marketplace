@@ -4,5 +4,6 @@ chef_ingredient 'chef-marketplace' do
 end
 
 bash 'chef-marketplace-ctl reconfigure' do
+  code 'chef-marketplace-ctl reconfigure'
   action :nothing
 end

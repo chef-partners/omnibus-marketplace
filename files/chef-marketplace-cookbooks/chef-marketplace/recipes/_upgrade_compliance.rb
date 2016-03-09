@@ -4,5 +4,6 @@ chef_ingredient 'compliance' do
 end
 
 bash 'chef-compliance-ctl reconfigure' do
+  code 'chef-compliance-ctl reconfigure'
   action :nothing
 end

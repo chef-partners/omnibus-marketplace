@@ -1,5 +1,10 @@
-bash 'chef-compliance-ctl reconfigure'
-bash 'chef-compliance-ctl stop'
+bash 'chef-compliance-ctl reconfigure' do
+  code 'chef-compliance-ctl reconfigure'
+end
+
+bash 'chef-compliance-ctl stop' do
+  code 'chef-compliance-ctl stop'
+end
 
 compliance_state_files.each do |state_file|
   file state_file do
@@ -19,5 +24,5 @@ file '/etc/chef-compliance/chef-compliance.rb' do
 end
 
 bash 'recreate complinace runit directories' do
-  command 'mkdir -p /opt/chef-compliance/{sv,init,service}'
+  code 'mkdir -p /opt/chef-compliance/{sv,init,service}'
 end
