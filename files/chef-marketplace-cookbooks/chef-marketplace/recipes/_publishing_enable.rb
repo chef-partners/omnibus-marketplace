@@ -80,3 +80,8 @@ package 'walinuxagent' do
   action [:install, :upgrade]
   only_if { node['chef-marketplace']['platform'] == 'azure' && mirrors_reachable? }
 end
+
+service 'firewalld' do
+  action [:disable, :stop]
+  only_if { node['platform'] == 'centos' && node['platform_version'].start_with?('7.') }
+end
