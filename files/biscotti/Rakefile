@@ -1,4 +1,4 @@
-%w(bundler find).each { |lib| require lib }
+require 'bundler'
 
 desc 'Run the console'
 task :console, :env do |_, args|

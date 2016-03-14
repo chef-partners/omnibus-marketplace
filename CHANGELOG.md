@@ -1,6 +1,6 @@
 # Chef Marketplace Changelog
 
-# 0.0.8 (2016-03-09)
+# 0.0.10 (2016-03-09)
 ## chef-marketplace-cookbooks
 * Live stream during publishing
 
