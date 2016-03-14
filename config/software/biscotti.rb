@@ -9,6 +9,6 @@ build do
 
   bundle "install --path=#{install_dir}/embedded/service/gem", env: env
   mkdir 'assets/biscotti'
-  rake 'assets:vendor'
+  bundle 'exec rake assets:vendor', env: env
   sync project_dir, "#{install_dir}/embedded/service/biscotti/"
 end
