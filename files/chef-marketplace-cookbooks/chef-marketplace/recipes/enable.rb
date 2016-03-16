@@ -1,6 +1,18 @@
 # Configure the node attributes
 include_recipe 'chef-marketplace::config'
 
+user 'opscode' do
+  system true
+  shell '/bin/sh'
+  home '/opt/opscode/embedded'
+  action :create
+end
+
+group 'opscode' do
+  members %w(opscode)
+  action :create
+end
+
 # Setup the MOTD first so that the user doesn't see old data if the shell in
 # before the chef-client has finished converging
 motd '50-chef-marketplace-appliance' do
