@@ -1,9 +1,9 @@
-require 'marketplace/reckoner/config'
-require 'marketplace/reckoner/checker'
-require 'marketplace/reckoner/updater'
-require 'marketplace/reckoner/eetee'
-require 'marketplace/reckoner/machine_id'
-require 'marketplace/reckoner/metrics'
+require "marketplace/reckoner/config"
+require "marketplace/reckoner/checker"
+require "marketplace/reckoner/updater"
+require "marketplace/reckoner/eetee"
+require "marketplace/reckoner/machine_id"
+require "marketplace/reckoner/metrics"
 
 # The Reckoner checks node usage and updates flexible billing endpoints
 class Marketplace

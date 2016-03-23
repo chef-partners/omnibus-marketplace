@@ -1,12 +1,12 @@
-source 'https://rubygems.org/'
+source "https://rubygems.org/"
 
-gem 'sinatra', '~> 1.4'
-gem 'sinatra-contrib'
-gem 'sinatra-flash'
-gem 'rubocop'
-gem 'unicorn'
-gem 'rake'
+gem "sinatra", "~> 1.4"
+gem "sinatra-contrib"
+gem "sinatra-flash"
+gem "rubocop"
+gem "unicorn"
+gem "rake"
 
 group :development do
-  gem 'pry'
+  gem "pry"
 end

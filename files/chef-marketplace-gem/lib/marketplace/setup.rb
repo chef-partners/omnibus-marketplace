@@ -1,9 +1,9 @@
-require 'chef/json_compat'
-require 'shellwords'
-require 'highline/import'
-require 'marketplace/payment'
-require 'marketplace/options'
-require 'timeout'
+require "chef/json_compat"
+require "shellwords"
+require "highline/import"
+require "marketplace/payment"
+require "marketplace/options"
+require "timeout"
 
 # Setup the Marketplace Appliance
 class Marketplace
@@ -53,33 +53,33 @@ class Marketplace
 
     def configure_software
       case role.to_s
-      when 'server'
+      when "server"
         reconfigure(:server)
         reconfigure(:manage)
         reconfigure(:reporting)
-      when 'analytics'
+      when "analytics"
         reconfigure(:analytics)
-      when 'aio'
+      when "aio"
         reconfigure(:server)
         reconfigure(:manage)
         reconfigure(:reporting)
         reconfigure(:analytics)
-      when 'compliance'
+      when "compliance"
         reconfigure(:compliance)
       else
-        fail "'#{role}' is not a valid role."
+        raise "'#{role}' is not a valid role."
       end
     end
 
     def create_default_users
       case role.to_s
-      when 'server', 'aio'
+      when "server", "aio"
         create_server_user
         create_server_org
-      when 'compliance'
-      when 'analytics'
+      when "compliance"
+      when "analytics"
       else
-        fail "'#{role}' is not a valid role."
+        raise "'#{role}' is not a valid role."
       end
     end
 
@@ -90,9 +90,9 @@ class Marketplace
 
     def marketplace_config
       @marketplace_config ||= begin
-        marketplace_json = '/etc/chef-marketplace/chef-marketplace-running.json'
+        marketplace_json = "/etc/chef-marketplace/chef-marketplace-running.json"
         if File.exist?(marketplace_json)
-          Chef::JSONCompat.parse(IO.read(marketplace_json))['chef-marketplace']
+          Chef::JSONCompat.parse(IO.read(marketplace_json))["chef-marketplace"]
         else
           {}
         end
@@ -100,8 +100,8 @@ class Marketplace
     end
 
     def role
-      if marketplace_config.key?('role')
-        marketplace_config['role']
+      if marketplace_config.key?("role")
+        marketplace_config["role"]
       else
         msg = "Could not determine the Chef Marketplace role.\n"
         msg << "Please set the role in /etc/chef-marketplace/marketplace.rb\n"
@@ -112,24 +112,24 @@ class Marketplace
     end
 
     def fqdn
-      marketplace_config['api_fqdn']
+      marketplace_config["api_fqdn"]
     end
 
     def ssl_port_for(service)
       case service.to_sym
       when :compliance
-        marketplace_config['compliance']['ssl_port']
+        marketplace_config["compliance"]["ssl_port"]
       when :analytics
-        marketplace_config['analytics']['ssl_port']
+        marketplace_config["analytics"]["ssl_port"]
       when :server
-        marketplace_config['api_ssl_port']
+        marketplace_config["api_ssl_port"]
       else
-        fail "Unknown service: #{service}"
+        raise "Unknown service: #{service}"
       end
     end
 
     def restart_reckoner
-      system('chef-marketplace-ctl restart reckoner')
+      system("chef-marketplace-ctl restart reckoner")
     end
 
     def validate_options
@@ -144,7 +144,7 @@ class Marketplace
       msg << "Type 'yes' if you agree"
 
       unless ui.ask("<%= color(%Q(#{msg}), :yellow) %>") =~ /yes/i
-        log('You must agree to the Chef Software, Inc License Agreement in order to continue.', :error)
+        log("You must agree to the Chef Software, Inc License Agreement in order to continue.", :error)
         exit 1
       end
     end
@@ -161,38 +161,38 @@ class Marketplace
       return unless options.register_node
 
       cmd = [
-        'chef-marketplace-ctl register-node',
+        "chef-marketplace-ctl register-node",
         "-f #{options.first_name.to_s.shellescape}",
         "-l #{options.last_name.to_s.shellescape}",
         "-e #{options.email.to_s.shellescape}",
         "-o #{options.organization.to_s.shellescape}"
-      ].join(' ')
+      ].join(" ")
 
       retry_command(cmd, 2, 10)
     end
 
     def reconfigure(product)
       case product.to_s
-      when 'marketplace'
-        service_name = 'Chef Marketplace'
-        ctl_command = 'chef-marketplace-ctl'
-      when 'server'
-        service_name = 'Chef Server'
-        ctl_command = 'chef-server-ctl'
-      when 'manage'
-        service_name = 'Chef Manage'
-        ctl_command = 'chef-manage-ctl'
-      when 'reporting'
-        service_name = 'Chef Reporting'
-        ctl_command = 'opscode-reporting-ctl'
-      when 'analytics'
-        service_name = 'Chef Analytics'
-        ctl_command = 'opscode-analytics-ctl'
-      when 'compliance'
-        service_name = 'Chef Compliance'
-        ctl_command = 'chef-compliance-ctl'
+      when "marketplace"
+        service_name = "Chef Marketplace"
+        ctl_command = "chef-marketplace-ctl"
+      when "server"
+        service_name = "Chef Server"
+        ctl_command = "chef-server-ctl"
+      when "manage"
+        service_name = "Chef Manage"
+        ctl_command = "chef-manage-ctl"
+      when "reporting"
+        service_name = "Chef Reporting"
+        ctl_command = "opscode-reporting-ctl"
+      when "analytics"
+        service_name = "Chef Analytics"
+        ctl_command = "opscode-analytics-ctl"
+      when "compliance"
+        service_name = "Chef Compliance"
+        ctl_command = "chef-compliance-ctl"
       else
-        fail "Unknown product: #{product}"
+        raise "Unknown product: #{product}"
       end
 
       log "Please wait while we set up #{service_name}. This may take a few minutes to complete..."
@@ -204,42 +204,42 @@ class Marketplace
       # the command is run by a system user lacking such variables (rc/cloud-init),
       # the reconfigure will fail because rabbitmqctl needs them to be set.
       # Until both packages have been fixed this is our workaround.
-      system({ 'HOME' => '/root', 'USER' => 'root' }, "#{ctl_command} reconfigure")
+      system({ "HOME" => "/root", "USER" => "root" }, "#{ctl_command} reconfigure")
     end
 
     def run_analytics_preflight_check
-      unless run_command('opscode-analytics preflight-check').success?
-        log('Chef Analtyics preflight check failed, cannot set up Chef Analytics', :error)
+      unless run_command("opscode-analytics preflight-check").success?
+        log("Chef Analtyics preflight check failed, cannot set up Chef Analytics", :error)
         exit 1
       end
     end
 
     def update_software
-      log 'Updating the Chef Server software packages...'
-      run_command('chef-marketplace-ctl upgrade -y')
+      log "Updating the Chef Server software packages..."
+      run_command("chef-marketplace-ctl upgrade -y")
     end
 
     def create_server_user
       cmd = [
-        'chef-server-ctl user-create',
+        "chef-server-ctl user-create",
         options.username.to_s.shellescape,
         options.first_name.to_s.shellescape,
         options.last_name.to_s.shellescape,
         options.email.to_s.shellescape,
         options.password.to_s.shellescape
-      ].join(' ')
+      ].join(" ")
 
       retry_command(cmd)
     end
 
     def create_server_org
       cmd = [
-        'chef-server-ctl org-create',
+        "chef-server-ctl org-create",
         options.organization.to_s.shellescape,
         options.organization.to_s.shellescape,
-        '-a',
+        "-a",
         options.username.to_s.shellescape
-      ].join(' ')
+      ].join(" ")
 
       retry_command(cmd)
     end
@@ -271,37 +271,37 @@ class Marketplace
     def wait_for_cloud_init_preconfigure
       return unless cloud_init_running?
 
-      log('Please wait for software configuration. This may take a few minutes to complete..')
+      log("Please wait for software configuration. This may take a few minutes to complete..")
       Timeout.timeout(1800) do
         sleep 5 while cloud_init_running?
       end
     rescue Timeout::Error
-      log('Timed out waiting for background configuration to complete', :error)
+      log("Timed out waiting for background configuration to complete", :error)
       exit(1)
     end
 
     def preconfigured?
-      File.exist?('/var/opt/chef-marketplace/preconfigured')
+      File.exist?("/var/opt/chef-marketplace/preconfigured")
     end
 
     def cloud_init_running?
-      File.exist?('/var/opt/chef-marketplace/cloud_init_running')
+      File.exist?("/var/opt/chef-marketplace/cloud_init_running")
     end
 
     def redirect_user
       msg = ["\n\nYou're all set!\n"]
 
       case role
-      when 'server', 'aio'
+      when "server", "aio"
         msg << ["Next you'll want to log into the Chef management console and download the Starter Kit:",
                 "https://#{fqdn}:#{ssl_port_for(:server)}/organizations/#{options.organization}/getting_started\n",
                 "Use your username '#{options.username}' instead of your email address to login\n"
                ]
-      when 'compliance'
+      when "compliance"
         msg << ["Next you'll want to log into the Chef Compliance Web UI",
                 "https://#{fqdn}:#{ssl_port_for(:compliance)}/#/setup\n"
                ]
-      when 'analytics'
+      when "analytics"
         msg << ["Next you'll want to log into the Chef Analytics Web UI",
                 "https://#{fqdn}\n",
 
@@ -309,10 +309,10 @@ class Marketplace
                ]
       end
 
-      msg << 'In order to use Transport Layer Security (TLS) we had to generate a self-signed certificate which'
+      msg << "In order to use Transport Layer Security (TLS) we had to generate a self-signed certificate which"
       msg << "might cause a warning in your browser, you can safely ignore it.\n"
 
-      if role == 'aio'
+      if role == "aio"
         msg << "\nGain insight into your infrastructure in the Chef Analytics UI:\n"
         msg << "https://#{fqdn}:#{ssl_port_for(:analytics)}\n\n"
       end

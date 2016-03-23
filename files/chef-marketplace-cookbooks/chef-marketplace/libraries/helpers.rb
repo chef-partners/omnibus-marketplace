@@ -1,78 +1,78 @@
-require 'resolv'
-require 'net/http'
-require 'timeout'
-require 'securerandom'
-require 'yaml'
+require "resolv"
+require "net/http"
+require "timeout"
+require "securerandom"
+require "yaml"
 
 class Marketplace
   module Helpers
     def motd_action
-      node['chef-marketplace']['motd']['enabled'] ? :create : :delete
+      node["chef-marketplace"]["motd"]["enabled"] ? :create : :delete
     end
 
     def reporting_partition_action
-      node['chef-marketplace']['reporting']['cron']['enabled'] ? :create : :delete
+      node["chef-marketplace"]["reporting"]["cron"]["enabled"] ? :create : :delete
     end
 
     def actions_trimmer_action
-      node['chef-marketplace']['analytics']['trimmer']['enabled'] ? :create : :delete
+      node["chef-marketplace"]["analytics"]["trimmer"]["enabled"] ? :create : :delete
     end
 
     def current_user_directories
       Etc::Passwd.each_with_object({}) do |user, memo|
-        next if %w(halt sync shutdown).include?(user.name) ||
-                user.shell =~ %r{(/sbin/nologin|/bin/false)}
+        next if %w{halt sync shutdown}.include?(user.name) ||
+            user.shell =~ %r{(/sbin/nologin|/bin/false)}
         memo[user.name] = user.dir
       end
     end
 
     def system_ssh_keys
-      %w(key key.pub dsa_key dsa_key.pub rsa_key.pub rsa_key).map do |key|
+      %w{key key.pub dsa_key dsa_key.pub rsa_key.pub rsa_key}.map do |key|
         "/etc/ssh/ssh_host_#{key}"
       end
     end
 
     def current_sudoers
-      Dir['/etc/sudoers.d/*'].delete_if { |entry| entry =~ /cloud-init/ }
+      Dir["/etc/sudoers.d/*"].delete_if { |entry| entry =~ /cloud-init/ }
     end
 
     def cloud_cfg_gecos
-      case node['chef-marketplace']['platform']
-      when 'aws' then 'Ec2 User'
-      when 'azure' then 'Ubuntu'
-      when 'openstack' then 'OpenStack User'
-      when 'oracle' then 'Oracle User'
+      case node["chef-marketplace"]["platform"]
+      when "aws" then "Ec2 User"
+      when "azure" then "Ubuntu"
+      when "openstack" then "OpenStack User"
+      when "oracle" then "Oracle User"
       end
     end
 
     def cloud_cfg_default_user
-      node['chef-marketplace']['platform'] == 'azure' ? 'ubuntu' : node['chef-marketplace']['user']
+      node["chef-marketplace"]["platform"] == "azure" ? "ubuntu" : node["chef-marketplace"]["user"]
     end
 
     def cloud_cfg_ssh_pwauth
-      node['chef-marketplace']['platform'] == 'azure' ? true : false
+      node["chef-marketplace"]["platform"] == "azure" ? true : false
     end
 
     def cloud_cfg_locale_configfile
-      node['platform_family'] == 'rhel' ? '/etc/sysconfig/i18n' : '/etc/default/locale'
+      node["platform_family"] == "rhel" ? "/etc/sysconfig/i18n" : "/etc/default/locale"
     end
 
     def cloud_cfg_distro
-      node['platform_family'] == 'rhel' ? 'rhel' : node['platform']
+      node["platform_family"] == "rhel" ? "rhel" : node["platform"]
     end
 
     def cron_package
-      case node['platform']
-      when 'redhat', 'centos', 'oracle' then 'cronie'
-      when 'debian', 'ubuntu' then 'cron'
+      case node["platform"]
+      when "redhat", "centos", 'oracle' then 'cronie'
+      when "debian", "ubuntu" then 'cron'
       end
     end
 
     def default_package_mirror_uri
-      case node['platform']
-      when 'redhat' then 'http://mirrorlist.centos.org'
-      when 'centos' then 'http://mirrorlist.centos.org'
-      when 'ubuntu' then 'http://us.archive.ubuntu.com/ubuntu/'
+      case node["platform"]
+      when "redhat" then "http://mirrorlist.centos.org"
+      when "centos" then "http://mirrorlist.centos.org"
+      when "ubuntu" then "http://us.archive.ubuntu.com/ubuntu/"
       end
     end
 
@@ -81,11 +81,11 @@ class Marketplace
     # worry about package installs/removals in that environment.
     def mirrors_reachable?(mirror = nil)
       mirror ||= default_package_mirror_uri
-      return node['chef-marketplace']['mirrors_reachable'] if node['chef-marketplace'].attribute?('mirrors_reachable')
+      return node["chef-marketplace"]["mirrors_reachable"] if node["chef-marketplace"].attribute?("mirrors_reachable")
 
       # check whether or not outbound traffic is disabled
-      if node['chef-marketplace']['disable_outbound_traffic']
-        return node.set['chef-marketplace']['mirrors_reachable'] = false
+      if node["chef-marketplace"]["disable_outbound_traffic"]
+        return node.set["chef-marketplace"]["mirrors_reachable"] = false
       end
 
       # check if the hostname is resolvable
@@ -95,32 +95,32 @@ class Marketplace
       # check if the mirror is reachable
       Timeout.timeout(2) do
         res = Net::HTTP.get_response(uri)
-        node.set['chef-marketplace']['mirrors_reachable'] = res.is_a?(Net::HTTPSuccess)
+        node.set["chef-marketplace"]["mirrors_reachable"] = res.is_a?(Net::HTTPSuccess)
       end
 
-      node['chef-marketplace']['mirrors_reachable']
+      node["chef-marketplace"]["mirrors_reachable"]
     rescue
-      node.set['chef-marketplace']['mirrors_reachable'] = false
+      node.set["chef-marketplace"]["mirrors_reachable"] = false
     end
 
     def outbound_traffic_disabled?
-      node['chef-marketplace']['disable_outbound_traffic']
+      node["chef-marketplace"]["disable_outbound_traffic"]
     end
 
     def security_enabled?
-      node['chef-marketplace'].attribute?('security') && node['chef-marketplace']['security']['enabled']
+      node["chef-marketplace"].attribute?("security") && node["chef-marketplace"]["security"]["enabled"]
     end
 
     def chef_server_configured?
-      File.exist?('/etc/opscode/chef-server-running.json')
+      File.exist?("/etc/opscode/chef-server-running.json")
     end
 
     def analytics_configured?
-      File.exist?('/etc/opscode-analytics/opscode-analytics-running.json')
+      File.exist?("/etc/opscode-analytics/opscode-analytics-running.json")
     end
 
     def compliance_configured?
-      File.exist?('/etc/chef-compliance/chef-compliance-running.json')
+      File.exist?("/etc/chef-compliance/chef-compliance-running.json")
     end
 
     def manage_url
@@ -133,23 +133,23 @@ class Marketplace
 
     def motd_variables
       vars = {
-        doc_url: node['chef-marketplace']['documentation']['url'],
-        support_email: node['chef-marketplace']['support']['email'],
-        role: node['chef-marketplace']['role']
+        doc_url: node["chef-marketplace"]["documentation"]["url"],
+        support_email: node["chef-marketplace"]["support"]["email"],
+        role: node["chef-marketplace"]["role"]
       }
 
-      case node['chef-marketplace']['role']
-      when 'server', 'aio'
+      case node["chef-marketplace"]["role"]
+      when "server", "aio"
         vars[:role_name] = 'Chef Server'
         unless security_enabled?
           vars[:analytics_url] = analytics_url
           vars[:manage_url] = manage_url
         end
-      when 'analytics'
-        vars[:role_name] = 'Chef Analytics'
+      when "analytics"
+        vars[:role_name] = "Chef Analytics"
         vars[:analytics_url] = manage_url unless security_enabled?
-      when 'compliance'
-        vars[:role_name] = 'Chef Compliance'
+      when "compliance"
+        vars[:role_name] = "Chef Compliance"
         vars[:compliance_url] = "#{manage_url}/#/setup" unless security_enabled?
       end
 
@@ -158,9 +158,9 @@ class Marketplace
 
     # Returns an array of hashes of which omnibus commands should be enabled/disabled
     def omnibus_commands
-      service_dir = '/opt/chef-marketplace/embedded/service'
+      service_dir = "/opt/chef-marketplace/embedded/service"
 
-      enabled_commands = %w(
+      enabled_commands = %w{
         setup.rb
         hostname.rb
         test.rb
@@ -168,13 +168,13 @@ class Marketplace
         trim_actions_db.rb
         register_node.rb
         prepare_for_publishing.rb
-      )
+      }
       disabled_commands = []
 
-      case node['chef-marketplace']['role']
-      when 'server', 'compliance'
+      case node["chef-marketplace"]["role"]
+      when "server", "compliance"
         disabled_commands << enabled_commands.delete('trim_actions_db.rb')
-      when 'aio', 'analytics'
+      when "aio", "analytics"
         # Keep em all
       end
 
@@ -196,20 +196,20 @@ class Marketplace
     end
 
     def biscotti_yml_config
-      { 'production' =>
-        { 'biscotti' =>
+      { "production" =>
+        { "biscotti" =>
           {
-            'message' => node['chef-marketplace']['biscotti']['message'],
-            'uuid' => node['chef-marketplace']['biscotti']['uuid'],
-            'uuid_type' => node['chef-marketplace']['biscotti']['uuid_type'],
-            'token' => node['chef-marketplace']['biscotti']['token']
+            "message" => node["chef-marketplace"]["biscotti"]["message"],
+            "uuid" => node["chef-marketplace"]["biscotti"]["uuid"],
+            "uuid_type" => node["chef-marketplace"]["biscotti"]["uuid_type"],
+            "token" => node["chef-marketplace"]["biscotti"]["token"]
           }
         }
       }.to_yaml
     end
 
     def analytics_state_files
-      %w(
+      %w{
         /var/opt/opscode-analytics/bootstrapped
         /var/opt/opscode-analytics/actions/config/secrets.yml
         /var/opt/opscode-analytics/actions/config/database.yml
@@ -230,22 +230,22 @@ class Marketplace
         /opt/opscode-analytics/embedded/service/notifier_config/sys.config
         /opt/opscode-analytics/embedded/bin/storm
         /opt/opscode-analytics/embedded/bin/alaska
-      )
+      }
     end
 
     def analytics_state_directories
-      %w(
+      %w{
         /opt/opscode-analytics/sv
         /opt/opscode-analytics/init
         /opt/opscode-analytics/service
         /var/opt/opscode-analytics/postgresql
         /var/opt/opscode-analytics/ssl
         /var/opt/opscode-analytics/zookeeper/data
-      )
+      }
     end
 
     def server_state_files
-      %w(
+      %w{
         /etc/opscode/webui_pub.pem
         /etc/opscode/worker-public.pem
         /etc/opscode/chef-server-running.json
@@ -279,11 +279,11 @@ class Marketplace
         /var/opt/opscode-reporting/etc/sys.config
         /var/opt/chef-manage/etc/chef-manage-running.json
         /var/opt/chef-manage/etc/settings.yml
-      )
+      }
     end
 
     def server_state_directories
-      %w(
+      %w{
         /opt/opscode/sv
         /opt/opscode/service
         /opt/opscode/init
@@ -301,25 +301,25 @@ class Marketplace
         /var/opt/opscode/redis_lb
         /var/opt/opscode/upgrades
         /var/opt/opscode/local-mode-cache
-      )
+      }
     end
 
     def compliance_state_files
-      %w(
+      %w{
         /etc/chef-compliance/chef-compliance-running.json
         /etc/chef-compliance/chef-compliance-secrets.json
         /etc/chef-compliance/server-config.json
-      )
+      }
     end
 
     def compliance_state_directories
-      %w(
+      %w{
         /opt/chef-compliance/sv
         /opt/chef-compliance/init
         /opt/chef-compliance/service
         /var/opt/chef-compliance/postgresql
         /var/opt/chef-compliance/ssl
-      )
+      }
     end
   end
 end

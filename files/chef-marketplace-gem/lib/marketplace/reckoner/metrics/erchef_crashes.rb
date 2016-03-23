@@ -1,9 +1,9 @@
-require 'marketplace/reckoner/metrics/base'
+require "marketplace/reckoner/metrics/base"
 
 class Marketplace::Reckoner::Metrics
   class ErchefCrashes < LogParser
     def filenames
-      '/var/log/opscode/opscode-erchef/crash.log*'
+      "/var/log/opscode/opscode-erchef/crash.log*"
     end
 
     def metric_matchers

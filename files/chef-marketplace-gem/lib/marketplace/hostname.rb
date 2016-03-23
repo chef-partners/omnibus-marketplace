@@ -1,9 +1,9 @@
-require 'ohai'
+require "ohai"
 
 class Marketplace
   class Hostname
     def resolve
-      Ohai::System.new.all_plugins('hostname').first.data['fqdn']
+      Ohai::System.new.all_plugins("hostname").first.data["fqdn"]
     end
 
     def associate_eip(hostname)
@@ -18,7 +18,7 @@ class Marketplace
       File.write(
         file_path,
         JSON.pretty_generate(
-          'set_fqdn' => hostname, 'run_list' => ['recipe[hostname::default]']
+          "set_fqdn" => hostname, "run_list" => ["recipe[hostname::default]"]
         )
       )
     end

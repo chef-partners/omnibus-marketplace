@@ -15,9 +15,9 @@
 # limitations under the License.
 #
 
-if File.exist?('/etc/chef-marketplace/marketplace.rb')
-  Marketplace.from_file('/etc/chef-marketplace/marketplace.rb')
-  node.consume_attributes('chef-marketplace' => Marketplace.save(false))
+if File.exist?("/etc/chef-marketplace/marketplace.rb")
+  Marketplace.from_file("/etc/chef-marketplace/marketplace.rb")
+  node.consume_attributes("chef-marketplace" => Marketplace.save(false))
 end
 
-puts Chef::JSONCompat.to_json_pretty(node['chef-marketplace'])
+puts Chef::JSONCompat.to_json_pretty(node["chef-marketplace"])

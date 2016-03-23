@@ -1,86 +1,86 @@
-require 'highline/import'
-require 'tempfile'
+require "highline/import"
+require "tempfile"
 
-add_command_under_category 'register-node', 'Setup', 'Register node with Chef to enable support', 2 do
-  def run_chef_non_root(dna, args = '')
-    FileUtils.mkdir_p('/tmp/chef-marketplace/local-mode-cache/nodes')
-    FileUtils.rm_rf('/tmp/chef-marketplace/local-mode-cache/nodes/*')
+add_command_under_category "register-node", "Setup", "Register node with Chef to enable support", 2 do
+  def run_chef_non_root(dna, args = "")
+    FileUtils.mkdir_p("/tmp/chef-marketplace/local-mode-cache/nodes")
+    FileUtils.rm_rf("/tmp/chef-marketplace/local-mode-cache/nodes/*")
     cmd = "#{base_path}/embedded/bin/chef-client -z"
     cmd << "-c #{base_path}/embedded/cookbooks/non_root_solo.rb -j #{dna}"
     cmd << " #{args}" unless args.empty?
     status = run_command(cmd)
-    FileUtils.rm_rf('/tmp/chef-marketplace/local-mode-cache/')
+    FileUtils.rm_rf("/tmp/chef-marketplace/local-mode-cache/")
     status
   end
 
   config = {
-    'chef-marketplace' => {
-      'registration' => {
-        'address' => 'https://marketplace.chef.io'
+    "chef-marketplace" => {
+      "registration" => {
+        "address" => "https://marketplace.chef.io"
       }
     },
-    'run_list' => ['chef-marketplace::register_node']
+    "run_list" => ["chef-marketplace::register_node"]
   }
 
   ui = HighLine.new
 
-  if File.exist?('/etc/chef-marketplace/chef-marketplace-running.json')
-    running_config = JSON.parse(IO.read('/etc/chef-marketplace/chef-marketplace-running.json'))
+  if File.exist?("/etc/chef-marketplace/chef-marketplace-running.json")
+    running_config = JSON.parse(IO.read("/etc/chef-marketplace/chef-marketplace-running.json"))
     begin
-      configured_address = running_config['chef-marketplace']['marketplace_api']['address']
+      configured_address = running_config["chef-marketplace"]["marketplace_api"]["address"]
     rescue NoMethodError
       configured_address = nil
     end
-    config['chef-marketplace']['registration']['address'] = configured_address if configured_address
+    config["chef-marketplace"]["registration"]["address"] = configured_address if configured_address
   end
 
   OptionParser.new do |opts|
-    opts.banner = 'Usage: chef-marketplace-ctl register-node [options]'
+    opts.banner = "Usage: chef-marketplace-ctl register-node [options]"
 
-    opts.on('-f FIRST_NAME', '--first FIRST_NAME', String, 'The primary support contacts first name') do |first|
-      config['chef-marketplace']['registration']['first_name'] = first
+    opts.on("-f FIRST_NAME", "--first FIRST_NAME", String, "The primary support contacts first name") do |first|
+      config["chef-marketplace"]["registration"]["first_name"] = first
     end
 
-    opts.on('-l LAST_NAME', '--last LAST_NAME', String, 'The primary support contacts last name') do |last|
-      config['chef-marketplace']['registration']['last_name'] = last
+    opts.on("-l LAST_NAME", "--last LAST_NAME", String, "The primary support contacts last name") do |last|
+      config["chef-marketplace"]["registration"]["last_name"] = last
     end
 
-    opts.on('-e EMAIL_ADDRESS', '--email EMAIL_ADDRESS', String, 'The primary support contacts email address') do |email|
-      config['chef-marketplace']['registration']['email'] = email
+    opts.on("-e EMAIL_ADDRESS", "--email EMAIL_ADDRESS", String, "The primary support contacts email address") do |email|
+      config["chef-marketplace"]["registration"]["email"] = email
     end
 
-    opts.on('-o ORG_NAME', '--organization ORG_NAME', String, 'The primary support contacts organization name') do |org|
-      config['chef-marketplace']['registration']['organization'] = org
+    opts.on("-o ORG_NAME", "--organization ORG_NAME", String, "The primary support contacts organization name") do |org|
+      config["chef-marketplace"]["registration"]["organization"] = org
     end
 
-    opts.on('-s SERVER_ADDRESS', '--server SERVER_ADDRESS', String, 'The Marketplace API server address') do |address|
-      config['chef-marketplace']['registration']['address'] = address
+    opts.on("-s SERVER_ADDRESS", "--server SERVER_ADDRESS", String, "The Marketplace API server address") do |address|
+      config["chef-marketplace"]["registration"]["address"] = address
     end
 
-    opts.on('-h', '--help', 'Show this message') do
+    opts.on("-h", "--help", "Show this message") do
       puts opts
       exit
     end
   end.parse!(ARGV)
 
-  %w(first_name last_name organization).each do |opt|
-    config['chef-marketplace']['registration'][opt] ||= ui.ask("Please enter your #{opt.split('_').first} name:") do |q|
+  %w{first_name last_name organization}.each do |opt|
+    config["chef-marketplace"]["registration"][opt] ||= ui.ask("Please enter your #{opt.split('_').first} name:") do |q|
       q.validate = ->(p) { p.length >= 3 }
-      q.responses[:not_valid] = 'Valid entries must be at least 3 characters in length'
+      q.responses[:not_valid] = "Valid entries must be at least 3 characters in length"
     end
   end
 
-  config['chef-marketplace']['registration']['email'] ||= ui.ask('Please enter your email address:') do |q|
+  config["chef-marketplace"]["registration"]["email"] ||= ui.ask("Please enter your email address:") do |q|
     q.validate = /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
-    q.responses[:not_valid] = 'Your entry was not a valid email address'
+    q.responses[:not_valid] = "Your entry was not a valid email address"
   end
 
-  puts 'Registering the node with Chef Software...'
+  puts "Registering the node with Chef Software..."
 
-  Tempfile.open('register_node.json') do |file|
+  Tempfile.open("register_node.json") do |file|
     file.write(JSON.pretty_generate(config))
     file.rewind
-    @status = run_chef_non_root(file.path, '--lockfile /tmp/chef-client-register-node.lock')
+    @status = run_chef_non_root(file.path, "--lockfile /tmp/chef-client-register-node.lock")
   end
 
   @status.success? ? exit(0) : exit(1)

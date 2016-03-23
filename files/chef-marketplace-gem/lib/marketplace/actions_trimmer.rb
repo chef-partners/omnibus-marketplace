@@ -1,7 +1,7 @@
-require 'json'
-require 'sequel'
-require 'time'
-require 'logger'
+require "json"
+require "sequel"
+require "time"
+require "logger"
 
 class ActionsTrimmer
   attr_accessor :log, :options, :db
@@ -9,14 +9,14 @@ class ActionsTrimmer
   def initialize(opts = {})
     @options = default_options.merge(opts)
     @log = Logger.new(options[:log_file])
-    @db = Sequel.postgres('actions',
+    @db = Sequel.postgres("actions",
                           user: options[:user],
                           password: options[:password],
                           host: options[:host])
   end
 
   def run
-    log.info 'Starting Analytics Actions database trimmer..'
+    log.info "Starting Analytics Actions database trimmer.."
     log.info "Maximum allowed database size: #{options[:db_max_size_gb]}GB"
     log.info "Average activity entry size: #{options[:avg_activity_size_kb]}KB"
     log.info "Activities since last run: #{interval_activities}"
@@ -27,12 +27,12 @@ class ActionsTrimmer
   private
 
   def default_options
-    config = JSON.parse(File.read('/etc/opscode-analytics/opscode-analytics-running.json'))['analytics']
+    config = JSON.parse(File.read("/etc/opscode-analytics/opscode-analytics-running.json"))["analytics"]
 
     {
-      user: config['actions']['sql_user'],
-      password: config['actions']['sql_password'],
-      host: 'localhost',
+      user: config["actions"]["sql_user"],
+      password: config["actions"]["sql_password"],
+      host: "localhost",
       log_file: $stdout,
       db_max_size_gb: 1,
       avg_activity_size_kb: 20,

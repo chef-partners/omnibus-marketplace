@@ -1,9 +1,9 @@
-name 'reckoner'
+name "reckoner"
 source path: "#{project.files_path}/reckoner"
 
-dependency 'ruby'
-dependency 'bundler'
-dependency 'chef-marketplace-gem'
+dependency "ruby"
+dependency "bundler"
+dependency "chef-marketplace-gem"
 
 build do
   env = with_standard_compiler_flags(with_embedded_path)

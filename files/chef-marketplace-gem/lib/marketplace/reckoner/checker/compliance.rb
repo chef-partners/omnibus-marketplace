@@ -1,4 +1,4 @@
-require 'sequel'
+require "sequel"
 
 class Marketplace
   class Reckoner
@@ -11,7 +11,7 @@ class Marketplace
         end
 
         def current_usage
-          db.from('nodes').count
+          db.from("nodes").count
         end
 
         def limit_exceeded?
@@ -28,13 +28,13 @@ class Marketplace
 
         def init(opts = {})
           @db = Sequel.postgres(
-            'chef_compliance',
-            host: opts[:host] || Marketplace::Reckoner::Config['db']['host'],
-            port: opts[:port] || Marketplace::Reckoner::Config['db']['port'],
-            user: opts[:user] || Marketplace::Reckoner::Config['db']['user'],
-            password: opts[:password] || Marketplace::Reckoner::Config['db']['password']
+            "chef_compliance",
+            host: opts[:host] || Marketplace::Reckoner::Config["db"]["host"],
+            port: opts[:port] || Marketplace::Reckoner::Config["db"]["port"],
+            user: opts[:user] || Marketplace::Reckoner::Config["db"]["user"],
+            password: opts[:password] || Marketplace::Reckoner::Config["db"]["password"]
           )
-          @max_nodes = opts[:license_count] || Marketplace::Reckoner::Config['license']['count']
+          @max_nodes = opts[:license_count] || Marketplace::Reckoner::Config["license"]["count"]
         end
       end
     end

@@ -1,7 +1,7 @@
-source 'https://supermarket.chef.io'
+source "https://supermarket.chef.io"
 
-cookbook 'hostname', github: '3ofcoins/chef-cookbook-hostname', branch: 'v0.4.0'
-cookbook 'enterprise', git: 'https://github.com/opscode-cookbooks/enterprise-chef-common.git'
-cookbook 'chef-ingredient'
+cookbook "hostname", github: "3ofcoins/chef-cookbook-hostname", branch: "v0.4.0"
+cookbook "enterprise", git: "https://github.com/opscode-cookbooks/enterprise-chef-common.git"
+cookbook "chef-ingredient"
 
 metadata

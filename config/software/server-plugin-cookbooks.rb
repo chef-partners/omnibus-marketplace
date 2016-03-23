@@ -1,4 +1,4 @@
-name 'server-plugin-cookbooks'
+name "server-plugin-cookbooks"
 
 source path: "#{project.files_path}/#{name}"
 
