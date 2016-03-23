@@ -13,8 +13,8 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 
-require 'mixlib/config'
-require 'chef/mash'
+require "mixlib/config"
+require "chef/mash"
 
 class Marketplace
   extend Mixlib::Config
@@ -24,11 +24,11 @@ class Marketplace
   end
 
   config_context :support do
-    default :email, 'aws@chef.io'
+    default :email, "aws@chef.io"
   end
 
   config_context :documentation do
-    default :url, 'https://docs.chef.io/aws_marketplace.html'
+    default :url, "https://docs.chef.io/aws_marketplace.html"
   end
 
   # Which port and FQDN the Chef Server LB will listen on
@@ -43,18 +43,18 @@ class Marketplace
     default :free_node_count, 5
 
     # Licensing model, eg: 'fixed' or 'flexible'
-    default :type, 'fixed'
+    default :type, "fixed"
   end
 
   # Which role the marketplace addition is to play:
   # 'server', 'aio', 'analytics', 'compliance'
-  default :role, 'server'
+  default :role, "server"
 
   # The marketplace platform, eg: 'aws', 'openstack', 'azure', 'gce', etc.
-  default :platform, 'aws'
+  default :platform, "aws"
 
   # The default SSH user
-  default :user, 'ec2-user'
+  default :user, "ec2-user"
 
   # The reckoner billing daemon
   config_context :reckoner do
@@ -62,8 +62,8 @@ class Marketplace
 
     # AWS specific config
     configurable :product_code
-    default :region, 'us-east-1'
-    default :usage_dimension, 'ChefNodes'
+    default :region, "us-east-1"
+    default :usage_dimension, "ChefNodes"
 
     # Phone Home
     config_context :eetee do
@@ -78,7 +78,7 @@ class Marketplace
     configurable :token
 
     default :port, 9666
-    default :listen_address, '127.0.0.1'
+    default :listen_address, "127.0.0.1"
   end
 
   # Set to true if you don't want to use outbound networks, eg: package mirrors
@@ -94,13 +94,13 @@ class Marketplace
       default :enabled, true
 
       # Standard crontab expression
-      default :expression, '0 0 * * *'
+      default :expression, "0 0 * * *"
 
       # Up to what year to delete, must be a valid shell command
-      default :year, 'date +%Y'
+      default :year, "date +%Y"
 
       # Up to what month to delete, must be a valid shell command
-      default :month, 'date +%m'
+      default :month, "date +%m"
     end
   end
 
@@ -113,7 +113,7 @@ class Marketplace
       # How often in hours to run the trimmer (1-24)
       default :interval, 4
 
-      default :log_file, '/var/log/opscode-analytics/actions-trimmer.log'
+      default :log_file, "/var/log/opscode-analytics/actions-trimmer.log"
 
       # The allowed max size of the actiongs database in Gigs
       default :max_db_size, 1
@@ -144,26 +144,26 @@ class Marketplace
   end
 
   config_context :marketplace_api do
-    default :address, 'https://marketplace.chef.io'
+    default :address, "https://marketplace.chef.io"
   end
 
   # Deprecated config options
   def self.publishing
-    puts 'WARNING: The publishing config option is no longer used and will be removed in a future release'
-    puts 'WARNING: Please remove all references to it /etc/chef-marketplace/marketplace.rb'
+    puts "WARNING: The publishing config option is no longer used and will be removed in a future release"
+    puts "WARNING: Please remove all references to it /etc/chef-marketplace/marketplace.rb"
     @publishing ||= Mash.new
     @publishing
   end
 
   def self.license_count(count)
-    puts 'WARNING: The license_count config option is no longer used and will be removed in a future release'
-    puts 'WARNING: Please modify it to license.count in /etc/chef-marketplace/marketplace.rb'
-    license['count'] = count
+    puts "WARNING: The license_count config option is no longer used and will be removed in a future release"
+    puts "WARNING: Please modify it to license.count in /etc/chef-marketplace/marketplace.rb"
+    license["count"] = count
   end
 
   def self.license_type(type)
-    puts 'WARNING: The license_type config option is no longer used and will be removed in a future release'
-    puts 'WARNING: Please modify it to license.type in /etc/chef-marketplace/marketplace.rb'
-    license['type'] = type
+    puts "WARNING: The license_type config option is no longer used and will be removed in a future release"
+    puts "WARNING: Please modify it to license.type in /etc/chef-marketplace/marketplace.rb"
+    license["type"] = type
   end
 end

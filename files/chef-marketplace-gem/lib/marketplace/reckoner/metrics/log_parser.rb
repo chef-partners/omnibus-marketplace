@@ -1,4 +1,4 @@
-require 'marketplace/reckoner/metrics/base'
+require "marketplace/reckoner/metrics/base"
 
 class Marketplace::Reckoner::Metrics
   class LogParser < Base
@@ -51,7 +51,7 @@ class Marketplace::Reckoner::Metrics
     end
 
     def marker_file
-      '/var/opt/chef-marketplace/reckoner/etc/file_markers.json'
+      "/var/opt/chef-marketplace/reckoner/etc/file_markers.json"
     end
 
     def file_markers
@@ -68,12 +68,12 @@ class Marketplace::Reckoner::Metrics
     end
 
     def seek_for(filename)
-      seek = marker_for(filename)['seek']
+      seek = marker_for(filename)["seek"]
       seek.nil? ? 0 : seek
     end
 
     def last_parse_time_for(filename)
-      time = marker_for(filename)['last_parse_time']
+      time = marker_for(filename)["last_parse_time"]
       time.nil? ? Time.at(0) : Time.at(time)
     end
 
@@ -82,8 +82,8 @@ class Marketplace::Reckoner::Metrics
 
       markers[parser_class] = {} unless markers.key?(parser_class)
       markers[parser_class][filename] = {} unless markers[parser_class].key?(filename)
-      markers[parser_class][filename]['seek'] = seek
-      markers[parser_class][filename]['last_parse_time'] = Time.now.to_i
+      markers[parser_class][filename]["seek"] = seek
+      markers[parser_class][filename]["last_parse_time"] = Time.now.to_i
 
       File.write(marker_file, JSON.pretty_generate(markers))
     end
@@ -101,7 +101,7 @@ class Marketplace::Reckoner::Metrics
     def parse_file(filename, seek)
       return unless File.exist?(filename)
 
-      File.open(filename, 'r') do |file|
+      File.open(filename, "r") do |file|
         file.seek(seek) unless seek > file.size
 
         until file.eof?

@@ -1,9 +1,9 @@
-require 'marketplace/reckoner/metrics/log_parser'
+require "marketplace/reckoner/metrics/log_parser"
 
 class Marketplace::Reckoner::Metrics
   class AnalyticsAccessLogs < LogParser
     def filenames
-      '/var/log/opscode/nginx/analytics.access.log*'
+      "/var/log/opscode/nginx/analytics.access.log*"
     end
 
     def metric_matchers

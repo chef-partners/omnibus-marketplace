@@ -1,7 +1,7 @@
-require 'digest'
-require 'marketplace/reckoner/metrics/base'
-require 'marketplace/reckoner/checker/chef_server'
-require 'marketplace/reckoner/machine_id'
+require "digest"
+require "marketplace/reckoner/metrics/base"
+require "marketplace/reckoner/checker/chef_server"
+require "marketplace/reckoner/machine_id"
 
 class Marketplace::Reckoner::Metrics
   class ChefNodesPerOrg < Base

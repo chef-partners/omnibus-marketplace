@@ -1,17 +1,17 @@
-require 'net/http'
-require 'uri'
-require 'ostruct'
-require 'json'
-require 'openssl'
+require "net/http"
+require "uri"
+require "ostruct"
+require "json"
+require "openssl"
 
 class Marketplace
   class ApiClient
     attr_reader :connection
 
-    def initialize(endpoint = 'https://marketplace.chef.io')
+    def initialize(endpoint = "https://marketplace.chef.io")
       uri = URI.parse(endpoint)
       @connection = Net::HTTP.new(uri.host, uri.port)
-      @connection.use_ssl = uri.scheme == 'https'
+      @connection.use_ssl = uri.scheme == "https"
     end
 
     def get(path, params)
@@ -48,7 +48,7 @@ class Marketplace
       else
         request = Net::HTTP.const_get(method.capitalize.to_sym).new(path)
         request.body = params.to_json
-        request['Content-Type'] = 'application/vnd+json'
+        request["Content-Type"] = "application/vnd+json"
       end
 
       connection.request(request)

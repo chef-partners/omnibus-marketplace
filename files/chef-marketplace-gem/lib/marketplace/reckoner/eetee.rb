@@ -1,7 +1,7 @@
-require 'json'
-require 'net/http'
-require 'securerandom'
-require 'marketplace/reckoner/machine_id'
+require "json"
+require "net/http"
+require "securerandom"
+require "marketplace/reckoner/machine_id"
 
 class Marketplace
   class Reckoner
@@ -11,7 +11,7 @@ class Marketplace
       attr_reader :metrics_to_collect, :run_period
       attr_accessor :payload
 
-      VERSION = '1'.freeze
+      VERSION = "1".freeze
 
       def self.daily_runner
         metrics_to_collect = Marketplace::Reckoner::Config.phone_home.metrics.daily
@@ -31,7 +31,7 @@ class Marketplace
         @run_period = run_period
         @metrics_to_collect = metrics_to_collect
 
-        @payload = { 'metrics' => {} }
+        @payload = { "metrics" => {} }
       end
 
       def run
@@ -40,17 +40,17 @@ class Marketplace
       end
 
       def collect_metrics
-        payload['eetee_version'] = VERSION
-        payload['machine_uuid']  = machine_uuid
-        payload['platform']      = Marketplace::Reckoner::Config.phone_home.platform
-        payload['time_started']  = Time.now
+        payload["eetee_version"] = VERSION
+        payload["machine_uuid"]  = machine_uuid
+        payload["platform"]      = Marketplace::Reckoner::Config.phone_home.platform
+        payload["time_started"]  = Time.now
 
         metrics_to_collect.each do |metric|
           metric_data = Marketplace::Reckoner::Metrics.class_for(metric).data
-          payload['metrics'][metric] = metric_data unless metric_data.nil?
+          payload["metrics"][metric] = metric_data unless metric_data.nil?
         end
 
-        payload['time_finished'] = Time.now
+        payload["time_finished"] = Time.now
 
         payload
       end
@@ -59,9 +59,9 @@ class Marketplace
         uri = URI(endpoint)
         request = Net::HTTP::Post.new(uri)
         request.body = payload.to_json
-        request.content_type = 'application/json'
+        request.content_type = "application/json"
 
-        Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == 'https') do |http|
+        Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
           http.request(request)
         end
       end
@@ -75,7 +75,7 @@ class Marketplace
       end
 
       def stop_file_exists?
-        File.exist?('/etc/opscode/DISABLE_PHONE_HOME')
+        File.exist?("/etc/opscode/DISABLE_PHONE_HOME")
       end
 
       def enabled_in_config?

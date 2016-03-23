@@ -1,4 +1,4 @@
-require 'chef/server_api'
+require "chef/server_api"
 
 class Marketplace
   class Reckoner
@@ -11,19 +11,19 @@ class Marketplace
         end
 
         def current_usage
-          api.get('license')['node_count']
+          api.get("license")["node_count"]
         end
 
         def max_nodes
-          api.get('license')['node_license']
+          api.get("license")["node_license"]
         end
 
         def limit_exceeded?
-          api.get('license')['limit_exceeded']
+          api.get("license")["limit_exceeded"]
         end
 
         def user_count
-          api.get('users').count
+          api.get("users").count
         end
 
         def org_count
@@ -31,7 +31,7 @@ class Marketplace
         end
 
         def orgs
-          api.get('organizations')
+          api.get("organizations")
         end
 
         def org_node_count(org)
@@ -47,11 +47,11 @@ class Marketplace
 
         def init(opts = {})
           @api = Chef::ServerAPI.new(
-            opts[:endpoint] || Marketplace::Reckoner::Config['server']['endpoint'],
-            client_name: opts[:client] || Marketplace::Reckoner::Config['server']['client'],
-            signing_key_filename: opts[:client_key_path] || Marketplace::Reckoner::Config['server']['client_key_path']
+            opts[:endpoint] || Marketplace::Reckoner::Config["server"]["endpoint"],
+            client_name: opts[:client] || Marketplace::Reckoner::Config["server"]["client"],
+            signing_key_filename: opts[:client_key_path] || Marketplace::Reckoner::Config["server"]["client_key_path"]
           )
-          Chef::Config['ssl_verify_mode'] = :verify_none
+          Chef::Config["ssl_verify_mode"] = :verify_none
         end
       end
     end

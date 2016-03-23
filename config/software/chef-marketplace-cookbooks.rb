@@ -1,32 +1,32 @@
-name 'chef-marketplace-cookbooks'
+name "chef-marketplace-cookbooks"
 
 source path: "#{project.files_path}/#{name}"
 
-dependency 'berkshelf'
-dependency 'chef-marketplace-gem'
+dependency "berkshelf"
+dependency "chef-marketplace-gem"
 
 build do
   command "#{install_dir}/embedded/bin/berks vendor #{install_dir}/embedded/cookbooks --berksfile=./chef-marketplace/Berksfile",
-          env: { 'RUBYOPT'         => nil,
-                 'BUNDLE_BIN_PATH' => nil,
-                 'BUNDLE_GEMFILE'  => nil,
-                 'GEM_PATH'        => nil,
-                 'GEM_HOME'        => nil }
+          env: { "RUBYOPT"         => nil,
+                 "BUNDLE_BIN_PATH" => nil,
+                 "BUNDLE_GEMFILE"  => nil,
+                 "GEM_PATH"        => nil,
+                 "GEM_HOME"        => nil }
 
   # Ensure cookbooks are readable so non-root chef-marketplace-ctl commands work
   command "chmod -R a+r #{install_dir}/embedded/cookbooks"
 
-  erb source: 'single-recipe.json.erb',
+  erb source: "single-recipe.json.erb",
       dest: "#{install_dir}/embedded/cookbooks/dna.json",
-      vars: { recipe: 'chef-marketplace::default' }
+      vars: { recipe: "chef-marketplace::default" }
 
-  erb source: 'single-recipe.json.erb',
+  erb source: "single-recipe.json.erb",
       dest: "#{install_dir}/embedded/cookbooks/show-config.json",
-      vars: { recipe: 'chef-marketplace::show_config' }
+      vars: { recipe: "chef-marketplace::show_config" }
 
-  erb source: 'solo.rb.erb',
+  erb source: "solo.rb.erb",
       dest: "#{install_dir}/embedded/cookbooks/solo.rb"
 
-  erb source: 'non_root_solo.rb.erb',
+  erb source: "non_root_solo.rb.erb",
       dest: "#{install_dir}/embedded/cookbooks/non_root_solo.rb"
 end

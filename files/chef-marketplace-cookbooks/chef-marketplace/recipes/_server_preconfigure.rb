@@ -6,21 +6,21 @@
 # then this appears to be the best option to speed up these runs while being
 # in compliance with the cloud marketplace rules.
 
-%w(chef-server-ctl opscode-reporting-ctl chef-manage-ctl).each do |ctl_cmd|
+%w{chef-server-ctl opscode-reporting-ctl chef-manage-ctl}.each do |ctl_cmd|
   bash "#{ctl_cmd} reconfigure" do
     code "#{ctl_cmd} reconfigure"
     live_stream true
   end
 end
 
-%w(chef-server-ctl chef-manage-ctl).each do |ctl_cmd|
+%w{chef-server-ctl chef-manage-ctl}.each do |ctl_cmd|
   bash "#{ctl_cmd} stop" do
     code "#{ctl_cmd} stop"
     ignore_failure true
   end
 end
 
-file '/etc/chef-manage/manage.rb' do
+file "/etc/chef-manage/manage.rb" do
   action :delete
 end
 
@@ -37,6 +37,6 @@ server_state_directories.each do |state_dir|
   end
 end
 
-bash 'recreate server runit directories' do
-  code 'mkdir -p /opt/{opscode,chef-manage}/{sv,init,service}'
+bash "recreate server runit directories" do
+  code "mkdir -p /opt/{opscode,chef-manage}/{sv,init,service}"
 end

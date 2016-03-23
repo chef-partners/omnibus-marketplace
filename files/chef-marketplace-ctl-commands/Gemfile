@@ -1,8 +1,8 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
-gem 'omnibus-ctl', github: 'chef/omnibus-ctl'
-gem 'chef', github: 'chef/chef'
-gem 'pry'
-gem 'rubocop'
-gem 'rspec'
-gem 'chef-marketplace'
+gem "omnibus-ctl", github: "chef/omnibus-ctl"
+gem "chef", github: "chef/chef"
+gem "pry"
+gem "rubocop"
+gem "rspec"
+gem "chef-marketplace"
