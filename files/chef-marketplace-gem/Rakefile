@@ -6,6 +6,7 @@ require "rspec/core"
 require "rspec/core/rake_task"
 require "bundler"
 require "bundler/gem_tasks"
+require "chefstyle"
 require "rubocop/rake_task"
 
 desc "Default task to run spec suite"
@@ -23,6 +24,7 @@ task :coverage do
 end
 
 desc "Run Rubocop style checks"
-RuboCop::RakeTask.new do |cop|
-  cop.fail_on_error = true
+RuboCop::RakeTask.new do |task|
+  task.fail_on_error = true
+  task.options << "--display-cop-names"
 end
