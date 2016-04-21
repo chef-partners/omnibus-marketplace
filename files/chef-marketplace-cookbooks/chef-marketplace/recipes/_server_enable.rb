@@ -52,3 +52,16 @@ template "/etc/chef-manage/manage.rb" do
   group "opscode"
   action :create_if_missing
 end
+
+["opscode", "chef-manage", "opscode-reporting"].map do |package|
+  "/var/opt/#{package}/.license.accepted"
+end.each do |license_file|
+  directory ::File.dirname(license_file) do
+    action :create
+  end
+
+  file license_file do
+    action :touch
+    not_if { ::File.exist?(license_file) }
+  end
+end

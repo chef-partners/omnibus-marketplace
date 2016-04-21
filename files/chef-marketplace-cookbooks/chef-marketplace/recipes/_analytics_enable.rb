@@ -17,3 +17,14 @@ template "/etc/cron.d/actions-trimmer" do
   )
   action actions_trimmer_action
 end
+
+license_file = "/var/opt/opscode-analytics/.license.accepted"
+
+directory ::File.dirname(license_file) do
+  action :create
+end
+
+file license_file do
+  action :touch
+  not_if { ::File.exist?(license_file) }
+end
