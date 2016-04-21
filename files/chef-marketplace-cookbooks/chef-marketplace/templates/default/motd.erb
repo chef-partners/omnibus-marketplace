@@ -17,25 +17,16 @@ ________/\\\\\\\\\__/\\\________/\\\__/\\\\\\\\\\\\\\\__/\\\\\\\\\\\\\\\_
 
         Welcome to the <%= @role_name %> Marketplace Appliance!
 
-<% if @role == 'compliance' %>
-If this your first time logging in you'll need to set up Chef Compliance:
-<%= @compliance_url %>
-<% else %>
-If this your first time logging in you'll need to set up <%= @role_name %> by
-running the following command:
-
-sudo chef-marketplace-ctl setup
-<% end -%>
+If you have not completed setting up the <%= @role_name %> please run through
+the setup wizard: <%= @setup_wizard %>
 
 Read Chef documentation: <%= @doc_url %>
 Email the Chef support team: <%= @support_email %>
-<% if @manage_url %>
+<% if @role =~ /aio|server/ %>
 Login to Chef Manage: <%= @manage_url %>
-<% end -%>
-<% if @analytics_url %>
+<% elsif @role == "analytics" %>
 Login to Chef Analytics: <%= @analytics_url %>
-<% end -%>
-<% if @compliance_url %>
+<% elsif @role == "compliance" %>
 Login to Chef Compliance: <%= @compliance_url %>
 <% end -%>
 <% if @update_motd %>

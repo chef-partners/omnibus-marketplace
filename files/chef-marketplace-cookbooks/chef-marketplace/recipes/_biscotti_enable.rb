@@ -20,6 +20,7 @@ directory ::File.dirname(server_lb_template) do
   owner "root"
   group "root"
   mode "0644"
+  recursive true
   action :create
   only_if { node["chef-marketplace"]["role"] =~ /aio|server/ }
 end
