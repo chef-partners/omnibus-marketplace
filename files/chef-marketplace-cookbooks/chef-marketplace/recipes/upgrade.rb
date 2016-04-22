@@ -5,6 +5,16 @@ unless mirrors_reachable?
   return
 end
 
-node["chef-marketplace"]["upgrade_packages"].each do |pkg|
+bash "yum-clean-all" do
+  code "yum clean all"
+  only_if { node["platform_family"] == "rhel" }
+end
+
+bash "apt-get-clean" do
+  code "apt-get clean"
+  only_if { node["platform"] == "ubuntu" }
+end
+
+node["chef-marketplace"]["upgrade_packages"].sort.each do |pkg|
   include_recipe "chef-marketplace::_upgrade_#{pkg.tr('-', '_')}"
 end

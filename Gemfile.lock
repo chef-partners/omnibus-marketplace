@@ -279,6 +279,3 @@ DEPENDENCIES
   rubocop
   sequel
   test-kitchen (~> 1.3)
-
-BUNDLED WITH
-   1.11.2

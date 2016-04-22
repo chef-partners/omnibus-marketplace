@@ -135,22 +135,22 @@ class Marketplace
       vars = {
         doc_url: node["chef-marketplace"]["documentation"]["url"],
         support_email: node["chef-marketplace"]["support"]["email"],
-        role: node["chef-marketplace"]["role"]
+        role: node["chef-marketplace"]["role"],
+        analytics_url: manage_url,
+        manage_url: manage_url,
+        compliance_url: manage_url
       }
 
       case node["chef-marketplace"]["role"]
       when "server", "aio"
         vars[:role_name] = 'Chef Server'
-        unless security_enabled?
-          vars[:analytics_url] = analytics_url
-          vars[:manage_url] = manage_url
-        end
+        vars[:setup_wizard] = "#{manage_url}/signup"
       when "analytics"
         vars[:role_name] = "Chef Analytics"
-        vars[:analytics_url] = manage_url unless security_enabled?
+        vars[:setup_wizard] = "chef-marketplace-ctl setup"
       when "compliance"
         vars[:role_name] = "Chef Compliance"
-        vars[:compliance_url] = "#{manage_url}/#/setup" unless security_enabled?
+        vars[:setup_wizard] = "#{manage_url}/#/setup"
       end
 
       vars
