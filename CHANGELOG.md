@@ -1,5 +1,23 @@
 # Chef Marketplace Changelog
 
+# 0.0.11 (2016-04-27)
+
+## chef-marketplace-gem
+* Add chefstyle requirement to chef-marketplace.gem
+
+## chef-marketplace-cookbooks
+* Update MOTD to point to the proper setup wizards
+* Add license files because we do license acceptance during setup
+* Update chef-ingredient to use packages.chef.io
+* Prune the package and chef cache because our root disk can be small
+* Automatically stop and start services during upgrade
+* Ensure that the opscode user/group exist on the system
+* Fix bundler and rake during asset compilation
+
+## chef-marketplace-ctl
+* Only run unit tests in chef-marketplace-ctl test
+* Update chef-marketplace-ctl upgrade
+
 # 0.0.10 (2016-03-09)
 ## chef-marketplace-cookbooks
 * Live stream during publishing
