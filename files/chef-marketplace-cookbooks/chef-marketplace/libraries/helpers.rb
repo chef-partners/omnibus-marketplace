@@ -84,7 +84,7 @@ class Marketplace
       return node["chef-marketplace"]["mirrors_reachable"] if node["chef-marketplace"].attribute?("mirrors_reachable")
 
       # check whether or not outbound traffic is disabled
-      if node["chef-marketplace"]["disable_outbound_traffic"]
+      if outbound_traffic_disabled?
         return node.set["chef-marketplace"]["mirrors_reachable"] = false
       end
 
@@ -104,6 +104,7 @@ class Marketplace
     end
 
     def outbound_traffic_disabled?
+      return false if node["chef-marketplace"]["override_outbound_traffic"]
       node["chef-marketplace"]["disable_outbound_traffic"]
     end
 

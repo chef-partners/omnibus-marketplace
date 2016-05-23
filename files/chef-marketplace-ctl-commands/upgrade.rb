@@ -49,6 +49,10 @@ add_command_under_category "upgrade", "Maintenance", "Upgrade or install Chef so
       config["chef-marketplace"]["upgrade_packages"] << "chef-marketplace"
     end
 
+    opts.on("--enable-outbound-traffic", "Enable outbound traffic during this command.") do
+      config["chef-marketplace"]["outbound_traffic_override"] = true
+    end
+
     opts.on("-h", "--help", "Show this message") do
       puts opts
       exit(0)
