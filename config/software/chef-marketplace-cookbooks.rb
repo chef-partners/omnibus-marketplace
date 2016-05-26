@@ -1,4 +1,5 @@
 name "chef-marketplace-cookbooks"
+license :project_license
 
 source path: "#{project.files_path}/#{name}"
 

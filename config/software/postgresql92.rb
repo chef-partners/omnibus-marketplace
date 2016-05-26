@@ -1,5 +1,7 @@
 name "postgresql92"
 default_version "9.2.10" # Chef Server 12.2 uses 9.2.10
+license "PostgreSQL"
+license_file "COPYRIGHT"
 
 dependency "zlib"
 dependency "openssl"
