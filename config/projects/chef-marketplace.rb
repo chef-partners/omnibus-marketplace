@@ -17,10 +17,10 @@ dependency "pg-gem"
 dependency "server-plugin-cookbooks"
 dependency "reckoner"
 dependency "biscotti"
+dependency "chef"
 dependency "chef-marketplace-ctl"
 dependency "chef-marketplace-gem"
 dependency "chef-marketplace-cookbooks"
-dependency "chef"
 dependency "version-manifest"
 
 exclude '\.git*'
