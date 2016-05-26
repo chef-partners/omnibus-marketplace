@@ -82,7 +82,10 @@ class Marketplace
   end
 
   # Set to true if you don't want to use outbound networks, eg: package mirrors
-  default :disable_outboud_traffic, false
+  default :disable_outbound_traffic, false
+  class<<self
+    alias :disable_outboud_traffic :disable_outbound_traffic
+  end
 
   config_context :security do
     # Force enable or disable the security recipe

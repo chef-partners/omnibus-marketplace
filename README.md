@@ -65,7 +65,7 @@ user 'ec2-user'
 
 # Prevents commands from attempting to use external services like package mirrors
 # Changing this setting will disable certain features
-disable_outboud_traffic true
+disable_outbound_traffic true
 
 # Configure which port the Analytics UI binds to
 analytics.ssl_port = 8443

@@ -1,7 +1,7 @@
 include_recipe "chef-marketplace::config"
 
 unless mirrors_reachable?
-  Chef::Log.warn "Skipping package upgrade because mirrors are not available or outboud traffic is disabled..."
+  Chef::Log.warn "Skipping package upgrade because mirrors are not available or outbound traffic is disabled..."
   return
 end
 
