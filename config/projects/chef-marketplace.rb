@@ -1,6 +1,8 @@
 name "chef-marketplace"
 maintainer "Chef Software, Inc. <partnereng@chef.io>"
 homepage "http://www.chef.io"
+license "Apache-2.0"
+license_file "LICENSE"
 
 install_dir "/opt/chef-marketplace"
 build_version Omnibus::BuildVersion.semver

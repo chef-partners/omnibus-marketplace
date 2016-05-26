@@ -1,6 +1,8 @@
 name "biscotti"
 source path: "#{project.files_path}/biscotti"
 
+license :project_license
+
 dependency "ruby"
 dependency "bundler"
 

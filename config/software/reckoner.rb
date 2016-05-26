@@ -1,5 +1,6 @@
 name "reckoner"
 source path: "#{project.files_path}/reckoner"
+license :project_license
 
 dependency "ruby"
 dependency "bundler"

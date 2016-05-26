@@ -1,4 +1,5 @@
 name "chef-marketplace-ctl"
+license :project_license
 
 dependency "omnibus-ctl"
 dependency "bundler"

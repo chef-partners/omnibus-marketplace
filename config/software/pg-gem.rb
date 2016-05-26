@@ -1,5 +1,8 @@
 name "pg-gem"
 default_version "0.18.4"
+license "BSD-2-Clause"
+license_file "https://github.com/ged/ruby-pg/blob/master/LICENSE"
+license_file "https://github.com/ged/ruby-pg/blob/master/BSDL"
 
 dependency "ruby"
 dependency "rubygems"

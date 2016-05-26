@@ -1,4 +1,5 @@
 name "chef-marketplace-gem"
+license :project_license
 
 dependency "ruby"
 dependency "bundler"
