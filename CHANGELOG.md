@@ -1,5 +1,13 @@
 # Chef Marketplace Changelog
 
+# 0.0.12 (2016-05-26)
+
+## chef-marketplace-cookbooks
+* Rename `disable_outboud_config` config parameter to `disable_outbound_config` (the old one is aliased for backcompat)
+
+## chef-marketplace-ctl
+* Add `chef-marketplace-ctl upgrade --override-outbound-config` parameter to allow upgrades.
+
 # 0.0.11 (2016-04-27)
 
 ## chef-marketplace-gem
