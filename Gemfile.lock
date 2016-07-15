@@ -342,7 +342,7 @@ DEPENDENCIES
   omnibus-ctl!
   omnibus-software!
   pry
-  rspec
+  rspec (~> 3.4.0)
   rubocop
   sequel
   test-kitchen
