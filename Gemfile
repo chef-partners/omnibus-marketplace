@@ -14,6 +14,8 @@ gem "chef-provisioning"
 gem "chef-provisioning-aws"
 gem "kitchen-ec2"
 
+gem "nokogiri", "= 1.6.8.1"
+
 # Reckoner Deps
 gem "sequel"
 gem "aws-sdk"
