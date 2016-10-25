@@ -29,33 +29,6 @@ bash "chef-manage-ctl reconfigure" do
   action :nothing
 end
 
-ruby_block "remove-chef-server-from-cache" do
-  block do
-    package = Dir["#{Chef::Config[:file_cache_path]}/*"].find { |f| f =~ /chef-server-core/ }
-    FileUtils.rm(package) if package && File.exist?(package)
-  end
-
-  action :nothing
-end
-
-ruby_block "remove-reporting-from-cache" do
-  block do
-    package = Dir["#{Chef::Config[:file_cache_path]}/*"].find { |f| f =~ /opscode-reporting/ }
-    FileUtils.rm(package) if package && File.exist?(package)
-  end
-
-  action :nothing
-end
-
-ruby_block "remove-manage-from-cache" do
-  block do
-    package = Dir["#{Chef::Config[:file_cache_path]}/*"].find { |f| f =~ /chef-manage/ }
-    FileUtils.rm(package) if package && File.exist?(package)
-  end
-
-  action :nothing
-end
-
 # Chef Server
 bash "chef-server-ctl stop" do
   code "chef-server-ctl stop"
@@ -67,7 +40,6 @@ chef_ingredient "chef-server" do
 
   notifies :run, "bash[chef-server-ctl reconfigure]", :immediately
   notifies :run, "bash[chef-server-ctl upgrade]", :immediately
-  notifies :run, "ruby_block[remove-chef-server-from-cache]", :immediately
   notifies :run, "bash[yum-clean-all]", :immediately
   notifies :run, "bash[apt-get-clean]", :immediately
 end
@@ -84,7 +56,6 @@ chef_ingredient "reporting" do
   notifies :run, "bash[chef-server-ctl start]", :immediately
   notifies :run, "bash[opscode-reporting-ctl reconfigure]", :immediately
   notifies :run, "bash[chef-server-ctl restart]"
-  notifies :run, "ruby_block[remove-reporting-from-cache]", :immediately
   notifies :run, "bash[yum-clean-all]", :immediately
   notifies :run, "bash[apt-get-clean]", :immediately
 end
@@ -102,7 +73,6 @@ chef_ingredient "manage" do
   notifies :run, "bash[chef-server-ctl start]", :immediately
   notifies :run, "bash[chef-manage-ctl reconfigure]", :immediately
   notifies :run, "bash[chef-server-ctl restart]"
-  notifies :run, "ruby_block[remove-manage-from-cache]", :immediately
   notifies :run, "bash[yum-clean-all]", :immediately
   notifies :run, "bash[apt-get-clean]", :immediately
 end
