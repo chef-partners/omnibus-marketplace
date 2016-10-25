@@ -172,7 +172,7 @@ GEM
       little-plugger (~> 1.1)
       multi_json (~> 1.10)
     method_source (0.8.2)
-    mini_portile2 (2.0.0)
+    mini_portile2 (2.1.0)
     minitar (0.5.4)
     mixlib-authentication (1.4.0)
       mixlib-log
@@ -203,8 +203,8 @@ GEM
       net-ssh-gateway (>= 1.2.0)
     net-telnet (0.1.1)
     nio4r (1.2.1)
-    nokogiri (1.6.7.2)
-      mini_portile2 (~> 2.0.0.rc2)
+    nokogiri (1.6.8.1)
+      mini_portile2 (~> 2.1.0)
     nori (2.6.0)
     octokit (4.3.0)
       sawyer (~> 0.7.0, >= 0.5.3)
@@ -338,6 +338,7 @@ DEPENDENCIES
   chefstyle
   kitchen-ec2
   kitchen-vagrant
+  nokogiri (= 1.6.8.1)
   omnibus!
   omnibus-ctl!
   omnibus-software!
@@ -348,4 +349,4 @@ DEPENDENCIES
   test-kitchen
 
 BUNDLED WITH
-   1.12.5
+   1.13.2
