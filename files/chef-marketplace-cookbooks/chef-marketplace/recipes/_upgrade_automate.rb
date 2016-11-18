@@ -11,12 +11,7 @@ bash 'delivery-ctl start' do
   action :nothing
 end
 
-# Chef Server
-bash 'delivery-ctl stop' do
-  code 'delivery-ctl stop'
-  only_if { delivery_configured? }
-end
-
+# Chef Automate
 chef_ingredient 'delivery' do
   action :upgrade
   channel :current # TODO: change this back to stable when we've got the release out
