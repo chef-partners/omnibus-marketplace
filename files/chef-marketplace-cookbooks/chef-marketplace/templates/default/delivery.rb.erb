@@ -1,0 +1,10 @@
+delivery_fqdn "marketplace.vm"
+
+delivery["chef_username"]        = "delivery"
+delivery["chef_private_key"]     = "/etc/delivery/delivery.pem"
+delivery["chef_server"]          = "https://localhost:8443/organizations/delivery"
+postgresql["superuser_enable"]   = true
+postgresql["superuser_username"] = "chef-pgsql"
+postgresql["superuser_password"] = "password"
+data_collector["token"]          = "token"
+insights["enable"]               = true

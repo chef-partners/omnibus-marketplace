@@ -1,5 +1,6 @@
 case node["chef-marketplace"]["role"]
-when "aio", "server"
+# TODO: perhaps we need to use `/var/opt/delivery/nginx` for automate. We'll see
+when "aio", "server", "automate"
   node.set['chef-marketplace']['biscotti']['nginx']['dir'] = '/var/opt/opscode/nginx'
 when "compliance"
   node.set["chef-marketplace"]["biscotti"]["nginx"]["dir"] = "/var/opt/chef-compliance/nginx"

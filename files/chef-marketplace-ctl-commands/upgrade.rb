@@ -30,6 +30,9 @@ add_command_under_category "upgrade", "Maintenance", "Upgrade or install Chef so
       when "aio"
         config["chef-marketplace"]["upgrade_packages"] << "chef-server"
         config["chef-marketplace"]["upgrade_packages"] << "analytics"
+      when "automate"
+        config["chef-marketplace"]["upgrade_packages"] << "automate"
+        config["chef-marketplace"]["upgrade_packages"] << "chef-server"
       end
     end
 
@@ -51,6 +54,10 @@ add_command_under_category "upgrade", "Maintenance", "Upgrade or install Chef so
 
     opts.on("--override-outbound-traffic", "Override outbound traffic during this command.") do
       config["chef-marketplace"]["override_outbound_traffic"] = true
+    end
+
+    opts.on("-d", "--automate", "Upgrade Chef Automate") do
+      config["chef-marketplace"]["upgrade_packages"] << "automate"
     end
 
     opts.on("-h", "--help", "Show this message") do

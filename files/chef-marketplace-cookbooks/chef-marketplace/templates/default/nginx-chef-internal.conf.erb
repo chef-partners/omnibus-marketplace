@@ -1,0 +1,7 @@
+#
+# chef server endpoints proxied by Delivery's nginx
+#
+location ~ ^/(_status|organizations|users|bookshelf|authenticate_user|system_recovery|license|server_api_version)/?(.*) {
+  proxy_pass https://chef_server;
+  proxy_redirect https://chef_server /;
+}

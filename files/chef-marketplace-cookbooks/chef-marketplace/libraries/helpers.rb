@@ -116,6 +116,10 @@ class Marketplace
       File.exist?("/etc/opscode/chef-server-running.json")
     end
 
+    def delivery_configured?
+      File.exist?("/etc/delivery/delivery-running.json")
+    end
+
     def analytics_configured?
       File.exist?("/etc/opscode-analytics/opscode-analytics-running.json")
     end
@@ -302,6 +306,34 @@ class Marketplace
         /var/opt/opscode/redis_lb
         /var/opt/opscode/upgrades
         /var/opt/opscode/local-mode-cache
+      }
+    end
+
+    def automate_state_files
+      # TODO: more app configs
+      %w{
+        /etc/delivery/builder.pem
+        /etc/delivery/builder.pub
+        /etc/delivery/delivery.pem
+        /etc/delivery/delivery.pup
+        /etc/delivery/delivery-running.json
+        /etc/delivery/delivery-secrets.json
+      }
+    end
+
+    def automate_state_directories
+      %w{
+        /opt/delivery/sv
+        /opt/delivery/service
+        /opt/delivery/init
+        /var/opt/delivery/census
+        /var/opt/delivery/delivery
+        /var/opt/delivery/elasticsearch
+        /var/opt/delivery/elasticsearch_backups
+        /var/opt/delivery/local-mode-cache
+        /var/opt/delivery/nginx/ca
+        /var/opt/delivery/postgresql
+        /var/opt/delivery/rabbitmq
       }
     end
 
