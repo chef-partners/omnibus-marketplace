@@ -5,6 +5,6 @@ delivery["chef_private_key"]     = "/etc/delivery/delivery.pem"
 delivery["chef_server"]          = "https://localhost:8443/organizations/delivery"
 postgresql["superuser_enable"]   = true
 postgresql["superuser_username"] = "chef-pgsql"
-postgresql["superuser_password"] = "password"
-data_collector["token"]          = "token"
+postgresql["superuser_password"] = "<%= node['chef-marketplace']['automate']['postgresql']['superuser_password'] %>"
+data_collector["token"]          = "<%= node['chef-marketplace']['automate']['data_collector']['token'] %>"
 insights["enable"]               = true
