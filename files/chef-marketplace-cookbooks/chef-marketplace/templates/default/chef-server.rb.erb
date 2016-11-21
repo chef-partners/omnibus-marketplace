@@ -5,7 +5,7 @@
 #                                                                             #
 ###############################################################################
 
-api_fqdn                              = "localhost"
+api_fqdn                              = "<%= node['chef-marketplace']['api_fqdn'] %>"
 nginx["non_ssl_port"]                 = false
 nginx["ssl_port"]                     = 8443
 postgresql["external"]                = true

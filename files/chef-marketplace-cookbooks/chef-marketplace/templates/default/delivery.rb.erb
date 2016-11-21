@@ -1,4 +1,4 @@
-delivery_fqdn "marketplace.vm"
+delivery_fqdn "<%= node['chef-marketplace']['api_fqdn'] %>"
 
 delivery["chef_username"]        = "delivery"
 delivery["chef_private_key"]     = "/etc/delivery/delivery.pem"
