@@ -3,6 +3,7 @@ delivery_fqdn "<%= node['chef-marketplace']['api_fqdn'] %>"
 delivery["chef_username"]        = "delivery"
 delivery["chef_private_key"]     = "/etc/delivery/delivery.pem"
 delivery["chef_server"]          = "https://localhost:8443/organizations/delivery"
+delivery["chef_server_proxy"]    = true
 postgresql["superuser_enable"]   = true
 postgresql["superuser_username"] = "chef-pgsql"
 postgresql["superuser_password"] = "<%= node['chef-marketplace']['automate']['postgresql']['superuser_password'] %>"
