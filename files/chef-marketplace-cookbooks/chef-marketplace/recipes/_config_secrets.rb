@@ -40,7 +40,7 @@ default_secrets = {
 # Hash#merge will override any values in the original hash with values that
 # come from the input, so all values coming from the file on disk will be
 # overwrite the random data
-new_secrets = default_secrets.merge(secrets_from_file)
+new_secrets = Chef::Mixin::DeepMerge.deep_merge(secrets_from_file, default_secrets)
 
 file secrets_file do
   content Chef::JSONCompat.to_json_pretty(new_secrets)
