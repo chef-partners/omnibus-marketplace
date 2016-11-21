@@ -23,16 +23,6 @@ end
 # TODO:
 # * reconfigure delivery when templates change
 
-directory '/var/opt/delivery/license' do
-  recursive true
-end
-
-cookbook_file '/var/opt/delivery/license/delivery.license' do
-  source 'delivery.license'
-  action :create_if_missing
-end
-
 template "/etc/delivery/delivery.rb" do
   source "delivery.rb.erb"
 end
-
