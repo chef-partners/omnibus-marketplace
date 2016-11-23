@@ -1,0 +1,79 @@
+version: '2'
+# We're going to create and use our own network because the default docker
+# network uses a 16 bit netmask that overlaps with our internal VPN network.
+# I'm not sure why the default network needs 65k addresses, but alas, we'll
+# go with our own class C because it won't overlap and we'll be able to hit the
+# internal artifactory to download packages from the development channels.
+networks:
+  marketplace:
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.16.239.0/24
+        gateway: 172.16.239.1
+services:
+  # This is Automate in "Marketplace mode" which consists of:
+  #  * Chef Server
+  #  * Chef Automate
+  #  * Chef Marketplace
+  automate:
+    networks:
+      marketplace:
+        ipv4_address: 172.16.239.3
+        aliases:
+          - automate-marketplace.test
+    hostname: automate-marketplace
+    privileged: true # for iptables
+    image: devchef/chef-server-12
+    mem_limit: 4G
+    links:
+      - ec2-metadata:ec2-metadata
+    expose:
+      - "22"
+      - "443"
+      # Git Port
+      - "8989"
+      # Push Job Ports
+      - "10000-10003"
+    ports:
+      - "443:443" # workflow/viz UI
+    volumes:
+      - ./shared:/shared
+      - ./.chef/keys:/volumes/keys # mount chef-server keys to host for knife
+      - ./files/chef-marketplace-ctl-commands:/sync/ctl-commands
+      - ./files/chef-marketplace-cookbooks:/sync/marketplace-cookbooks
+      - ./files/chef-marketplace-gem:/sync/chef-marketplace-gem
+      - ./files/reckoner:/sync/reckoner
+      - ./files/biscotti:/sync/biscotti
+      - ./pkg:/omnibus-pkgs
+    environment:
+      # override devchef/chef-server-12 defaults
+      - CHEF_FQDN=automate-marketplace.test
+      - CHEF_USER=delivery
+      - CHEF_NAME=Delivery User
+      - CHEF_ORG_SHORT=acme
+      - CHEF_ORG_FULL=Acme Co
+      # Marketplace package
+      - CHANNEL=${CHANNEL}
+      - VERSION=${VERSION}
+      - U_CHANNEL=${U_CHANNEL}
+      - U_VERSION=${U_VERSION}
+      # Chef Automate
+      - CA_CHANNEL=${CA_CHANNEL}
+      # Chef Server
+      - CS_CHANNEL=${CS_CHANNEL}
+    command: bash -c /shared/scripts/automate-marketplace.sh
+  # This is a simple sinatra app that will act as an ec2 metadata server which
+  # will allow us to to mimick being in ec2.
+  ec2-metadata:
+    networks:
+      marketplace:
+        ipv4_address: 172.16.239.4
+        aliases:
+          - ec2-metadata.test
+    image: devchef/chefdk:latest
+    ports:
+      - "9666:9666"
+    volumes:
+      - ./shared/scripts/ec2-metadata.sh:/usr/src/ec2-metadata.sh
+    command: bash /usr/src/ec2-metadata.sh
