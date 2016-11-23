@@ -1,6 +1,10 @@
 updater.enabled <%= node['chef-marketplace']['platform'] == 'aws' %>
 updater.driver '<%= node['chef-marketplace']['platform'] == 'aws' ? 'ec2' : node['chef-marketplace']['platform'] %>'
-checker.driver '<%= node['chef-marketplace']['role'] == 'aio' ? 'chef_server' : 'compliance' %>'
+<% if node['chef-marketplace']['role'] == 'aio' -%>
+checker.driver = 'chef_server'
+<% else -%>
+checker.driver = '<%= node['chef-marketplace']['role'] %>'
+<% end -%>
 license.count <%= node['chef-marketplace']['license']['count'] %>
 license.type '<%= node['chef-marketplace']['license']['type'] %>'
 license.free <%= node['chef-marketplace']['license']['free_node_count'] %>
