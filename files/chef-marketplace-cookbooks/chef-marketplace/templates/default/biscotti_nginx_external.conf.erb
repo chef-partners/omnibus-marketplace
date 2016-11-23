@@ -2,3 +2,10 @@ location ~ "^/biscotti" {
   proxy_redirect http://biscotti /;
   proxy_pass http://biscotti;
 }
+
+location ~ "^/credentials" {
+  access_by_lua_file '<%= node["chef-marketplace"]["biscotti"]["nginx"]["biscotti_lua_file"] %>';
+
+  proxy_redirect http://biscotti /;
+  proxy_pass http://biscotti;
+}

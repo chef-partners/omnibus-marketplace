@@ -201,13 +201,28 @@ class Marketplace
     end
 
     def biscotti_yml_config
+      redirect_path = if node["chef-marketplace"]["role"] == "automate"
+                        "/credentials"
+                      else
+                        "/"
+                      end
+      credentials = if node["chef-marketplace"]["role"] == "automate"
+                      {
+                        "admin_password" => node["chef-marketplace"]["automate"]["passwords"]["admin_user"],
+                        "builder_password" => node["chef-marketplace"]["automate"]["passwords"]["builder_user"]
+                      }
+                    else
+                      {}
+                    end
       { "production" =>
         { "biscotti" =>
           {
             "message" => node["chef-marketplace"]["biscotti"]["message"],
             "uuid" => node["chef-marketplace"]["biscotti"]["uuid"],
             "uuid_type" => node["chef-marketplace"]["biscotti"]["uuid_type"],
-            "token" => node["chef-marketplace"]["biscotti"]["token"]
+            "token" => node["chef-marketplace"]["biscotti"]["token"],
+            "redirect_path" => redirect_path,
+            "credentials" => credentials
           }
         }
       }.to_yaml
@@ -353,6 +368,13 @@ class Marketplace
         /var/opt/chef-compliance/postgresql
         /var/opt/chef-compliance/ssl
       }
+    end
+
+    def biscotti_token_hmac
+      digest = OpenSSL::Digest.new("sha1")
+      OpenSSL::HMAC.hexdigest(digest,
+                              node["chef-marketplace"]["biscotti"]["token"],
+                              node["chef-marketplace"]["biscotti"]["uuid"])
     end
   end
 end
