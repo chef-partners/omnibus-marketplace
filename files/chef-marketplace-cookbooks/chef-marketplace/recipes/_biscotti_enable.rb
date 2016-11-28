@@ -8,7 +8,12 @@ nginx_scripts_dir = node["chef-marketplace"]["biscotti"]["nginx"]["scripts_dir"]
 nginx_sha1_lua = ::File.join(nginx_scripts_dir, "sha1.lua")
 nginx_biscotti_lua = node["chef-marketplace"]["biscotti"]["nginx"]["biscotti_lua_file"]
 nginx_biscotti_upstream = ::File.join(nginx_addon_dir, "25-biscotti_upstreams.conf")
-nginx_biscotti_external = ::File.join(nginx_addon_dir, "25-biscotti_external.conf")
+nginx_biscotti_external = if node["chef-marketplace"]["role"] == "automate" 
+                            # automate loads all of the routes from *_internal
+                            ::File.join(nginx_addon_dir, "25-biscotti_internal.conf")
+                          else
+                            ::File.join(nginx_addon_dir, "25-biscotti_external.conf")
+                          end
 
 # HACK: Right now the the chef server nginx template doesn't allow us to
 # specify a file location for access_by_lua_file so we're manually hacking that
@@ -43,20 +48,13 @@ end
   end
 end
 
-cookbook_file nginx_sha1_lua do
-  source "sha1.lua"
-  owner "root"
-  group "root"
-  mode "0644"
-  action :create
-end
-
 template nginx_biscotti_lua do
   source "biscotti.lua.erb"
   owner "root"
   group "root"
   mode "0644"
   action :create
+  variables(token_hmac: biscotti_token_hmac())
 end
 
 template nginx_biscotti_upstream do

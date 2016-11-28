@@ -116,6 +116,10 @@ class Marketplace
       File.exist?("/etc/opscode/chef-server-running.json")
     end
 
+    def delivery_configured?
+      File.exist?("/etc/delivery/delivery-running.json")
+    end
+
     def analytics_configured?
       File.exist?("/etc/opscode-analytics/opscode-analytics-running.json")
     end
@@ -197,13 +201,28 @@ class Marketplace
     end
 
     def biscotti_yml_config
+      redirect_path = if node["chef-marketplace"]["role"] == "automate"
+                        "/credentials"
+                      else
+                        "/"
+                      end
+      credentials = if node["chef-marketplace"]["role"] == "automate"
+                      {
+                        "admin_password" => node["chef-marketplace"]["automate"]["passwords"]["admin_user"],
+                        "builder_password" => node["chef-marketplace"]["automate"]["passwords"]["builder_user"]
+                      }
+                    else
+                      {}
+                    end
       { "production" =>
         { "biscotti" =>
           {
             "message" => node["chef-marketplace"]["biscotti"]["message"],
             "uuid" => node["chef-marketplace"]["biscotti"]["uuid"],
             "uuid_type" => node["chef-marketplace"]["biscotti"]["uuid_type"],
-            "token" => node["chef-marketplace"]["biscotti"]["token"]
+            "token" => node["chef-marketplace"]["biscotti"]["token"],
+            "redirect_path" => redirect_path,
+            "credentials" => credentials
           }
         }
       }.to_yaml
@@ -305,6 +324,34 @@ class Marketplace
       }
     end
 
+    def automate_state_files
+      # TODO: more app configs
+      %w{
+        /etc/delivery/builder.pem
+        /etc/delivery/builder.pub
+        /etc/delivery/delivery.pem
+        /etc/delivery/delivery.pup
+        /etc/delivery/delivery-running.json
+        /etc/delivery/delivery-secrets.json
+      }
+    end
+
+    def automate_state_directories
+      %w{
+        /opt/delivery/sv
+        /opt/delivery/service
+        /opt/delivery/init
+        /var/opt/delivery/census
+        /var/opt/delivery/delivery
+        /var/opt/delivery/elasticsearch
+        /var/opt/delivery/elasticsearch_backups
+        /var/opt/delivery/local-mode-cache
+        /var/opt/delivery/nginx/ca
+        /var/opt/delivery/postgresql
+        /var/opt/delivery/rabbitmq
+      }
+    end
+
     def compliance_state_files
       %w{
         /etc/chef-compliance/chef-compliance-running.json
@@ -321,6 +368,13 @@ class Marketplace
         /var/opt/chef-compliance/postgresql
         /var/opt/chef-compliance/ssl
       }
+    end
+
+    def biscotti_token_hmac
+      digest = OpenSSL::Digest.new("sha1")
+      OpenSSL::HMAC.hexdigest(digest,
+                              node["chef-marketplace"]["biscotti"]["token"],
+                              node["chef-marketplace"]["biscotti"]["uuid"])
     end
   end
 end

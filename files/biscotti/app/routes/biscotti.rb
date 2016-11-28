@@ -11,12 +11,17 @@ module Biscotti
       post "/biscotti" do
         if valid_uuid?
           bake_cookie
-          redirect "/"
+          redirect settings.biscotti['redirect_path']
         else
           flash[:error] = "The #{settings.biscotti['uuid_type']} that you supplied " \
             "did not match.  Please verify and try again."
           redirect "/biscotti"
         end
+      end
+
+      get "/credentials" do
+        @credentials = settings.biscotti['credentials']
+        erb :credentials
       end
     end
   end

@@ -13,12 +13,12 @@ if ngx.re.match(ngx.var.uri,  "^/biscotti") then
     return
 end
 
-local sha1 = require('sha1')
 local cookie = ngx.var.cookie_ChefMarketplaceAuth
 
 if cookie ~= nil then
     -- Check if the HMAC in the cookie matches what we expect
-    if sha1.hmac("<%= node['chef-marketplace']['biscotti']['token'] %>", "<%= node['chef-marketplace']['biscotti']['uuid'] %>") == cookie then
+    local token_hmac = '<%= @token_hmac %>'
+    if token_hmac == cookie then
         return
     end
 end

@@ -1,0 +1,6 @@
+#
+# Used by Delivery to proxy chef-server-related requests to the locally-running Chef Server
+#
+upstream chef_server {
+  server 127.0.0.1:8443;
+}

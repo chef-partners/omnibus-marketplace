@@ -29,6 +29,7 @@ class Marketplace
         # Just configure software if we're preconfiguring
         configure_software
         reconfigure(:marketplace)
+        setup_automate if role.to_s == "automate"
         restart_reckoner
         return
       end
@@ -51,6 +52,59 @@ class Marketplace
       @ctl_context.respond_to?(meth) ? @ctl_context.send(meth, *args, &block) : super
     end
 
+    def setup_automate
+      # NOTE: because this code is part of a CLI tool and not a recipe
+      # like most of the code exectuted by `chef-marketplace-ctl`, we
+      # don't have access to node attributes that are set by the -ctl
+      # commands. Eventually, this CLI app should move into a recipe
+      # like the rest of the commands beause it's no longer useful to
+      # be run from the CLI any more.
+
+      # read the secrets from disk
+      secrets_file = "/etc/chef-marketplace/chef-marketplace-secrets.json"
+      secrets = if ::File.exist?(secrets_file)
+                  Chef::JSONCompat.from_json(::File.read(secrets_file))
+                else
+                  {}
+                end
+      passwords = secrets['automate']['passwords']
+
+      # create chef server user
+      # TODO:
+      # * determine correct email
+      # * create user with existing delivery.{pem,pub}
+      create_user = [
+        "chef-server-ctl user-create",
+        "delivery",                         # options.username.to_s.shellescape,
+        "Automate",                         # options.first_name.to_s.shellescape,
+        "User",                             # options.last_name.to_s.shellescape,
+        "automate@chef.io",                 # options.email.to_s.shellescape,
+        passwords['chef_user'].shellescape, # options.password.to_s.shellescape
+        "-f /etc/delivery/delivery.pem"
+      ].join(" ")
+      retry_command(create_user)
+
+      # create chef server org
+      create_org = [
+        "chef-server-ctl org-create",
+        "delivery", # options.organization.to_s.shellescape,
+        "delivery", # options.organization.to_s.shellescape,
+        "-a",
+        "delivery"  # options.username.to_s.shellescape
+      ].join(" ")
+      retry_command(create_org)
+
+      # create automate enterprise
+      create_ent = [
+        "delivery-ctl create-enterprise",
+        "default",                                                    # enterprise name
+        "--ssh-pub-key-file=/etc/delivery/builder.pub",               # builder public key
+        "--password=#{passwords['admin_user'].shellescape}",          # admin password
+        "--builder-password=#{passwords['builder_user'].shellescape}" # builder password
+      ].join(" ")
+      retry_command(create_ent)
+    end
+
     def configure_software
       case role.to_s
       when "server"
@@ -66,6 +120,9 @@ class Marketplace
         reconfigure(:analytics)
       when "compliance"
         reconfigure(:compliance)
+      when "automate"
+        reconfigure(:delivery)
+        reconfigure(:server)
       else
         raise "'#{role}' is not a valid role."
       end
@@ -73,7 +130,7 @@ class Marketplace
 
     def create_default_users
       case role.to_s
-      when "server", "aio"
+      when "server", "aio", "automate"
         create_server_user
         create_server_org
       when "compliance"
@@ -191,6 +248,9 @@ class Marketplace
       when "compliance"
         service_name = "Chef Compliance"
         ctl_command = "chef-compliance-ctl"
+      when "delivery"
+        service_name = "Chef Automate"
+        ctl_command = "delivery-ctl"
       else
         raise "Unknown product: #{product}"
       end

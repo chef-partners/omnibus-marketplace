@@ -5,4 +5,21 @@
 #                                                                             #
 ###############################################################################
 
-topology 'chef-marketplace'
+api_fqdn                              = "<%= node['chef-marketplace']['api_fqdn'] %>"
+nginx["non_ssl_port"]                 = false
+nginx["ssl_port"]                     = 8443
+postgresql["external"]                = true
+postgresql["db_superuser"]            = "chef-pgsql"
+postgresql["db_superuser_password"]   = "<%= node['chef-marketplace']['automate']['postgresql']['superuser_password'] %>"
+postgresql["vip"]                     = "127.0.0.1"
+opscode_expander["enable"]            = false
+dark_launch["actions"]                = false
+rabbitmq["enable"]                    = false
+opscode_erchef["search_provider"]     = "elasticsearch"
+opscode_erchef["search_queue_mode"]   = "batch"
+opscode_solr4["external"]             = true
+opscode_solr4["external_url"]         = "http://localhost:9200"
+
+# TODO: clean this up
+# data_collector["root_url"]            = ""
+# data_collector["token"]               = ""
