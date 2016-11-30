@@ -352,6 +352,13 @@ class Marketplace
       }
     end
 
+    def marketplace_state_files
+      %w{
+        /etc/chef-marketplace/chef-marketplace-running.json
+        /etc/chef-marketplace/chef-marketplace-secrets.json
+      }
+    end
+
     def compliance_state_files
       %w{
         /etc/chef-compliance/chef-compliance-running.json
