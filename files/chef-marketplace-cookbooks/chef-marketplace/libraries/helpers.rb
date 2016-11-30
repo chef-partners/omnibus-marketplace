@@ -181,6 +181,9 @@ class Marketplace
         disabled_commands << enabled_commands.delete('trim_actions_db.rb')
       when "aio", "analytics"
         # Keep em all
+      when "automate"
+        disabled_commands << enabled_commands.delete('trim_actions_db.rb')
+        disabled_commands << enabled_commands.delete('register_node.rb')
       end
 
       enabled_commands.map! do |cmd|
