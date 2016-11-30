@@ -27,6 +27,13 @@ class Marketplace
         default :client_key_path, "/etc/opscode/pivotal.pem"
       end
 
+      config_context :automate do
+      end
+
+      config_context :elasticsearch do
+        default :url, "http://localhost:8080/elasticsearch"
+      end
+
       # Some DB creds for the compliance server
       config_context :db do
         default :host, "localhost"

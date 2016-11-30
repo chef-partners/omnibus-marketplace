@@ -3,6 +3,7 @@ class Marketplace
     class Checker
       autoload :ChefServer, "marketplace/reckoner/checker/chef_server"
       autoload :Compliance, "marketplace/reckoner/checker/compliance"
+      autoload :Automate,   "marketplace/reckoner/checker/automate"
 
       def self.from_opts(opts)
         driver = opts.delete(:checker) || Marketplace::Reckoner::Config["checker"]["driver"]

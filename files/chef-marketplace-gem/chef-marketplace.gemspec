@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["me@ryan.ec"]
   spec.summary       = "Chef Marketplace libraries"
   spec.description   = spec.summary
-  spec.license       = "Apachev2"
+  spec.license       = "Apache-2.0"
 
   spec.files         = Find.find("./").select { |f| !File.directory?(f) }
   spec.executables   = spec.files.grep(/^bin/) { |f| File.basename(f) }
@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "highline"
   spec.add_dependency "chef"
   spec.add_dependency "aws-sdk"
+  spec.add_dependency "elasticsearch"
 
   spec.add_development_dependency "bundler", "~> 1.6"
   spec.add_development_dependency "rake"

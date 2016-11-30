@@ -5,21 +5,28 @@
 #                                                                             #
 ###############################################################################
 
-api_fqdn                              = "<%= node['chef-marketplace']['api_fqdn'] %>"
-nginx["non_ssl_port"]                 = false
-nginx["ssl_port"]                     = 8443
-postgresql["external"]                = true
-postgresql["db_superuser"]            = "chef-pgsql"
-postgresql["db_superuser_password"]   = "<%= node['chef-marketplace']['automate']['postgresql']['superuser_password'] %>"
-postgresql["vip"]                     = "127.0.0.1"
-opscode_expander["enable"]            = false
-dark_launch["actions"]                = false
-rabbitmq["enable"]                    = false
-opscode_erchef["search_provider"]     = "elasticsearch"
-opscode_erchef["search_queue_mode"]   = "batch"
-opscode_solr4["external"]             = true
-opscode_solr4["external_url"]         = "http://localhost:9200"
-
-# TODO: clean this up
-# data_collector["root_url"]            = ""
-# data_collector["token"]               = ""
+api_fqdn                                    = "<%= node["chef-marketplace"]["api_fqdn"] %>"
+bookshelf["storage_type"]                   = :sql
+dark_launch["actions"]                      = false
+data_collector["root_url"]                  = "https://localhost/data-collector/v0"
+data_collector["token"]                     = "<%= node["chef-marketplace"]["automate"]["data_collector"]["token"] %>"
+nginx["non_ssl_port"]                       = false
+nginx["ssl_port"]                           = 8443
+nginx["dhparam_key_length"]                 = 1024
+nginx["server_name"]                        = "<%= node["chef-marketplace"]["api_fqdn"] %>"
+oc_id["enable"]                             = false
+opscode_erchef["base_resource_url"]         = "<%= node["chef-marketplace"]["api_fqdn"] %>"
+opscode_erchef["nginx_bookshelf_caching"]   = :on
+opscode_erchef["s3_url_expiry_window_size"] = "50%"
+opscode_erchef["search_provider"]           = "elasticsearch"
+opscode_erchef["search_queue_mode"]         = "batch"
+opscode_solr4["external"]                   = true
+opscode_solr4["external_url"]               = "http://localhost:8080/elasticsearch"
+opscode_expander["enable"]                  = false
+postgresql["db_superuser"]                  = "chef-pgsql"
+postgresql["db_superuser_password"]         = "<%= node["chef-marketplace"]["automate"]["postgresql"]["superuser_password"] %>"
+postgresql["external"]                      = true
+postgresql["vip"]                           = "127.0.0.1"
+rabbitmq["enable"]                          = false
+rabbitmq["management_enabled"]              = false
+rabbitmq["queue_length_monitor_enabled"]    = false

@@ -8,7 +8,7 @@ nginx_scripts_dir = node["chef-marketplace"]["biscotti"]["nginx"]["scripts_dir"]
 nginx_sha1_lua = ::File.join(nginx_scripts_dir, "sha1.lua")
 nginx_biscotti_lua = node["chef-marketplace"]["biscotti"]["nginx"]["biscotti_lua_file"]
 nginx_biscotti_upstream = ::File.join(nginx_addon_dir, "25-biscotti_upstreams.conf")
-nginx_biscotti_external = if node["chef-marketplace"]["role"] == "automate" 
+nginx_biscotti_external = if node["chef-marketplace"]["role"] == "automate"
                             # automate loads all of the routes from *_internal
                             ::File.join(nginx_addon_dir, "25-biscotti_internal.conf")
                           else

@@ -1,11 +1,25 @@
-delivery_fqdn "<%= node['chef-marketplace']['api_fqdn'] %>"
+################################### WARNING ###################################
+#                                                                             #
+# This file is managed by chef-marketplace.  Please consult the documentation #
+# before editing this file as several settings may be overwritten.            #
+#                                                                             #
+###############################################################################
 
-delivery["chef_username"]        = "delivery"
-delivery["chef_private_key"]     = "/etc/delivery/delivery.pem"
-delivery["chef_server"]          = "https://localhost:8443/organizations/delivery"
-delivery["chef_server_proxy"]    = true
-postgresql["superuser_enable"]   = true
-postgresql["superuser_username"] = "chef-pgsql"
-postgresql["superuser_password"] = "<%= node['chef-marketplace']['automate']['postgresql']['superuser_password'] %>"
-data_collector["token"]          = "<%= node['chef-marketplace']['automate']['data_collector']['token'] %>"
-insights["enable"]               = true
+data_collector["token"]           = "<%= node["chef-marketplace"]["automate"]["data_collector"]["token"] %>"
+delivery_fqdn                     "<%= node["chef-marketplace"]["api_fqdn"] %>"
+delivery["chef_private_key"]      = "/etc/delivery/delivery.pem"
+delivery["chef_server"]           = "https://localhost:8443/organizations/delivery"
+delivery["chef_server_proxy"]     = true
+delivery["chef_username"]         = "delivery"
+delivery["primary"]               = true
+delivery["marketplace_licensing"] = true
+elasticsearch["enable_auth"]      = true
+insights["enable"]                = true
+insights["enable_auth"]           = true
+kibana["enable_auth"]             = true
+postgresql["listen_address"]      = "0.0.0.0"
+postgresql["superuser_enable"]    = true
+postgresql["superuser_username"]  = "chef-pgsql"
+postgresql["superuser_password"]  = "<%= node["chef-marketplace"]["automate"]["postgresql"]["superuser_password"] %>"
+reaper["enable"]                  = true
+reaper["mode"]                    = "delete"
