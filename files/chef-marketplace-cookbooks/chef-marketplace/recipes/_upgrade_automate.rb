@@ -14,7 +14,6 @@ end
 # Chef Automate
 chef_ingredient 'delivery' do
   action :upgrade
-  channel :current # TODO: change this back to stable when we've got the release out
 
   notifies :run, 'bash[delivery-ctl reconfigure]', :immediately
   notifies :run, 'bash[yum-clean-all]', :immediately
