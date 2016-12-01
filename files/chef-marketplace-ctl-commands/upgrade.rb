@@ -28,7 +28,7 @@ add_command_under_category "upgrade", "Maintenance", "Upgrade or install Chef so
       when "compliance"
         config["chef-marketplace"]["upgrade_packages"] << "compliance"
       when "aio"
-        config["chef-marketplace"]["upgrade_packages"] << "chef-server"
+        config["chef-marketplace"]["upgrade_packages"] << "chef-server-aio"
         config["chef-marketplace"]["upgrade_packages"] << "analytics"
       when "automate"
         config["chef-marketplace"]["upgrade_packages"] << "automate"
