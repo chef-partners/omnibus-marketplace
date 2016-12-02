@@ -22,13 +22,13 @@ add_command_under_category "upgrade", "Maintenance", "Upgrade or install Chef so
 
       case config["chef-marketplace"]["role"]
       when "server"
-        config["chef-marketplace"]["upgrade_packages"] << "chef-server"
+        config["chef-marketplace"]["upgrade_packages"] << "chef-server-aio"
       when "analytics"
         config["chef-marketplace"]["upgrade_packages"] << "analytics"
       when "compliance"
         config["chef-marketplace"]["upgrade_packages"] << "compliance"
       when "aio"
-        config["chef-marketplace"]["upgrade_packages"] << "chef-server"
+        config["chef-marketplace"]["upgrade_packages"] << "chef-server-aio"
         config["chef-marketplace"]["upgrade_packages"] << "analytics"
       when "automate"
         config["chef-marketplace"]["upgrade_packages"] << "automate"
@@ -37,7 +37,11 @@ add_command_under_category "upgrade", "Maintenance", "Upgrade or install Chef so
     end
 
     opts.on("-s", "--server", "Upgrade Chef Server, Chef Reporting and Chef Manage") do
-      config["chef-marketplace"]["upgrade_packages"] << "chef-server"
+      if config["chef-marketplace"]["role"] == "automate"
+        config["chef-marketplace"]["upgrade_packages"] << "chef-server"
+      else
+        config["chef-marketplace"]["upgrade_packages"] << "chef-server-aio"
+      end
     end
 
     opts.on("-a", "--analytics", "Upgrade Chef Analytics") do

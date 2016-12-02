@@ -1,4 +1,4 @@
-include_recipe "chef-marketplace::_server_enable"
+include_recipe "chef-marketplace::_server_aio_enable"
 include_recipe "chef-marketplace::_analytics_enable"
 
 template "/etc/opscode-analytics/opscode-analytics.rb" do
