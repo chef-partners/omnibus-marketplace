@@ -77,14 +77,14 @@ describe "chef-marketplace-ctl upgrade" do
 
       context "when the role is a chef server" do
         let(:role) { "server" }
-        let(:required_packages) { %w{chef-marketplace chef-server} }
+        let(:required_packages) { %w{chef-marketplace chef-server-aio} }
 
         it_behaves_like "a proper upgrade"
       end
 
       context "when the role is an All-In-One" do
         let(:role) { "aio" }
-        let(:required_packages) { %w{chef-marketplace chef-server analytics} }
+        let(:required_packages) { %w{chef-marketplace chef-server-aio analytics} }
 
         it_behaves_like "a proper upgrade"
       end
@@ -95,10 +95,17 @@ describe "chef-marketplace-ctl upgrade" do
 
         it_behaves_like "a proper upgrade"
       end
+
+      context "when the role is automate" do
+        let(:role) { "automate" }
+        let(:required_packages) { %w{chef-marketplace automate chef-server} }
+
+        it_behaves_like "a proper upgrade"
+      end
     end
 
     context "when there is no role configured" do
-      let(:required_packages) { %w{chef-marketplace chef-server analytics} }
+      let(:required_packages) { %w{chef-marketplace chef-server-aio analytics} }
 
       it_behaves_like "a proper upgrade"
     end
@@ -106,7 +113,7 @@ describe "chef-marketplace-ctl upgrade" do
 
   context "with -s" do
     let(:command) { "upgrade -s" }
-    let(:required_packages) { %w{chef-server} }
+    let(:required_packages) { %w{chef-server-aio} }
 
     it_behaves_like "a proper upgrade"
   end
@@ -128,6 +135,13 @@ describe "chef-marketplace-ctl upgrade" do
   context "with -c" do
     let(:command) { "upgrade -c" }
     let(:required_packages) { %w{compliance} }
+
+    it_behaves_like "a proper upgrade"
+  end
+
+  context "with -d" do
+    let(:command) { "upgrade -d" }
+    let(:required_packages) { %w{automate} }
 
     it_behaves_like "a proper upgrade"
   end
