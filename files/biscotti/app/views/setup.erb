@@ -1,0 +1,80 @@
+<div class="row">
+  <div class="small-9 small-centered columns">
+    <div class="row">
+      <div class="small-9 small-centered columns">
+        <div class="panel">
+          <h2>Chef Automate Marketplace Setup</h2>
+        </div>
+      </div>
+    </div>
+    <form action="/biscotti/setup/starter-kit" method="post" id="setup-form" data-abide="ajax">
+      <div class="small-9 small-centered columns">
+        <label>First Name
+          <input type="text" class="radius" name="firstname" placeholder="Jane" pattern="[a-zA-z\s]+$" required autofocus>
+        </label>
+        <small class="error">A first name is required. Special characters are not allowed.</small>
+      </div>
+      <div class="small-9 small-centered columns">
+        <label>Last Name
+          <input type="text" class="radius" name="lastname" placeholder="Doe" pattern="[a-zA-z\s]+$" required>
+        </label>
+        <small class="error">A last name is required. Special characters are not allowed.</small>
+      </div>
+      <div class="small-9 small-centered columns">
+        <label>Email Address
+          <input type="email" class="radius" name="email" placeholder="jdoe@chef.io" required>
+        </label>
+        <small class="error">A valid email address is required.</small>
+      </div>
+      <hr>
+      <div class="small-9 small-centered columns">
+        <label>Username
+          <input type="text" class="radius" name="username" placeholder="jdoe" pattern="alpha" required>
+        </label>
+        <small class="error">A username is required. Spaces and special characters are not allowed.</small>
+      </div>
+      <div class="small-9 small-centered columns">
+        <label>Password
+          <input type="password" class="radius" id="password" name="password" required>
+        </label>
+        <small class="error">A password is required.</small>
+      </div>
+      <div class="small-9 small-centered columns">
+        <label>Confirm Password
+          <input type="password" class="radius" name="password-confirm" data-equalto="password" required>
+        </label>
+        <small class="error">The passwords did not match.</small>
+      </div>
+      <div class="small-9 small-centered columns">
+        <label>Organization Name
+          <input type="text" class="radius" name="organization" placeholder="Chef" pattern="alpha_numeric" required>
+        </label>
+        <small class="error">An organization name is required. Spaces and special characters are not allowed.</small>
+      </div>
+      <div class="small-9 small-centered columns">
+        <label>RSA Public Key
+          <textarea placeholder="If left blank, a key pair will be created for you" name="pubkey"></textarea>
+        </label>
+      </div>
+      <div class="small-9 small-centered columns">
+        <input type="checkbox" id="supportaccount" name="supportaccount" value="true" checked>
+        <label for="supportaccount">Create a Chef Software support account for me</label>
+      </div>
+      <div class="small-9 small-centered columns">
+        <input type="checkbox" id="eula" name="eula" value="true" required>
+        <label for="eula">I have read and accept the <a href="https://www.chef.io/online-master-agreement/">EULA and Master Agreement</a></label>
+        <small class="error">You must agree to the Chef Software EULA and master agreement</small>
+      </div>
+      <div class="small-9 small-centered columns">
+        <button class="button large" type="submit" name="starter-kit-form-button">Setup Chef Automate & Download Starter Kit</button>
+      </div>
+    </form>
+  </div>
+  <div class="row">
+    <div class="small-9 small-centered columns">
+      <a href="/u/default/#/dashboard" name="automate-login-href">
+        <button class="button large hide small-offset-4" type="submit" name="automate-login-button">Login to Chef Automate</button>
+      </a>
+    </div>
+  </div>
+</div>

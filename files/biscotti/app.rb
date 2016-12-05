@@ -1,27 +1,29 @@
-require "bundler"
-Bundler.require
-
 $LOAD_PATH << File.expand_path(File.dirname(__FILE__))
 $LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../"))
+ENV["RACK_ENV"] ||= "development"
 
-require "sinatra/base"
-require "sinatra/config_file"
-require "sinatra/flash"
+require "bundler/setup"
+Bundler.require(:default, ENV["RACK_ENV"])
+
 require "app/extensions"
 require "app/routes"
 require "lib/bakery"
+require "lib/starter_kit"
+require "lib/helpers"
 
 module Biscotti
   class App < Sinatra::Base
     enable :sessions
 
+    set public_folder: "public"
+
     register Sinatra::ConfigFile
+    config_file Biscotti::Helpers.config_file_path
+
+    register Sinatra::Reloader if development?
     register Sinatra::Flash
 
-    config_file "config/config.yml"
-
-    set public_folder: "assets", static: true
-
-    use Biscotti::Routes::Biscotti
+    use Biscotti::Routes::Index
+    use Biscotti::Routes::Setup
   end
 end

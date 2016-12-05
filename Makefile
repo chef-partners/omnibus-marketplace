@@ -67,7 +67,10 @@ shell:
 build-gem:
 	cd ./files/chef-marketplace-gem && gem build chef-marketplace*.gemspec
 
-load: load-biscotti load-cookbook build-gem load-gem load-reckoner load-omnibus-ctl
+compile-biscotti-assets:
+	cd ./files/biscotti && bundle exec rake assets:precompile
+
+load: compile-biscotti-assets load-biscotti load-cookbook build-gem load-gem load-reckoner load-omnibus-ctl
 
 load-%:
 	docker-compose exec automate "/shared/scripts/load-$*.sh"

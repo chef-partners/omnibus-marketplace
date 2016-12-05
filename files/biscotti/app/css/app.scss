@@ -1,0 +1,50 @@
+@import "~chef-web-core/dist/stylesheets/chef.css";
+@import "~chef-web-core/dist/stylesheets/chef/components/alert.css";
+@import "~chef-web-core/dist/stylesheets/chef/components/button.css";
+@import "~chef-web-core/dist/stylesheets/chef/components/form.css";
+@import "~chef-web-core/dist/stylesheets/chef/components/icon.css";
+@import "~chef-web-core/dist/stylesheets/chef/components/label.css";
+@import "~chef-web-core/dist/stylesheets/chef/components/tab.css";
+@import "~chef-web-core/dist/stylesheets/chef/components/logo.css";
+
+@font-face {
+  font-family: "foundation-icons";
+  src: url("~chef-web-core/dist/fonts/foundation-icons.eot");
+  src: url("~chef-web-core/dist/fonts/foundation-icons.eot#iefix") format("embedded-opentype"),
+       url("~chef-web-core/dist/fonts/foundation-icons.woff") format("woff"),
+       url("~chef-web-core/dist/fonts/foundation-icons.ttf") format("truetype"),
+       url("~chef-web-core/dist/fonts/foundation-icons.svg") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+input[type=text], input[type=textarea], input[type=password], input[type=email] {
+  border: 1px solid;
+}
+
+input[type="text"].radius, input[type="password"].radius, input[type="date"].radius, input[type="datetime"].radius, input[type="datetime-local"].radius, input[type="month"].radius, input[type="week"].radius, input[type="email"].radius, input[type="number"].radius, input[type="search"].radius, input[type="tel"].radius, input[type="time"].radius, input[type="url"].radius, input[type="color"].radius, textarea.radius {
+  border-radius: 0px;
+}
+
+.switch label {
+  color: #4d4d4d;
+  font-size: .875rem;
+}
+
+.error input[type=text], .error input[type=textarea], .error input[type=password], .error input[type=email] {
+  border: 1px solid #f04124;
+}
+
+.error label, .error label.error {
+  color: #4d4d4d;
+}
+
+.button {
+  border-radius: 0px;
+}
+
+.panel {
+  border: none;
+  background: none;
+  text-align: center;
+}

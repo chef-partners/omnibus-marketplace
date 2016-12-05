@@ -1,0 +1,36 @@
+{
+  "name": "biscotti",
+  "version": "0.0.1",
+  "description": "Chef Marketplace Authorization and Setup Application",
+  "main": "app.js",
+  "scripts": {
+    "dev": "webpack-dev-server --content-base app --progress --colors",
+    "build": "webpack -p --config webpack.config.js --profile --progress --colors",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ryan@chef.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chef-partners/omnibus-marketplace"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "foundation-sites": "^5.5.1",
+    "chef-web-core": "https://github.com/chef/chef-web-core/releases/download/1.0.1/chef-web-core-1.0.1.tgz"
+  },
+  "devDependencies": {
+    "babel-core": "^5.8.35",
+    "babel-loader": "^5.4.0",
+    "css-loader": "^0.23.1",
+    "expose-loader": "^0.7.0",
+    "file-loader": "^0.9.0",
+    "imports-loader": "^0.7.0",
+    "node-sass": "^3.4.2",
+    "sass-loader": "^4.0.2",
+    "script-loader": "^0.7.0",
+    "style-loader": "^0.13.0",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.14.0",
+    "webpack-dev-server": "^1.14.1"
+  }
+}

@@ -1,13 +1,17 @@
 development:
   biscotti:
-    message: 'Please enter the Instance ID continue to the web interface'
+    message: 'Please enter the Instance ID continue to the web interface. The Instance ID can be found in the AWS Console.'
     token: '12345'
     uuid_type: 'Instance ID'
     uuid: 'i-1234abcd'
+    credentials:
+      admin_password: 'AUTOMATEADMINPASSWORD'
 
 production:
- biscotti:
+  biscotti:
     message: 'Please enter the Instance ID continue to the web interface'
     token: '12345'
     uuid_type: 'Instance ID'
     uuid: 'i-1234abcd'
+    credentials:
+      admin_password: 'AUTOMATEADMINPASSWORD'

@@ -54,7 +54,7 @@ template nginx_biscotti_lua do
   group "root"
   mode "0644"
   action :create
-  variables(token_hmac: biscotti_token_hmac())
+  variables(token_hmac: biscotti_token_hmac)
 end
 
 template nginx_biscotti_upstream do
