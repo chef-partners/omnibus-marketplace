@@ -6,6 +6,9 @@ gem "sinatra",         require: "sinatra/base"
 gem "sinatra-contrib", require: %w{sinatra/contrib sinatra/config_file sinatra/reloader}
 gem "sinatra-flash",   require: "sinatra/flash"
 gem "unicorn"
+gem "chef"
+gem "rest-client"
+gem "rubyzip"
 
 group :development do
   gem "pry"

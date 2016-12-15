@@ -18,6 +18,7 @@ module Biscotti
     set public_folder: "public"
 
     register Sinatra::ConfigFile
+
     config_file Biscotti::Helpers.config_file_path
 
     register Sinatra::Reloader if development?

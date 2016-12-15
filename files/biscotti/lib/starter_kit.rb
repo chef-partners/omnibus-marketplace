@@ -1,4 +1,4 @@
-require "zlib"
+require "zip"
 require "rubygems"
 require "rubygems/package"
 
@@ -11,32 +11,34 @@ module Biscotti
       @params = validate_and_normalize_params(params)
     end
 
-    def tgz
-      @tgz ||=
+    def zip
+      @zip ||=
         begin
-          tarball = StringIO.new
-          archive = StringIO.new
-          Gem::Package::TarWriter.new(tarball) do |tar|
-            tar.mkdir(".chef", 0755)
-            tar.add_file(knife_config_filename, 0755) { knife_config }
-            tar.add_file(automate_admin_creds_filename, 0600) { automate_admin_creds }
-            tar.add_file(pivotal_key_filename, 0600) { pivotal_key }
-            if create_private_key?
-              tar.add_file(private_key_filename, 0755) { private_key }
-            end
-            tar.mkdir(".chef/trusted_certs", 0755)
-            # TODO add the ssl certs
+          archive = Zip::OutputStream.new(StringIO.new, true) do |out|
+            # knife config
+            out.put_next_entry(knife_config_filename)
+            out.write(knife_config)
+
+            # pivotal key
+            out.put_next_entry(pivotal_key_filename)
+            out.write(pivotal_key)
+
+            # chef user key
+            # TODO: if exists
+
+            # automate credentials
+            out.put_next_entry(automate_admin_creds_filename)
+            out.write(automate_admin_creds)
+
+            # trusted certs
+            # TODO: add certs
           end
-          tarball.rewind
-          gz = Zlib::GzipWriter.new(archive)
-          gz.write(tarball.string)
-          gz.close # close to write the gzip footer
-          StringIO.new(archive.string)
+          archive.close_buffer.string
         end
     end
 
     def filename
-      "starter_kit.tgz"
+      "starter_kit.zip"
     end
 
     def knife_config
