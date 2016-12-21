@@ -1,3 +1,5 @@
 require "./app"
 
-run Biscotti::App
+map "/biscotti" do
+  run Biscotti::App
+end

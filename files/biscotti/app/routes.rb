@@ -1,6 +1,7 @@
 module Biscotti
   module Routes
     autoload :Base, "app/routes/base"
-    autoload :Biscotti, "app/routes/biscotti"
+    autoload :Index, "app/routes/index"
+    autoload :Setup, "app/routes/setup"
   end
 end
