@@ -5,14 +5,14 @@ module Biscotti
 
       module Helpers
         def bake_cookie
-          bakery = Biscotti::Bakery.new(settings.biscotti["token"], params["uuid"])
+          bakery = Biscotti::Bakery.new(Biscotti::App.settings.biscotti["token"], params["uuid"])
           response.set_cookie("ChefMarketplaceAuth", bakery.cookie)
         end
 
         def valid_uuid?
-          settings.biscotti["uuid"] &&
+          Biscotti::App.settings.biscotti["uuid"] &&
             params["uuid"] &&
-            settings.biscotti["uuid"] == params["uuid"]
+            Biscotti::App.settings.biscotti["uuid"] == params["uuid"]
         end
       end
 
