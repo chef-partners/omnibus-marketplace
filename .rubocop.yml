@@ -2,6 +2,7 @@ AllCops:
   Exclude:
     - '**/bin/*'
     - 'Guardfile'
+  TargetRubyVersion: 2.2
 Metrics/LineLength:
   Enabled: false
 Metrics/MethodLength:
