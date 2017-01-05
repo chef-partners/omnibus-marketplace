@@ -23,7 +23,6 @@ dependency "chef"
 dependency "chef-marketplace-ctl"
 dependency "chef-marketplace-gem"
 dependency "chef-marketplace-cookbooks"
-dependency "remove-nodejs"
 dependency "version-manifest"
 
 exclude '\.git*'

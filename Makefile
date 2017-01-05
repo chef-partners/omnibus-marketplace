@@ -68,7 +68,7 @@ build-gem:
 	cd ./files/chef-marketplace-gem && gem build chef-marketplace*.gemspec
 
 compile-biscotti-assets:
-	cd ./files/biscotti && bundle exec rake assets:precompile
+	cd ./files/biscotti && npm install && npm run build
 
 load: compile-biscotti-assets load-biscotti load-cookbook build-gem load-gem load-reckoner load-omnibus-ctl
 

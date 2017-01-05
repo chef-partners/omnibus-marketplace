@@ -1,15 +1,21 @@
-<% unless node['chef-marketplace']['role'] == 'compliance' %>
+<% if node['chef-marketplace']['role'] =~ /server|aio/ -%>
 -- When the http_x_ops_userid header is set we route it to the chef-server API.
 -- We only need to require authentication for the UI so we'll move on if that
 -- header is present.
 if ngx.var.http_x_ops_userid then
     return
 end
-<% end %>
+<% end -%>
 
--- Whitelist all requests to the biscotti upstream.  This allows us to download
--- biscotti assets without a cookie being present.
-if ngx.re.match(ngx.var.uri,  "^/biscotti") then
+-- Whitelist all requests to the biscotti asset upstream. This allows us to
+-- download biscotti assets without a cookie being present.
+if ngx.re.match(ngx.var.uri,  "^/biscotti/assets") then
+    return
+end
+
+-- Whitelist all requests to the biscotti index. This allows GET and POST to
+-- biscotti authorization page.
+if ngx.re.match(ngx.var.uri,  "^/biscotti/$") then
     return
 end
 
@@ -17,11 +23,10 @@ local cookie = ngx.var.cookie_ChefMarketplaceAuth
 
 if cookie ~= nil then
     -- Check if the HMAC in the cookie matches what we expect
-    local token_hmac = '<%= @token_hmac %>'
-    if token_hmac == cookie then
+    if '<%= @token_hmac %>' == cookie then
         return
     end
 end
 
 -- If we don't get a match then route to biscotti
-ngx.exec("/biscotti")
+ngx.exec("/biscotti/")

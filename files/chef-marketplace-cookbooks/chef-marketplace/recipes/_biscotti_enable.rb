@@ -1,43 +1,19 @@
-biscotti_config_dir = "/var/opt/chef-marketplace/biscotti/etc"
-biscotti_log_dir = "/var/log/chef-marketplace/biscotti"
-biscotti_app_config = ::File.join(biscotti_config_dir, "config.yml")
+biscotti_config_dir     = "/var/opt/chef-marketplace/biscotti/etc"
+biscotti_log_dir        = "/var/log/chef-marketplace/biscotti"
+biscotti_app_config     = ::File.join(biscotti_config_dir, "config.yml")
 bisoctti_unicorn_config = ::File.join(biscotti_config_dir, "unicorn.rb")
 
-nginx_addon_dir = node["chef-marketplace"]["biscotti"]["nginx"]["add_on_dir"]
-nginx_scripts_dir = node["chef-marketplace"]["biscotti"]["nginx"]["scripts_dir"]
-nginx_sha1_lua = ::File.join(nginx_scripts_dir, "sha1.lua")
-nginx_biscotti_lua = node["chef-marketplace"]["biscotti"]["nginx"]["biscotti_lua_file"]
+nginx_addon_dir         = node["chef-marketplace"]["biscotti"]["nginx"]["add_on_dir"]
+nginx_scripts_dir       = node["chef-marketplace"]["biscotti"]["nginx"]["scripts_dir"]
+nginx_biscotti_lua      = node["chef-marketplace"]["biscotti"]["nginx"]["biscotti_lua_file"]
 nginx_biscotti_upstream = ::File.join(nginx_addon_dir, "25-biscotti_upstreams.conf")
-nginx_biscotti_external = if node["chef-marketplace"]["role"] == "automate"
-                            # automate loads all of the routes from *_internal
-                            ::File.join(nginx_addon_dir, "25-biscotti_internal.conf")
-                          else
-                            ::File.join(nginx_addon_dir, "25-biscotti_external.conf")
-                          end
-
-# HACK: Right now the the chef server nginx template doesn't allow us to
-# specify a file location for access_by_lua_file so we're manually hacking that
-# file on disk.  We can remove these next two resources these changes have been
-# merged upstream.
-server_lb_template = "/opt/opscode/embedded/cookbooks/private-chef/templates/default/nginx/nginx_chef_api_lb.conf.erb"
-
-directory ::File.dirname(server_lb_template) do
-  owner "root"
-  group "root"
-  mode "0644"
-  recursive true
-  action :create
-  only_if { node["chef-marketplace"]["role"] =~ /aio|server/ }
-end
-
-cookbook_file server_lb_template do
-  source "chef_server_nginx_lb.conf.erb"
-  owner "root"
-  group "root"
-  mode "0644"
-  action :create
-  only_if { node["chef-marketplace"]["role"] =~ /aio|server/ }
-end
+nginx_biscotti_external =
+  if node["chef-marketplace"]["role"] == "automate"
+    # automate loads all of the routes from *_internal
+    ::File.join(nginx_addon_dir, "25-biscotti_internal.conf")
+  else
+    ::File.join(nginx_addon_dir, "25-biscotti_external.conf")
+  end
 
 # Ensure these directories exist but do not manage their mode, let Chef Server
 # or Chef Compliance do that.
@@ -82,7 +58,7 @@ directory biscotti_config_dir do
 end
 
 file biscotti_app_config do
-  content biscotti_yml_config
+  content biscotti_config.to_yaml
   owner "root"
   group "root"
   mode "0644"

@@ -58,8 +58,13 @@ if [ "$U_CHANNEL" != "no_upgrade" ]; then
   /opt/chefdk/bin/chef-apply /shared/recipes/setup-marketplace.rb
 fi
 
-/opt/chefdk/bin/chef-apply /shared/recipes/setup-automate.rb
-/opt/chefdk/bin/chef-apply /shared/recipes/setup-chef-server.rb
+if [ -f /var/opt/chef-marketplace/preconfigured ]; then
+  /opt/chefdk/bin/chef-apply /shared/recipes/setup-automate.rb
+  /opt/chefdk/bin/chef-apply /shared/recipes/setup-chef-server.rb
+else
+  chef-marketplace-ctl setup --preconfigure
+  touch /var/opt/chef-marketplace/preconfigured
+fi
 
 # Something useful that also keeps the container running...
 chef-marketplace-ctl tail

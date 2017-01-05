@@ -5,11 +5,9 @@ ENV["RACK_ENV"] ||= "development"
 require "bundler/setup"
 Bundler.require(:default, ENV["RACK_ENV"])
 
+require "lib/biscotti"
 require "app/extensions"
 require "app/routes"
-require "lib/bakery"
-require "lib/starter_kit"
-require "lib/helpers"
 
 module Biscotti
   class App < Sinatra::Base

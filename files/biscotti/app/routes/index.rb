@@ -17,9 +17,9 @@ module Biscotti
           bake_cookie
           redirect Biscotti::App.settings.biscotti["redirect_path"]
         else
-          flash[:error] = "The #{settings.biscotti["uuid_type"]} that you supplied " \
+          flash[:error] = "The #{Biscotti::App.settings.biscotti["uuid_type"]} that you supplied " \
             "did not match.  Please verify and try again."
-          redirect "/"
+          redirect "biscotti/"
         end
       end
     end
