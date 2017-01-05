@@ -17,18 +17,12 @@ ________/\\\\\\\\\__/\\\________/\\\__/\\\\\\\\\\\\\\\__/\\\\\\\\\\\\\\\_
 
         Welcome to the <%= @role_name %> Marketplace Appliance!
 
-If you have not completed setting up the <%= @role_name %> please run through
+If you have not completed setting up <%= @role_name %> please run through
 the setup wizard: <%= @setup_wizard %>
 
 Read Chef documentation: <%= @doc_url %>
 Email the Chef support team: <%= @support_email %>
-<% if @role =~ /aio|server/ %>
-Login to Chef Manage: <%= @manage_url %>
-<% elsif @role == "analytics" %>
-Login to Chef Analytics: <%= @analytics_url %>
-<% elsif @role == "compliance" %>
-Login to Chef Compliance: <%= @compliance_url %>
-<% end -%>
+Login to <%= @role_name %>: <%= @frontend_url %>
 <% if @update_motd %>
 EOS
 <% end -%>
