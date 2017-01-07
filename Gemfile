@@ -13,6 +13,7 @@ gem "chefstyle"
 gem "chef-provisioning"
 gem "chef-provisioning-aws"
 gem "kitchen-ec2"
+gem 'rainbow', '>= 2.1.0', '< 2.2.0' # https://github.com/sickill/rainbow/issues/40
 
 gem "nokogiri", "= 1.6.8.1"
 

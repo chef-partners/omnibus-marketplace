@@ -6,7 +6,7 @@ GIT
 
 GIT
   remote: git://github.com/opscode/omnibus-software.git
-  revision: 7f1b5f2bef8ca0d248d943688dd78cceaa1b18c5
+  revision: e28530b32478b2f6e38ed1634a7a6a42f6abfd43
   specs:
     omnibus-software (4.0.0)
       chef-sugar (>= 3.4.0)
@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: git://github.com/opscode/omnibus.git
-  revision: 712ba4cbaee85fdd307a3c8e970a981a2127f6c7
+  revision: aadc7f243c2caa2c1d43e4fc7dd8e349ea288133
   specs:
     omnibus (5.5.0)
       aws-sdk (~> 2)
@@ -197,7 +197,7 @@ GEM
     mixlib-log (1.7.1)
     mixlib-shellout (2.2.7)
     mixlib-versioning (1.1.0)
-    molinillo (0.5.4)
+    molinillo (0.5.5)
     multi_json (1.12.1)
     multipart-post (2.0.0)
     net-scp (1.2.1)
@@ -240,7 +240,7 @@ GEM
       slop (~> 3.4)
     public_suffix (2.0.5)
     rack (2.0.1)
-    rainbow (2.2.1)
+    rainbow (2.1.0)
     retryable (2.0.4)
     ridley (5.1.0)
       addressable
@@ -361,10 +361,11 @@ DEPENDENCIES
   omnibus-ctl!
   omnibus-software!
   pry
+  rainbow (>= 2.1.0, < 2.2.0)
   rspec
   rubocop
   sequel
   test-kitchen
 
 BUNDLED WITH
-   1.13.6
+   1.13.7
