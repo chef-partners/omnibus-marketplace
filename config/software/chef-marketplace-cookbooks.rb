@@ -3,7 +3,7 @@ license :project_license
 
 source path: "#{project.files_path}/#{name}"
 
-dependency "berkshelf"
+dependency "berkshelf-no-depselector"
 dependency "chef-marketplace-gem"
 
 build do

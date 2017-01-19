@@ -8,9 +8,8 @@ install_dir "/opt/chef-marketplace"
 build_version Omnibus::BuildVersion.semver
 build_iteration 1
 
-override :ruby, version: "2.2.4"
+override :ruby, version: "2.3.3"
 override :chef, version: "master"
-override :berkshelf, version: "v4.2.3"
 
 dependency "preparation"
 dependency "postgresql92" # only the client

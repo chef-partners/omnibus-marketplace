@@ -15,7 +15,7 @@ build do
   gem "build chef-marketplace.gemspec", env: env
 
   gem "install chef-marketplace-*.gem --without development", env: env
-  gem "install chef-marketplace-*.gem -i #{install_dir}/embedded/service/gem/ruby/2.2.0 --without development", env: env
+  gem "install chef-marketplace-*.gem -i #{install_dir}/embedded/service/gem/ruby/2.3.0 --without development", env: env
 
   sync "#{project_dir}/spec", "#{install_dir}/embedded/service/chef-marketplace-gem/spec"
 end
