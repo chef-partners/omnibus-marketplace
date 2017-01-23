@@ -30,7 +30,6 @@ describe Marketplace::Reckoner::MachineID do
         expect(File).to receive(:read).with("id_file").and_return('{"key1": "value1"}')
 
         machine_id_contents = tester.machine_id_contents
-        expect(machine_id_contents).to be_a(Hash)
         expect(machine_id_contents["key1"]).to eq("value1")
       end
     end
@@ -42,7 +41,6 @@ describe Marketplace::Reckoner::MachineID do
         expect(tester).to receive(:generate_machine_id).and_return("key2" => "value2")
 
         machine_id_contents = tester.machine_id_contents
-        expect(machine_id_contents).to be_a(Hash)
         expect(machine_id_contents["key2"]).to eq("value2")
       end
     end

@@ -13,7 +13,6 @@ BUNDLE_PATH: "/opt/chef-marketplace/embedded/service/gem"
 BUNDLE_DISABLE_SHARED_GEMS: true
 EOF
 
-apt-get install -y build-essential
 CPPFLAGS="-I/opt/chef-marketplace/embedded/include -O2" \
 CXXFLAGS="-I/opt/chef-marketplace/embedded/include -O2" \
 CFLAGS="-I/opt/chef-marketplace/embedded/include -O2" \

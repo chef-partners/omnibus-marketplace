@@ -14,7 +14,6 @@ BUNDLE_DISABLE_SHARED_GEMS: true
 EOF
 
 # Make sure our embedded set has all the goods
-apt-get install -y build-essential
 CPPFLAGS="-I/opt/chef-marketplace/embedded/include -O2" \
 CXXFLAGS="-I/opt/chef-marketplace/embedded/include -O2" \
 CFLAGS="-I/opt/chef-marketplace/embedded/include -O2" \

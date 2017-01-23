@@ -24,7 +24,7 @@ marketplace_version = ENV['VERSION'] == 'latest' ? :latest : ENV['VERSION']
 ].each do |product|
   if product['channel'] == 'local' # only supported for marketplace when running locally
     most_recent_build = Dir['/omnibus-pkgs/*.deb'].sort do |a, b|
-      File.mtime(a) <=> File.mtime(b)
+      File.new(a).mtime <=> File.new(b).mtime
     end.last
 
     dpkg_package product['package_name'] do

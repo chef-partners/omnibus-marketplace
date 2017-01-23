@@ -23,10 +23,14 @@ if [ "$exit_status" -ne "0" ]; then
   exit 1
 fi
 
+# Install build essential cause we'll probably need to compile gem extensions
+apt-get update
+dpkg -l | grep build-essential || (apt-get install --no-install-recommends -y build-essential)
+
 # Route ec2-metadata requests to the fake metadata service.
 metadata_ip=`getent hosts ec2-metadata | awk '{ print $1 }'`
 if [ ! -z ${metadata_ip} ]; then
-  dpkg -l | grep iptables || (apt-get update && apt-get install --no-install-recommends -y iptables)
+  dpkg -l | grep iptables || (apt-get install --no-install-recommends -y iptables)
   sysctl -w net.ipv4.conf.eth0.route_localnet=1
   iptables -t nat -p tcp -A OUTPUT -d 169.254.169.254 -j DNAT --to-destination ${metadata_ip}:9666
 fi
