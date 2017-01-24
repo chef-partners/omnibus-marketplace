@@ -5,7 +5,7 @@ require("../css/app.scss");
 
 $(document).chef({
   assets: {
-    images: "/biscotti/assets"
+    images: "/biscotti/assets/images"
   }
 });
 
@@ -16,5 +16,6 @@ $(document).ready(function () {
 
     $("#setup-form").addClass("hide");
     $("button[name=automate-login-button]").removeClass("hide");
+    $("#post-setup-panel").removeClass("hide");
   });
 });

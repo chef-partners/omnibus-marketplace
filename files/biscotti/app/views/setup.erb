@@ -72,6 +72,20 @@
   </div>
   <div class="row">
     <div class="small-9 small-centered columns">
+      <div class="panel hide" id="post-setup-panel">
+        <p>
+          <h2>You're all set!</h2>
+          The Starter Kit that you just downloaded will help you get going with Chef Automate. Inside the archive you'll find a text file containing the credentials you'll need to login to the Chef Automate Web UI or to interact with the Chef Automate API using the delivery CLI.
+
+          There's also a Chef repository that has been populated with multiple knife config files that you can use to interact with the Chef server using <a target="_blank" href="https://docs.chef.io/knife.html">knife</a>. All of the required keys and certificates for interacting with the Chef server are also included in the Chef repo. If you provided your own public key during setup, you'll want to copy the corresponding private key into the Chef repo under the "chef-repo/.chef/USERNAME.pem" where you'll replace USERNAME with the name that you provided on the setup form.
+
+          If you haven't already, download and install the <a target="_blank" href="https://downloads.chef.io/chefdk">ChefDK.</a> The Chef Developer Kit comes with the Ruby runtime and tooling that you'll need for interacting with Chef Automate and Chef server.
+
+          For further help getting started, see the <a target="_blank" href="https://docs.chef.io/chef_repo.html">Chef repo</a> and <a target="_blank" href="https://docs.chef.io/aws_marketplace.html">AWS Marketplace</a> documentation. For general help learning Chef you can visit the <a target="_blank" href="https://learn.chef.io/">Learn Chef tutorials</a>.
+
+          If you need any further assistance you can contact us at support@chef.io.
+        </p>
+      </div>
       <a href="/e/default/#/dashboard" name="automate-login-href">
         <button class="button large hide small-offset-4" type="submit" name="automate-login-button">Login to Chef Automate</button>
       </a>
