@@ -154,7 +154,7 @@ class Marketplace
       when 'compliance'
         vars[:role_name] = 'Chef Compliance'
         vars[:setup_wizard_url] = "#{frontend_url}/#/setup"
-      when 'automate',
+      when 'automate'
         vars[:role_name] = 'Chef Automate'
         vars[:setup_wizard_url] = "#{frontend_url}/biscotti/setup"
       end
