@@ -71,7 +71,7 @@ package cron_package do
   action :install
   only_if do
     (node["chef-marketplace"]["reporting"]["cron"]["enabled"] ||
-     node["chef-marketplace"]["actions"]["trimmer"]["enabled"]
+     node["chef-marketplace"]["analytics"]["trimmer"]["enabled"]
     ) && mirrors_reachable?
   end
 end
