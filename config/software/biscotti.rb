@@ -9,6 +9,8 @@ dependency "nodejs-binary"
 
 build do
   env = with_standard_compiler_flags(with_embedded_path)
+  # Make sure we know where to find npm so that we can build the assets
+  env["PATH"] = "#{env["PATH"]}:#{install_dir}/embedded/nodejs/bin"
 
   bundle "install --path=#{install_dir}/embedded/service/gem", env: env
   bundle "exec rake assets:precompile", env: env
