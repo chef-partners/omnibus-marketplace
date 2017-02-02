@@ -349,7 +349,6 @@ class Marketplace
 
     def marketplace_state_files
       %w{
-        /etc/chef-marketplace/chef-marketplace-running.json
         /etc/chef-marketplace/chef-marketplace-secrets.json
       }
     end
