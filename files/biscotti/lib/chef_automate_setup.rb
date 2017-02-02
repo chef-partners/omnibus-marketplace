@@ -44,7 +44,7 @@ module Biscotti
     end
 
     def set_user_password
-      api["internal-users/#{username}/reset-password"].post({
+      api["internal-users/#{username}/change-password"].post({
         password: password,
       }.to_json)
     end
