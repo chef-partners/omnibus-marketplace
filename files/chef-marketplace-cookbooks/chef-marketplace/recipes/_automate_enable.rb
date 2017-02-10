@@ -1,6 +1,7 @@
-include_recipe "chef-marketplace::_server_enable"
+include_recipe 'chef-marketplace::_server_enable'
 
 directory '/etc/delivery'
+directory '/var/opt/delivery/license'
 
 private_key '/etc/delivery/delivery.pem' do
   cipher            'DES-EDE3-CBC'
@@ -20,9 +21,14 @@ private_key '/etc/delivery/builder.pem' do
   type              :rsa
 end
 
-# TODO:
-# * reconfigure delivery when templates change
+# Use a 30 day trial license if we're on Azure
+file 'var/opt/delivery/license/delivery.license' do
+  source 'delivery.license'
+  action :create_if_missing
+  only_if { node['chef-marketplace']['platform'] == 'azure' }
+end
 
-template "/etc/delivery/delivery.rb" do
-  source "delivery.rb.erb"
+# TODO: reconfigure delivery when templates change
+template '/etc/delivery/delivery.rb' do
+  source 'delivery.rb.erb'
 end
