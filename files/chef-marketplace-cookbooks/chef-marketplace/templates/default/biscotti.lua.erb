@@ -7,6 +7,11 @@ if ngx.var.http_x_ops_userid then
 end
 <% end -%>
 
+<% if node['chef-marketplace']['platform'] == 'azure' -%>
+-- When we're on Azure we don't need to validate anything so we'll just return
+return
+<% end -%>
+
 -- Whitelist all requests to the biscotti asset upstream. This allows us to
 -- download biscotti assets without a cookie being present.
 if ngx.re.match(ngx.var.uri,  "^/biscotti/assets") then

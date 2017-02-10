@@ -1,4 +1,4 @@
-if node["chef-marketplace"]["role"] =~ /aio|server/
+if node["chef-marketplace"]["role"] =~ /aio|server|automate/
   node.set["chef-marketplace"]["reckoner"]["usage_dimension"] = "ChefNodes"
 elsif node["chef-marketplace"]["role"] == "compliance"
   node.set["chef-marketplace"]["reckoner"]["usage_dimension"] = "ComplianceNodes"
