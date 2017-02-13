@@ -6,7 +6,7 @@ GIT
 
 GIT
   remote: git://github.com/opscode/omnibus-software.git
-  revision: 9c08568928e45fd486ee720297f40036c20f7416
+  revision: 5aaeccbc70f08237086609858b82730a47b96efd
   specs:
     omnibus-software (4.0.0)
       chef-sugar (>= 3.4.0)
@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: git://github.com/opscode/omnibus.git
-  revision: efd598e477148e5ed7a83579131c6604fafe5800
+  revision: 4939fc0174c51f554d4f837f9f450eadb87014f5
   specs:
     omnibus (5.5.0)
       aws-sdk (~> 2)
@@ -35,13 +35,13 @@ GEM
       public_suffix (~> 2.0, >= 2.0.2)
     artifactory (2.5.1)
     ast (2.3.0)
-    aws-sdk (2.6.48)
-      aws-sdk-resources (= 2.6.48)
-    aws-sdk-core (2.6.48)
+    aws-sdk (2.7.7)
+      aws-sdk-resources (= 2.7.7)
+    aws-sdk-core (2.7.7)
       aws-sigv4 (~> 1.0)
       jmespath (~> 1.0)
-    aws-sdk-resources (2.6.48)
-      aws-sdk-core (= 2.6.48)
+    aws-sdk-resources (2.7.7)
+      aws-sdk-core (= 2.7.7)
     aws-sdk-v1 (1.66.0)
       json (~> 1.4)
       nokogiri (>= 1.4.4)
@@ -217,7 +217,7 @@ GEM
     nori (2.6.0)
     octokit (4.6.2)
       sawyer (~> 0.8.0, >= 0.5.3)
-    ohai (8.22.1)
+    ohai (8.23.0)
       chef-config (>= 12.5.0.alpha.1, < 13)
       ffi (~> 1.9)
       ffi-yajl (~> 2.2)
@@ -368,4 +368,4 @@ DEPENDENCIES
   test-kitchen
 
 BUNDLED WITH
-   1.13.7
+   1.14.2
