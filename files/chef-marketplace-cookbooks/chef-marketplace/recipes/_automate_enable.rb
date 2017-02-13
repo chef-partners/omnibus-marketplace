@@ -22,7 +22,7 @@ private_key '/etc/delivery/builder.pem' do
 end
 
 # Use a 30 day trial license if we're on Azure
-file 'var/opt/delivery/license/delivery.license' do
+cookbook_file 'var/opt/delivery/license/delivery.license' do
   source 'delivery.license'
   action :create_if_missing
   only_if { node['chef-marketplace']['platform'] == 'azure' }
