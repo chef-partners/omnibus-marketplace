@@ -1,5 +1,6 @@
 name "chef-marketplace-cookbooks"
 license :project_license
+skip_transitive_dependency_licensing true
 
 source path: "#{project.files_path}/#{name}"
 
