@@ -1,7 +1,10 @@
 include_recipe 'chef-marketplace::_server_enable'
 
 directory '/etc/delivery'
-directory '/var/opt/delivery/license'
+
+directory '/var/opt/delivery/license' do
+  recursive true
+end
 
 private_key '/etc/delivery/delivery.pem' do
   cipher            'DES-EDE3-CBC'
