@@ -35,6 +35,14 @@ directory "/var/lib/cloud/scripts/per-instance" do
   mode "0755"
   recursive true
   action :create
+  # Automate images on Azure are no longer configured by cloud-init at boot.
+  # They're now configured via an Azure Resource Manager template that launches,
+  # our image, copies the users Automate license (if provided) and configures
+  # the external FQDN in the marketplace.rb.
+  not_if do
+    node['chef-marketplace']['platform'] == 'azure' &&
+      node['chef-marketplace']['role'] == 'automate'
+  end
 end
 
 # Kick off the reconfigures with cloud-init so setup takes less time
@@ -43,6 +51,14 @@ template "/var/lib/cloud/scripts/per-instance/chef-marketplace-setup" do
   owner "root"
   group "root"
   mode "0755"
+  # Automate images on Azure are no longer configured by cloud-init at boot.
+  # They're now configured via an Azure Resource Manager template that launches,
+  # our image, copies the users Automate license (if provided) and configures
+  # the external FQDN in the marketplace.rb.
+  not_if do
+    node['chef-marketplace']['platform'] == 'azure' &&
+      node['chef-marketplace']['role'] == 'automate'
+  end
 end
 
 directory "/etc/cloud" do

@@ -7,7 +7,7 @@ bash "chef-marketplace-ctl stop" do
   code "chef-marketplace-ctl stop"
 end
 
-chef_ingredient "chef-marketplace" do
+chef_ingredient "marketplace" do
   action :upgrade
   notifies :run, "bash[chef-marketplace-ctl reconfigure]"
   notifies :run, "bash[yum-clean-all]", :immediately

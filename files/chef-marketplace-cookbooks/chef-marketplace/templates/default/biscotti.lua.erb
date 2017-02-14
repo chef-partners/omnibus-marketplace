@@ -9,7 +9,9 @@ end
 
 <% if node['chef-marketplace']['platform'] == 'azure' -%>
 -- When we're on Azure we don't need to validate anything so we'll just return
-return
+if true then
+    return
+end
 <% end -%>
 
 -- Whitelist all requests to the biscotti asset upstream. This allows us to

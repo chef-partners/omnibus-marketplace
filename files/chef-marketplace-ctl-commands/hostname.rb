@@ -39,6 +39,7 @@ add_command_under_category "hostname", "Configuration", "Query and modify the ho
     end
     run_command("opscode-manage-ctl reconfigure") if manage_configured?
     run_command("opscode-analytics-ctl reconfigure") if analytics_configured?
+    run_command("automate-ctl reconfigure") if automate_configured?
   else
     fqdn = marketplace.resolve
     msg = "ERROR: The Chef Server requires a resolvable fully qualified domain name."
@@ -59,4 +60,8 @@ end
 
 def manage_configured?
   File.exist?("/etc/opscode-manage/opscode-manage-running.json")
+end
+
+def automate_configured?
+  File.exist?("/etc/delivery/delivery-running.json")
 end
