@@ -1,0 +1,247 @@
+{
+  "handler": "Microsoft.Compute.MultiVm",
+  "version": "0.1.2-preview",
+  "parameters": {
+    "basics": [
+      {
+        "name": "vmName",
+        "type": "Microsoft.Common.TextBox",
+        "label": "Virtual Machine name",
+        "toolTip": "The name of the Virtual Machine.",
+        "defaultValue": "Chef Automate",
+        "constraints": {
+          "required": true
+        }
+      },
+      {
+        "name": "adminUsername",
+        "type": "Microsoft.Compute.UserNameTextBox",
+        "label": "Username",
+        "toolTip": "Admin username for the machine",
+        "osPlatform": "Linux",
+        "defaultValue": "azure",
+        "constraints": {
+          "required": true
+        }
+      },
+      {
+        "name": "SSHCredentials",
+        "type": "Microsoft.Compute.CredentialsCombo-linux",
+        "label": {
+          "authenticationType": "Authentication type",
+          "password": "Password",
+          "confirmPassword": "Confirm password",
+          "sshPublicKey": "SSH public key"
+        },
+        "toolTip": {
+          "authenticationType": "Authentication Type for the Virtual Machine",
+          "password": "Password for the Virtual Machine",
+          "sshPublicKey": "SSH Public Key for the Virtual Machine"
+        },
+        "constraints": {
+          "required": true
+        },
+        "options": {
+          "hideConfirmation": false
+        },
+        "osPlatform": "Linux"
+      }
+    ],
+    "steps": [
+      {
+        "name": "VirtualMachineConfig",
+        "label": "Virtual machine settings",
+        "subLabel": {
+          "preValidation": "Configure the Chef Automate virtual machine",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "Virtual machine settings",
+        "elements": [
+          {
+            "name": "Size",
+            "type": "Microsoft.Compute.SizeSelector",
+            "label": "Virtual machine size",
+            "toolTip": "The size of virtual machine to provision.",
+            "recommendedSizes": [
+              "Standard_D2_v2"
+            ],
+            "constraints": {
+              "allowedSizes": [
+                "Standard_A2",
+                "Standard_A3",
+                "Standard_A4",
+                "Standard_A5",
+                "Standard_A6",
+                "Standard_A7",
+                "Standard_A2_v2",
+                "Standard_A4_v2",
+                "Standard_A8_v2",
+                "Standard_A2m_v2",
+                "Standard_A4m_v2",
+                "Standard_A8m_v2",
+                "Standard_D2",
+                "Standard_D3",
+                "Standard_D4",
+                "Standard_D11",
+                "Standard_D12",
+                "Standard_D13",
+                "Standard_D14",
+                "Standard_D2_v2",
+                "Standard_D3_v2",
+                "Standard_D4_v2",
+                "Standard_D5_v2",
+                "Standard_D11_v2",
+                "Standard_D12_v2",
+                "Standard_D13_v2",
+                "Standard_D14_v2",
+                "Standard_DS4",
+                "Standard_DS12",
+                "Standard_DS13",
+                "Standard_DS14",
+                "Standard_DS4_v2",
+                "Standard_DS5_v2",
+                "Standard_DS12_v2",
+                "Standard_DS13_v2",
+                "Standard_DS14_v2",
+                "Standard_F4",
+                "Standard_F8",
+                "Standard_F16",
+                "Standard_G1",
+                "Standard_G2",
+                "Standard_G3",
+                "Standard_G4",
+                "Standard_GS1",
+                "Standard_GS2",
+                "Standard_GS3",
+                "Standard_GS4",
+                "Standard_GS5",
+                "Standard_L4s",
+                "Standard_L8s",
+                "Standard_L16s",
+                "Standard_L32s"
+              ],
+              "required": true
+            },
+            "osPlatform": "Linux",
+            "count": "1"
+          },
+          {
+            "name": "storageAccount",
+            "type": "Microsoft.Storage.StorageAccountSelector",
+            "label": "Storage account",
+            "toolTip": "Storage Account for the Virtual Machine's Disks",
+            "defaultValue": {
+              "type": "Standard_LRS",
+              "name": "[take(replace(guid(), '-', ''), 15)]"
+            },
+            "constraints": {
+              "allowedTypes": [
+                "Standard_LRS",
+                "Standard_GRS",
+                "Premium_LRS"
+              ],
+              "required": true
+            }
+          },
+          {
+            "name": "publicIpAddress",
+            "type": "Microsoft.Network.PublicIpAddressCombo",
+            "label": {
+              "publicIpAddress": "Public IP address",
+              "domainNameLabel": "DNS label"
+            },
+            "toolTip": {
+              "domainNameLabel": "DNS label for the Virtual Machine's public IP address."
+            },
+            "defaultValue": {
+              "publicIpAddressName": "ChefAutomatePublicIPAddress",
+              "domainNameLabel": "[basics('Name')]"
+            },
+            "options": {
+              "hideNone": true
+            }
+          },
+          {
+            "name": "virtualNetwork",
+            "type": "Microsoft.Network.VirtualNetworkCombo",
+            "label": {
+              "virtualNetwork": "Virtual network",
+              "subnets": "Subnets"
+            },
+            "toolTip": {
+              "virtualNetwork": "Virtual Network Name",
+              "subnets": "Subnets requied for Chef Automate"
+            },
+            "defaultValue": {
+              "name": "vnet01",
+              "addressPrefixSize": "/22"
+            },
+            "constraints": {
+              "minAddressPrefixSize": "/22"
+            },
+            "subnets": {
+              "subnet1": {
+                "label": "Chef subnet",
+                "defaultValue": {
+                  "name": "chefautomate-subnet",
+                  "addressPrefixSize": "/24"
+                },
+                "constraints": {
+                  "minAddressPrefixSize": "/24",
+                  "minAddressCount": 12,
+                  "requireContiguousAddresses": false
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "ChefAutomateSetup",
+        "label": "Chef Automate Setup",
+        "subLabel": {
+          "preValidation": "Chef Automate Configuration",
+          "postValidation": "Delightful"
+        },
+        "bladeTitle": "Chef Automate License",
+        "elements": [
+          {
+            "name": "automateLicense",
+            "type": "Microsoft.Common.FileUpload",
+            "label": "Automate License File",
+            "toolTip": "The Chef Automate license file. If omitted a 30 day trial license will be used",
+            "constraints": {
+              "required": false,
+              "accept": ".license"
+            },
+            "options": {
+              "uploadMode": "file"
+            }
+          }
+        ]
+      }
+    ],
+    "outputs": {
+      "adminPassword": "[basics('SSHCredentials').password]",
+      "adminUsername": "[basics('adminUsername')]",
+      "authenticationType": "[basics('SSHCredentials').authenticationType]",
+      "automateLicense": "[steps('ChefAutomateSetup').automateLicense]",
+      "location": "[location()]",
+      "publicIPAddressName": "[steps('VirtualMachineConfig').publicIpAddress.name]",
+      "publicIPDnsName": "[steps('VirtualMachineConfig').publicIpAddress.domainNameLabel]",
+      "publicIPNewOrExisting": "[steps('VirtualMachineConfig').publicIpAddress.newOrExistingOrNone]",
+      "resourceGroupName": "[steps('VirtualMachineConfig').storageAccount.resourceGroup]",
+      "sshPublicKey": "[basics('SSHCredentials').sshPublicKey]",
+      "storageAccountName": "[steps('VirtualMachineConfig').storageAccount.name]",
+      "storageAccountNewOrExisting": "[steps('VirtualMachineConfig').storageAccount.newOrExisting]",
+      "storageAccountType": "[steps('VirtualMachineConfig').storageAccount.type]",
+      "subnetName": "[steps('VirtualMachineConfig').virtualNetwork.subnets.subnet1.name]",
+      "subnetPrefix": "[steps('VirtualMachineConfig').virtualNetwork.subnets.subnet1.addressPrefix]",
+      "virtualNetworkAddressPrefix": "[steps('VirtualMachineConfig').virtualNetwork.addressPrefix]",
+      "virtualNetworkName": "[steps('VirtualMachineConfig').virtualNetwork.name]",
+      "virtualNetworkNewOrExisting": "[steps('VirtualMachineConfig').virtualNetwork.newOrExisting]",
+      "vmName": "[basics('VMName')]",
+      "vmSize": "[steps('VirtualMachineConfig').Size]"
+    }
+  }
+}
