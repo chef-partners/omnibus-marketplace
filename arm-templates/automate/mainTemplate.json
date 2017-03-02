@@ -1,0 +1,381 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Password for the Virtual Machine."
+      },
+      "defaultValue": ""
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "User name for the Virtual Machine."
+      }
+    },
+    "authenticationType": {
+      "type": "string",
+      "metadata": {
+        "description": "Password or SSH authentication"
+      }
+    },
+    "automateLicenseUri": {
+      "type": "string",
+      "metadata": {
+        "description": "Chef Automate license file Uri"
+      },
+      "defaultValue": ""
+    },
+    "imageProduct": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the product offering"
+      },
+      "defaultValue": "chef-automate"
+    },
+    "imageSKU": {
+      "type": "string",
+      "metadata": {
+        "description": "The SKU of product offering"
+      },
+      "defaultValue": "byol"
+    },
+    "imageVersion": {
+      "type": "string",
+      "metadata": {
+        "description": "The version of the product offering"
+      },
+      "defaultValue": "latest"
+    },
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "Azure location for this machine"
+      }
+    },
+    "publicIPAddressName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name to give to the Public IP address of the machine"
+      }
+    },
+    "publicIPDnsName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Domain Name Label for the DNS entry"
+      }
+    },
+    "publicIPNewOrExisting": {
+      "type": "string",
+      "metadata": {
+        "description": "Whether a new or an existing IP address should be used"
+      },
+      "defaultValue": "new"
+    },
+    "resourceGroupName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the resource group into which everything will be deployed"
+      }
+    },
+    "sshPublicKey": {
+      "type": "string",
+      "metadata": {
+        "description": "SSH Public key for the specified user"
+      },
+      "defaultValue": ""
+    },
+    "storageAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the storage account to use or created"
+      }
+    },
+    "storageAccountNewOrExisting": {
+      "type": "string",
+      "metadata": {
+        "description": "State whether to create or use an existing storage account"
+      },
+      "defaultValue": "new"
+    },
+    "storageAccountType": {
+      "type": "string",
+      "metadata": {
+        "description": "Type of storage account to create"
+      },
+      "defaultValue": "Standard_LRS"
+    },
+    "subnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the subnet to create within the virtual network"
+      }
+    },
+    "subnetPrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "Address space for the subnet"
+      }
+    },
+    "virtualNetworkAddressPrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "Virtual Network Address space"
+      }
+    },
+    "virtualNetworkName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the virtual network to create or use"
+      }
+    },
+    "virtualNetworkNewOrExisting": {
+      "type": "string",
+      "metadata": {
+        "description": "State whether the virtual network exists or not"
+      },
+      "defaultValue": "new"
+    },
+    "vmName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the virtual machine in Azure, this will also be the hostname"
+      }
+    },
+    "vmSize": {
+      "type": "string",
+      "metadata": {
+        "description": "Size of the machine to create"
+      }
+    },
+    "templateBaseUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "Base URL for the nested templates"
+      },
+      "defaultValue": "https://raw.githubusercontent.com/chef-partners/omnibus-marketplace/master/arm-templates/automate"
+    }
+  },
+  "variables": {
+    "location": "[parameters('location')]",
+    "vmName": "[parameters('vmName')]",
+    "vmSize": "[parameters('vmSize')]",
+    "nicName": "chefAutomateNic",
+    "vnetName": "[parameters('virtualNetworkName')]",
+    "vnetAddressPrefix": "[parameters('virtualNetworkAddressPrefix')]",
+    "subnetName": "[parameters('subnetName')]",
+    "subnetPrefix": "[parameters('subnetPrefix')]",
+    "storageAccountName": "[parameters('storageAccountName')]",
+    "storageAccountType": "[parameters('storageAccountType')]",
+    "publicIPAddressName": "[parameters('publicIPAddressName')]",
+    "publicIPAddressType": "Dynamic",
+    "template_urls": {
+      "storageAccount": "[concat(parameters('templateBaseUrl'), '/nested/storageaccount_', parameters('storageAccountNewOrExisting'), '.json')]",
+      "vnet": "[concat(parameters('templateBaseUrl'), '/nested/vnet_', parameters('virtualNetworkNewOrExisting'), '.json')]",
+      "publicIPAddress": "[concat(parameters('templateBaseUrl'), '/nested/publicipaddress_', parameters('publicIPNewOrExisting'), '.json')]",
+      "virtualMachine": "[concat(parameters('templateBaseUrl'), '/nested/vm_', parameters('authenticationType'), '.json')]",
+      "automateSetup": "[concat(parameters('templateBaseUrl'), '/nested/automate_setup.json')]"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "StorageAccountSetup",
+      "apiVersion": "2016-02-01",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('template_urls').storageAccount]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[variables('location')]"
+          },
+          "storageAccountType": {
+            "value": "[variables('storageAccountType')]"
+          },
+          "storageAccountName": {
+            "value": "[variables('storageAccountName')]"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "PublicIPAddressSetup",
+      "apiVersion": "2016-02-01",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('template_urls').publicIPAddress]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[variables('location')]"
+          },
+          "publicIPAddressName": {
+            "value": "[variables('publicIPAddressName')]"
+          },
+          "publicIPAddressType": {
+            "value": "[variables('publicIPAddressType')]"
+          },
+          "dnsLabelPrefix": {
+            "value": "[parameters('publicIPDnsName')]"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "VirtualNetworkSetup",
+      "apiVersion": "2016-02-01",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('template_urls').vnet]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "virtualNetworkName": {
+            "value": "[variables('vnetName')]"
+          },
+          "location": {
+            "value": "[variables('location')]"
+          },
+          "vnetAddressPrefix": {
+            "value": "[variables('vnetAddressPrefix')]"
+          },
+          "subnetName": {
+            "value": "[variables('subnetName')]"
+          },
+          "subnetPrefix": {
+            "value": "[variables('subnetPrefix')]"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[variables('nicName')]",
+      "apiVersion": "2015-06-15",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "Microsoft.Resources/deployments/PublicIPAddressSetup",
+        "Microsoft.Resources/deployments/VirtualNetworkSetup"
+      ],
+      "properties": {
+        "ipConfigurations": [ {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[reference('PublicIPAddressSetup').outputs.publicIpId.value]"
+              },
+              "subnet": {
+                "id": "[reference('VirtualNetworkSetup').outputs.subnetRef.value]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "ChefAutomateCreateVM",
+      "apiVersion": "2016-02-01",
+      "dependsOn": [
+        "Microsoft.Resources/deployments/StorageAccountSetup",
+        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('template_urls').virtualMachine]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "fqdn": {
+            "value": "[reference('PublicIPAddressSetup').outputs.fqdn.value]"
+          },
+          "imageProduct": {
+            "value": "[parameters('imageProduct')]"
+          },
+          "imageSKU": {
+            "value": "[parameters('imageSKU')]"
+          },
+          "imageVersion": {
+            "value": "[parameters('imageVersion')]"
+          },
+          "nicName": {
+            "value": "[variables('nicName')]"
+          },
+          "sshPublicKey": {
+            "value": "[parameters('sshPublicKey')]"
+          },
+          "storageAccountName": {
+            "value": "[variables('storageAccountName')]"
+          },
+          "vmName": {
+            "value": "[variables('vmName')]"
+          },
+          "vmSize": {
+            "value": "[variables('vmSize')]"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "ChefAutomateSetupVM",
+      "apiVersion": "2016-02-01",
+      "dependsOn": [
+        "Microsoft.Resources/deployments/ChefAutomateCreateVM"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('template_urls').automateSetup]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "automateLicenseUri": {
+            "value": "[parameters('automateLicenseUri')]"
+          },
+          "fqdn": {
+            "value": "[reference('PublicIPAddressSetup').outputs.fqdn.value]"
+          },
+          "templateBaseUrl": {
+            "value": "[parameters('templateBaseUrl')]"
+          },
+          "vmName": {
+            "value": "[variables('vmName')]"
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "fqdn": {
+      "type": "string",
+      "value": "[reference('PublicIPAddressSetup').outputs.fqdn.value]"
+    },
+    "sshCommand": {
+      "type": "string",
+      "value": "[concat('ssh ', parameters('adminUsername'), '@', reference('PublicIPAddressSetup').outputs.fqdn.value)]"
+    },
+    "chefAutomateURL": {
+      "type": "string",
+      "value": "[reference('ChefAutomateSetupVM').outputs.automateLoginURL.value]"
+    }
+  }
+}

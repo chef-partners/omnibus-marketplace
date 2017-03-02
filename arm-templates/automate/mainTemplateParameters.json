@@ -1,0 +1,78 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminPassword": {
+      "value": "Password123!"
+    },
+    "adminUsername": {
+      "value": "azure"
+    },
+    "authenticationType": {
+      "value": "password"
+    },
+    "automateLicenseUri": {
+      "value": "https://github.com/chef-partners/omnibus-marketplace/blob/ryan/mar-36/files/chef-marketplace-cookbooks/chef-marketplace/files/default/delivery.license?raw=true"
+    },
+    "imageProduct": {
+      "value": "chef-automate-preview"
+    },
+    "imageSKU": {
+      "value": "byol"
+    },
+    "imageVersion": {
+      "value": "latest"
+    },
+    "location": {
+      "value": "eastus"
+    },
+    "publicIPAddressName": {
+      "value": "automatetestaddr"
+    },
+    "publicIPDnsName": {
+      "value": "automatetestvm"
+    },
+    "publicIPNewOrExisting": {
+      "value": "new"
+    },
+    "resourceGroupName": {
+      "value": "automatearmtest"
+    },
+    "sshPublicKey": {
+      "value": ""
+    },
+    "storageAccountName": {
+      "value": "automatearmtest"
+    },
+    "storageAccountNewOrExisting": {
+      "value": "new"
+    },
+    "storageAccountType": {
+      "value": "Standard_LRS"
+    },
+    "subnetName": {
+      "value": "chefautomate-subnet"
+    },
+    "subnetPrefix": {
+      "value": "10.0.0.0/24"
+    },
+    "virtualNetworkAddressPrefix": {
+      "value": "10.0.0.0/16"
+    },
+    "virtualNetworkName": {
+      "value": "vnet01"
+    },
+    "virtualNetworkNewOrExisting": {
+      "value": "new"
+    },
+    "vmName": {
+      "value": "testchefautomate"
+    },
+    "vmSize": {
+      "value": "Standard_D2_v2"
+    },
+    "templateBaseUrl": {
+      "value": "https://raw.githubusercontent.com/chef-partners/omnibus-marketplace/ryan/mar-36/arm-templates/automate"
+    }
+  }
+}

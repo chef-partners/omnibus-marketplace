@@ -206,7 +206,7 @@
         "bladeTitle": "Chef Automate License",
         "elements": [
           {
-            "name": "automateLicense",
+            "name": "automateLicenseUri",
             "type": "Microsoft.Common.FileUpload",
             "label": "Automate License File",
             "toolTip": "The Chef Automate license file. If omitted a 30 day trial license will be used",
@@ -215,7 +215,10 @@
               "accept": ".license"
             },
             "options": {
-              "uploadMode": "file"
+              "uploadMode": "url",
+              "multiple": false,
+              "openMode": "binary",
+              "encoding": "UTF-8"
             }
           }
         ]
@@ -225,7 +228,7 @@
       "adminPassword": "[basics('SSHCredentials').password]",
       "adminUsername": "[basics('adminUsername')]",
       "authenticationType": "[basics('SSHCredentials').authenticationType]",
-      "automateLicense": "[steps('ChefAutomateSetup').automateLicense]",
+      "automateLicenseUri": "[steps('ChefAutomateSetup').automateLicenseUri]",
       "location": "[location()]",
       "publicIPAddressName": "[steps('VirtualMachineConfig').publicIpAddress.name]",
       "publicIPDnsName": "[steps('VirtualMachineConfig').publicIpAddress.domainNameLabel]",

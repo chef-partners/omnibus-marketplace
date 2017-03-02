@@ -75,4 +75,15 @@ load: compile-biscotti-assets load-biscotti load-cookbook build-gem load-gem loa
 load-%:
 	docker-compose exec automate "/shared/scripts/load-$*.sh"
 
+arm-publish: arm-validate arm-create-zip
+
+arm-validate:
+	azure group template validate -f ./arm-templates/automate/mainTemplate.json -e ./arm-templates/automate/mainTemplateParameters.json -g automatearmtest
+
+arm-test:
+	azure group deployment create -f ./arm-templates/automate/mainTemplate.json -e ./arm-templates/automate/mainTemplateParameters.json -g automatearmtest
+
+arm-create-zip:
+	zip -j "automate_arm_`date -u +"%Y-%m-%dT%H:%M:%SZ"`.zip" ./arm-templates/automate/mainTemplate.json ./arm-templates/automate/createUiDefinition.json
+
 .PHONY: clean start test

@@ -9,3 +9,4 @@ bin/*
 files/**/cache/
 files/biscotti/assets/*
 vendor/cookbooks
+automate_arm*.zip

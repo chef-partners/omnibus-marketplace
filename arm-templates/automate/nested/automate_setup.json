@@ -1,0 +1,66 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "automateLicenseUri": {
+      "type": "string",
+      "metadata": {
+        "description": "Location of the users license file"
+      },
+      "defaultValue": ""
+    },
+    "templateBaseUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "Base URL for nested templates and scripts"
+      },
+      "defaultValue": "https://raw.githubusercontent.com/chef-partners/omnibus-marketplace/master/arm-templates/automate"
+    },
+    "fqdn": {
+      "type": "string",
+      "metadata": {
+        "description": "FQDN of the chef server, this is used to display the URL to use to access the server"
+      }
+    },
+    "vmName": {
+      "type": "string",
+      "metadata": {
+        "description": "The virtual machine name"
+      }
+    }
+  },
+  "variables": {
+    "location": "[resourceGroup().location]",
+    "scriptUrl": "[concat(parameters('templateBaseUrl'), '/scripts/automate_setup.rb')]",
+    "rubyPath": "/opt/chef-marketplace/embedded/bin/ruby",
+    "setupCommand": "[concat(variables('rubyPath'), ' ./automate_setup.rb --fqdn ', parameters('fqdn'), ' --license ', parameters('automateLicenseUri'))]",
+    "automateLoginURL": "[concat('https://', parameters('fqdn'), '/biscotti/setup')]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(parameters('vmName'),'/automate_setup')]",
+      "apiVersion": "2015-06-15",
+      "location": "[variables('location')]",
+      "tags": {
+        "project": "Chef Automate",
+        "provider": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]"
+      },
+      "properties": {
+        "publisher": "Microsoft.OSTCExtensions",
+        "type": "CustomScriptForLinux",
+        "typeHandlerVersion": "1.4",
+        "settings": {
+          "fileUris": ["[variables('scriptUrl')]"],
+          "commandToExecute": "[variables('setupCommand')]"
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "automateLoginURL": {
+      "type": "string",
+      "value": "[variables('automateLoginURL')]"
+    }
+  }
+}
