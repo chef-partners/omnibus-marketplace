@@ -1,6 +1,6 @@
 {
   "handler": "Microsoft.Compute.MultiVm",
-  "version": "0.1.2-preview",
+  "version": "0.0.1-preview",
   "parameters": {
     "basics": [
       {
@@ -63,7 +63,10 @@
             "label": "Virtual machine size",
             "toolTip": "The size of virtual machine to provision.",
             "recommendedSizes": [
-              "Standard_D2_v2"
+              "Standard_D2_v2",
+              "Standard_A2_v2",
+              "Standard_A2m_v2",
+              "Standard_A2"
             ],
             "constraints": {
               "allowedSizes": [
@@ -147,11 +150,11 @@
             "name": "publicIpAddress",
             "type": "Microsoft.Network.PublicIpAddressCombo",
             "label": {
-              "publicIpAddress": "Public IP address",
-              "domainNameLabel": "DNS label"
+              "publicIpAddress": "Chef Automate public IP address",
+              "domainNameLabel": "Chef Automate FQDN DNS Label"
             },
             "toolTip": {
-              "domainNameLabel": "DNS label for the Virtual Machine's public IP address."
+              "domainNameLabel": "The DNS label to use as the Chef Automate FQDN"
             },
             "defaultValue": {
               "publicIpAddressName": "ChefAutomatePublicIPAddress",
@@ -159,6 +162,11 @@
             },
             "options": {
               "hideNone": true
+            },
+            "constraints": {
+              "required": {
+                "domainNameLabel": true
+              }
             }
           },
           {
@@ -200,15 +208,15 @@
         "name": "ChefAutomateSetup",
         "label": "Chef Automate Setup",
         "subLabel": {
-          "preValidation": "Chef Automate Configuration",
-          "postValidation": "Delightful"
+          "preValidation": "Configure Chef Automate",
+          "postValidation": "Done"
         },
         "bladeTitle": "Chef Automate License",
         "elements": [
           {
             "name": "automateLicenseUri",
             "type": "Microsoft.Common.FileUpload",
-            "label": "Automate License File",
+            "label": "Chef Automate License File",
             "toolTip": "The Chef Automate license file. If omitted a 30 day trial license will be used",
             "constraints": {
               "required": false,

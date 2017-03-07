@@ -316,6 +316,9 @@
           "imageVersion": {
             "value": "[parameters('imageVersion')]"
           },
+          "location": {
+            "value": "[variables('location')]"
+          },
           "nicName": {
             "value": "[variables('nicName')]"
           },

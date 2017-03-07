@@ -35,6 +35,9 @@
       },
       "defaultValue": "latest"
     },
+    "location": {
+      "type": "string"
+    },
     "sshPublicKey": {
       "type": "string",
       "metadata": {
@@ -78,17 +81,15 @@
     "imagePublisher": "chef-software",
     "imageSKU": "[parameters('imageSKU')]",
     "imageVersion": "[parameters('imageVersion')]",
-    "OSDiskName": "chefAutomate",
     "nicName": "[parameters('nicName')]",
-    "vmStorageAccountContainerName": "vhds",
     "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]"
   },
   "resources": [
     {
-      "type": "Microsoft.Compute/virtualMachines",
       "name": "[parameters('vmName')]",
-      "apiVersion": "2015-06-15",
-      "location": "[resourceGroup().location]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[parameters('location')]",
       "tags": {
         "project": "Chef Automate",
         "provider": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]"
@@ -125,9 +126,9 @@
             "version": "[variables('imageVersion')]"
           },
           "osDisk": {
-            "name": "osdisk",
+            "name": "[parameters('vmName')]",
             "vhd": {
-              "uri": "[concat('http://',variables('storageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',variables('OSDiskName'),'.vhd')]"
+              "uri": "[concat(concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-06-15').primaryEndpoints['blob'], 'vhds/'), parameters('vmName'), '.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -143,7 +144,7 @@
         "diagnosticsProfile": {
           "bootDiagnostics": {
             "enabled": "true",
-            "storageUri": "[concat('http://',variables('storageAccountName'),'.blob.core.windows.net')]"
+            "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-06-15').primaryEndpoints['blob']]"
           }
         }
       }

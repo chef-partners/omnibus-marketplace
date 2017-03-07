@@ -84,6 +84,6 @@ arm-test:
 	azure group deployment create -f ./arm-templates/automate/mainTemplate.json -e ./arm-templates/automate/mainTemplateParameters.json -g automatearmtest
 
 arm-create-zip:
-	zip -j "automate_arm_`date -u +"%Y-%m-%dT%H:%M:%SZ"`.zip" ./arm-templates/automate/mainTemplate.json ./arm-templates/automate/createUiDefinition.json
+	cd ./arm-templates/automate && zip -r "../../automate_arm_`date -u +"%Y-%m-%dT%H:%M:%SZ"`.zip" ./*
 
 .PHONY: clean start test

@@ -26,7 +26,7 @@
     {
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[parameters('virtualNetworkName')]",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2016-09-01",
       "tags": {
         "project": "Chef Automate",
         "provider": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]"

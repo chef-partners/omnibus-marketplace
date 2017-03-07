@@ -72,7 +72,7 @@
       "value": "Standard_D2_v2"
     },
     "templateBaseUrl": {
-      "value": "https://raw.githubusercontent.com/chef-partners/omnibus-marketplace/ryan/mar-36/arm-templates/automate"
+      "value": "https://raw.githubusercontent.com/chef-partners/omnibus-marketplace/ryan/fixes/arm-templates/automate"
     }
   }
 }
