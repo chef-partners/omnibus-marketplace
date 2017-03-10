@@ -10,3 +10,4 @@ files/**/cache/
 files/biscotti/assets/*
 vendor/cookbooks
 automate_arm*.zip
+node_modules/*

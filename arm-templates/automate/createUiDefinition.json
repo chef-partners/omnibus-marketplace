@@ -1,6 +1,6 @@
 {
   "handler": "Microsoft.Compute.MultiVm",
-  "version": "0.0.1-preview",
+  "version": "0.1.2-preview",
   "parameters": {
     "basics": [
       {
@@ -26,7 +26,7 @@
       },
       {
         "name": "SSHCredentials",
-        "type": "Microsoft.Compute.CredentialsCombo-linux",
+        "type": "Microsoft.Compute.CredentialsCombo",
         "label": {
           "authenticationType": "Authentication type",
           "password": "Password",
@@ -58,7 +58,7 @@
         "bladeTitle": "Virtual machine settings",
         "elements": [
           {
-            "name": "Size",
+            "name": "vmSize",
             "type": "Microsoft.Compute.SizeSelector",
             "label": "Virtual machine size",
             "toolTip": "The size of virtual machine to provision.",
@@ -122,8 +122,7 @@
                 "Standard_L8s",
                 "Standard_L16s",
                 "Standard_L32s"
-              ],
-              "required": true
+              ]
             },
             "osPlatform": "Linux",
             "count": "1"
@@ -142,8 +141,7 @@
                 "Standard_LRS",
                 "Standard_GRS",
                 "Premium_LRS"
-              ],
-              "required": true
+              ]
             }
           },
           {
@@ -251,8 +249,8 @@
       "virtualNetworkAddressPrefix": "[steps('VirtualMachineConfig').virtualNetwork.addressPrefix]",
       "virtualNetworkName": "[steps('VirtualMachineConfig').virtualNetwork.name]",
       "virtualNetworkNewOrExisting": "[steps('VirtualMachineConfig').virtualNetwork.newOrExisting]",
-      "vmName": "[basics('VMName')]",
-      "vmSize": "[steps('VirtualMachineConfig').Size]"
+      "vmName": "[basics('vmName')]",
+      "vmSize": "[steps('VirtualMachineConfig').vmSize]"
     }
   }
 }

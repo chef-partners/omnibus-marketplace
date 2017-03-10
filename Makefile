@@ -25,7 +25,7 @@ rebuild-%:
 	docker-compose stop $* && \
 	docker-compose rm -fv $* && \
 	docker-compose build --no-cache $* && \
-	docker-compose up -d $* && \
+	docker-compose up -d $*
 
 down:
 	docker-compose down --rmi all --volumes --remove-orphans
@@ -79,6 +79,7 @@ arm-publish: arm-validate arm-create-zip
 
 arm-validate:
 	azure group template validate -f ./arm-templates/automate/mainTemplate.json -e ./arm-templates/automate/mainTemplateParameters.json -g automatearmtest
+	npm install && npm install grunt --global && grunt test -folder=./arm-templates/automate
 
 arm-test:
 	azure group deployment create -f ./arm-templates/automate/mainTemplate.json -e ./arm-templates/automate/mainTemplateParameters.json -g automatearmtest
