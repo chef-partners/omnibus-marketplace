@@ -8,9 +8,11 @@
         "type": "Microsoft.Common.TextBox",
         "label": "Virtual Machine name",
         "toolTip": "The name of the Virtual Machine.",
-        "defaultValue": "Chef Automate",
+        "defaultValue": "ChefAutomate",
         "constraints": {
-          "required": true
+          "required": true,
+          "regex": "^[a-z0-9A-Z]{3,79}$",
+          "validationMessage": "The VM Name must be between 3 and 79 characters long and be letters and numbers only."
         }
       },
       {
