@@ -9,7 +9,7 @@ build_version Omnibus::BuildVersion.semver
 build_iteration 1
 
 override :ruby, version: "2.3.3"
-override :chef, version: "master"
+override :chef, version: "12.19.36"
 
 dependency "preparation"
 dependency "postgresql92" # only the client
