@@ -2,6 +2,12 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "apiVersions": {
+      "type": "object",
+      "metadata": {
+        "description": "ARM resource API versions"
+      }
+    },
     "automateLicenseUri": {
       "type": "string",
       "metadata": {
@@ -9,7 +15,7 @@
       },
       "defaultValue": ""
     },
-    "templateBaseUrl": {
+    "baseUrl": {
       "type": "string",
       "metadata": {
         "description": "Base URL for nested templates and scripts"
@@ -22,6 +28,12 @@
         "description": "FQDN of the chef server, this is used to display the URL to use to access the server"
       }
     },
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "Azure location for the resource"
+      }
+    },
     "vmName": {
       "type": "string",
       "metadata": {
@@ -30,8 +42,7 @@
     }
   },
   "variables": {
-    "location": "[resourceGroup().location]",
-    "scriptUrl": "[concat(parameters('templateBaseUrl'), '/scripts/automate_setup.rb')]",
+    "scriptUrl": "[concat(parameters('baseUrl'), '/scripts/automate_setup.rb')]",
     "rubyPath": "/opt/chef-marketplace/embedded/bin/ruby",
     "setupCommand": "[concat(variables('rubyPath'), ' ./automate_setup.rb --fqdn ', parameters('fqdn'), ' --license ', parameters('automateLicenseUri'))]",
     "automateLoginURL": "[concat('https://', parameters('fqdn'), '/biscotti/setup')]"
@@ -40,8 +51,8 @@
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(parameters('vmName'),'/automate_setup')]",
-      "apiVersion": "2015-06-15",
-      "location": "[variables('location')]",
+      "apiVersion": "[parameters('apiVersions').virtualMachineExtensions]",
+      "location": "[parameters('location')]",
       "tags": {
         "project": "Chef Automate",
         "provider": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]"

@@ -2,19 +2,25 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "virtualNetworkName": {
-      "type": "string"
+    "apiVersions": {
+      "type": "object",
+      "metadata": {
+        "description": "ARM resource API versions"
+      }
     },
     "location": {
-      "type": "string"
-    },
-    "vnetAddressPrefix": {
       "type": "string"
     },
     "subnetName": {
       "type": "string"
     },
     "subnetPrefix": {
+      "type": "string"
+    },
+    "virtualNetworkName": {
+      "type": "string"
+    },
+    "vnetAddressPrefix": {
       "type": "string"
     }
   },
@@ -26,7 +32,7 @@
     {
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[parameters('virtualNetworkName')]",
-      "apiVersion": "2016-09-01",
+      "apiVersion": "[parameters('apiVersions').virtualNetworks]",
       "tags": {
         "project": "Chef Automate",
         "provider": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]"

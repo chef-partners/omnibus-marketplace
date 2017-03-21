@@ -2,6 +2,12 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "apiVersions": {
+      "type": "object",
+      "metadata": {
+        "description": "ARM resource API versions"
+      }
+    },
     "location": {
       "type": "string"
     },
@@ -27,8 +33,8 @@
   "resources": [
     {
       "type": "Microsoft.Storage/storageAccounts",
-      "name": "[concat(parameters('storageAccountName'))]",
-      "apiVersion": "2015-06-15",
+      "name": "[parameters('storageAccountName')]",
+      "apiVersion": "[parameters('apiVersions').storageAccounts]",
       "tags": {
         "project": "Chef Automate",
         "provider": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]"

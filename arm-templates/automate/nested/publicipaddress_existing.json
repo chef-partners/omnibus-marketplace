@@ -2,32 +2,27 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "apiVersion": {
-      "type": "string",
+    "apiVersions": {
+      "type": "object",
       "metadata": {
-        "description": "API version of the resource to use"
-      },
-      "defaultValue": "2015-06-15"
+        "description": "ARM resource API versions"
+      }
     },
-
     "publicIPAddressName": {
       "type": "string",
       "metadata": {
         "description": "Name to give to the Public IP Address"
       }
     },
-
     "publicIPAddressType": {
       "type": "string",
       "metadata": {
         "description": "Type of public ip address"
       }
     },
-
     "dnsLabelPrefix": {
       "type": "string"
     },
-
     "location": {
       "type": "string",
       "metadata": {
@@ -42,7 +37,7 @@
       "type": "string"
     },
     "fqdn": {
-      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIpAddressName')),providers('Microsoft.Network', 'publicIPAddresses').apiVersions[0]).dnsSettings.fqdn]",
+      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddressName')), parameters('apiVersions').publicIPAddresses).dnsSettings.fqdn]",
       "type": "string"
     }
   }
