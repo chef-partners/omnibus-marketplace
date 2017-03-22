@@ -1,4 +1,5 @@
 DEFAULT_MACHINE = $(HOME)/.docker/machine/machines/default
+DEFINITION_URI ?= https://raw.githubusercontent.com/chef-partners/omnibus-marketplace/master/arm-templates/automate/createUiDefinition.json
 
 ifneq ($(wildcard /Applications/Docker.app/*),)
 start:
@@ -80,6 +81,10 @@ arm-publish: arm-validate arm-create-zip
 arm-validate:
 	azure group template validate -f ./arm-templates/automate/mainTemplate.json -e ./arm-templates/automate/mainTemplateParameters.json -g automatearmtest
 	npm install && npm install grunt --global && grunt test -folder=./arm-templates/automate
+
+arm-test-ui-href:
+	ENCODED_URI=$$(curl -Gso /dev/null -w %{url_effective} --data-urlencode "$(DEFINITION_URI)" "" | cut -c 3-);\
+	echo "https://portal.azure.com/#blade/Microsoft_Azure_Compute/CreateMultiVmWizardBlade/internal_bladeCallId/anything/internal_bladeCallerParams/{\"initialData\":{},\"providerConfig\":{\"createUiDefinition\":\"$$ENCODED_URI\"}}";\
 
 arm-test:
 	azure group deployment create -f ./arm-templates/automate/mainTemplate.json -e ./arm-templates/automate/mainTemplateParameters.json -g automatearmtest

@@ -71,7 +71,7 @@
     "vmSize": {
       "value": "Standard_D2_v2"
     },
-    "templateBaseUrl": {
+    "baseUrl": {
       "value": "https://raw.githubusercontent.com/chef-partners/omnibus-marketplace/ryan/fixes/arm-templates/automate"
     }
   }

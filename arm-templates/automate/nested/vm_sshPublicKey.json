@@ -14,6 +14,12 @@
         "description": "Dummy parameter. It is not used in this template but has to exist for the validation to work."
       }
     },
+    "apiVersions": {
+      "type": "object",
+      "metadata": {
+        "description": "ARM resource API versions"
+      }
+    },
     "imageProduct": {
       "type": "string",
       "metadata": {
@@ -76,27 +82,24 @@
     }
   },
   "variables": {
-    "storageAccountName": "[parameters('storageAccountName')]",
-    "imageProduct": "[parameters('imageProduct')]",
     "imagePublisher": "chef-software",
-    "imageSKU": "[parameters('imageSKU')]",
-    "imageVersion": "[parameters('imageVersion')]",
-    "nicName": "[parameters('nicName')]",
-    "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]"
+    "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]",
+    "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), parameters('apiVersions').storageAccounts).primaryEndpoints['blob']]",
+    "vhdUri": "[concat(concat(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), parameters('apiVersions').storageAccounts).primaryEndpoints['blob'], 'vhds/'), parameters('vmName'), '.vhd')]"
   },
   "resources": [
     {
       "name": "[parameters('vmName')]",
       "type": "Microsoft.Compute/virtualMachines",
-      "apiVersion": "2016-04-30-preview",
+      "apiVersion": "[parameters('apiVersions').virtualMachines]",
       "location": "[parameters('location')]",
       "tags": {
         "project": "Chef Automate",
         "provider": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]"
       },
       "plan": {
-        "name": "[variables('imageSKU')]",
-        "product": "[variables('imageProduct')]",
+        "name": "[parameters('imageSKU')]",
+        "product": "[parameters('imageProduct')]",
         "publisher": "[variables('imagePublisher')]"
       },
       "properties": {
@@ -121,14 +124,14 @@
         "storageProfile": {
           "imageReference": {
             "publisher": "[variables('imagePublisher')]",
-            "offer": "[variables('imageProduct')]",
-            "sku": "[variables('imageSKU')]",
-            "version": "[variables('imageVersion')]"
+            "offer": "[parameters('imageProduct')]",
+            "sku": "[parameters('imageSKU')]",
+            "version": "[parameters('imageVersion')]"
           },
           "osDisk": {
             "name": "[parameters('vmName')]",
             "vhd": {
-              "uri": "[concat(concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-06-15').primaryEndpoints['blob'], 'vhds/'), parameters('vmName'), '.vhd')]"
+              "uri": "[variables('vhdUri')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -137,14 +140,14 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('nicName'))]"
             }
           ]
         },
         "diagnosticsProfile": {
           "bootDiagnostics": {
             "enabled": "true",
-            "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-06-15').primaryEndpoints['blob']]"
+            "storageUri": "[variables('storageUri')]"
           }
         }
       }

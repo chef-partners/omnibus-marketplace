@@ -2,13 +2,13 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "virtualNetworkName": {
-      "type": "string"
+    "apiVersions": {
+      "type": "object",
+      "metadata": {
+        "description": "ARM resource API versions"
+      }
     },
     "location": {
-      "type": "string"
-    },
-    "vnetAddressPrefix": {
       "type": "string"
     },
     "subnetName": {
@@ -16,11 +16,17 @@
     },
     "subnetPrefix": {
       "type": "string"
+    },
+    "virtualNetworkName": {
+      "type": "string"
+    },
+    "vnetAddressPrefix": {
+      "type": "string"
     }
   },
   "variables" : {
-    "vnetID" : "[resourceId('Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
-    "subnet" : "[concat(variables('vnetID'),'/subnets/',parameters('subnetName'))]"
+    "vnetID" : "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+    "subnet" : "[concat(variables('vnetID'), '/subnets/', parameters('subnetName'))]"
   },
   "resources": [
   ],

@@ -123,7 +123,8 @@
       "type": "string",
       "metadata": {
         "description": "Virtual Network Address space"
-      }
+      },
+      "defaultValue": "10.0.0.0/16"
     },
     "virtualNetworkName": {
       "type": "string",
@@ -150,7 +151,7 @@
         "description": "Size of the machine to create"
       }
     },
-    "templateBaseUrl": {
+    "baseUrl": {
       "type": "string",
       "metadata": {
         "description": "Base URL for the nested templates"
@@ -159,46 +160,47 @@
     }
   },
   "variables": {
-    "location": "[parameters('location')]",
-    "vmName": "[parameters('vmName')]",
-    "vmSize": "[parameters('vmSize')]",
+    "apiVersions": {
+      "deployments": "2016-09-01",
+      "networkInterfaces": "2017-03-01",
+      "publicIPAddresses": "2017-03-01",
+      "storageAccounts": "2015-06-15",
+      "virtualMachineExtensions": "2017-03-30",
+      "virtualMachines": "2016-04-30-preview",
+      "virtualNetworks": "2016-09-01"
+    },
     "nicName": "chefAutomateNic",
-    "vnetName": "[parameters('virtualNetworkName')]",
-    "vnetAddressPrefix": "[parameters('virtualNetworkAddressPrefix')]",
-    "subnetName": "[parameters('subnetName')]",
-    "subnetPrefix": "[parameters('subnetPrefix')]",
-    "storageAccountName": "[parameters('storageAccountName')]",
-    "storageAccountType": "[parameters('storageAccountType')]",
-    "publicIPAddressName": "[parameters('publicIPAddressName')]",
-    "publicIPAddressType": "Dynamic",
-    "template_urls": {
-      "storageAccount": "[concat(parameters('templateBaseUrl'), '/nested/storageaccount_', parameters('storageAccountNewOrExisting'), '.json')]",
-      "vnet": "[concat(parameters('templateBaseUrl'), '/nested/vnet_', parameters('virtualNetworkNewOrExisting'), '.json')]",
-      "publicIPAddress": "[concat(parameters('templateBaseUrl'), '/nested/publicipaddress_', parameters('publicIPNewOrExisting'), '.json')]",
-      "virtualMachine": "[concat(parameters('templateBaseUrl'), '/nested/vm_', parameters('authenticationType'), '.json')]",
-      "automateSetup": "[concat(parameters('templateBaseUrl'), '/nested/automate_setup.json')]"
+    "templateUrls": {
+      "automateSetup": "[concat(parameters('baseUrl'), '/nested/automate_setup.json')]",
+      "publicIPAddress": "[concat(parameters('baseUrl'), '/nested/publicipaddress_', parameters('publicIPNewOrExisting'), '.json')]",
+      "storageAccount": "[concat(parameters('baseUrl'), '/nested/storageaccount_', parameters('storageAccountNewOrExisting'), '.json')]",
+      "virtualMachine": "[concat(parameters('baseUrl'), '/nested/vm_', parameters('authenticationType'), '.json')]",
+      "vnet": "[concat(parameters('baseUrl'), '/nested/vnet_', parameters('virtualNetworkNewOrExisting'), '.json')]"
     }
   },
   "resources": [
     {
       "type": "Microsoft.Resources/deployments",
       "name": "StorageAccountSetup",
-      "apiVersion": "2016-02-01",
+      "apiVersion": "[variables('apiVersions').deployments]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('template_urls').storageAccount]",
+          "uri": "[variables('templateUrls').storageAccount]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
+          "apiVersions": {
+            "value": "[variables('apiVersions')]"
+          },
           "location": {
-            "value": "[variables('location')]"
+            "value": "[parameters('location')]"
           },
           "storageAccountType": {
-            "value": "[variables('storageAccountType')]"
+            "value": "[parameters('storageAccountType')]"
           },
           "storageAccountName": {
-            "value": "[variables('storageAccountName')]"
+            "value": "[parameters('storageAccountName')]"
           }
         }
       }
@@ -206,22 +208,25 @@
     {
       "type": "Microsoft.Resources/deployments",
       "name": "PublicIPAddressSetup",
-      "apiVersion": "2016-02-01",
+      "apiVersion": "[variables('apiVersions').deployments]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('template_urls').publicIPAddress]",
+          "uri": "[variables('templateUrls').publicIPAddress]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
+          "apiVersions": {
+            "value": "[variables('apiVersions')]"
+          },
           "location": {
-            "value": "[variables('location')]"
+            "value": "[parameters('location')]"
           },
           "publicIPAddressName": {
-            "value": "[variables('publicIPAddressName')]"
+            "value": "[parameters('publicIPAddressName')]"
           },
           "publicIPAddressType": {
-            "value": "[variables('publicIPAddressType')]"
+            "value": "Dynamic"
           },
           "dnsLabelPrefix": {
             "value": "[parameters('publicIPDnsName')]"
@@ -232,28 +237,31 @@
     {
       "type": "Microsoft.Resources/deployments",
       "name": "VirtualNetworkSetup",
-      "apiVersion": "2016-02-01",
+      "apiVersion": "[variables('apiVersions').deployments]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('template_urls').vnet]",
+          "uri": "[variables('templateUrls').vnet]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
+          "apiVersions": {
+            "value": "[variables('apiVersions')]"
+          },
           "virtualNetworkName": {
-            "value": "[variables('vnetName')]"
+            "value": "[parameters('virtualNetworkName')]"
           },
           "location": {
-            "value": "[variables('location')]"
+            "value": "[parameters('location')]"
           },
           "vnetAddressPrefix": {
-            "value": "[variables('vnetAddressPrefix')]"
+            "value": "[parameters('virtualNetworkAddressPrefix')]"
           },
           "subnetName": {
-            "value": "[variables('subnetName')]"
+            "value": "[parameters('subnetName')]"
           },
           "subnetPrefix": {
-            "value": "[variables('subnetPrefix')]"
+            "value": "[parameters('subnetPrefix')]"
           }
         }
       }
@@ -261,8 +269,8 @@
     {
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[variables('nicName')]",
-      "apiVersion": "2015-06-15",
-      "location": "[variables('location')]",
+      "apiVersion": "[variables('apiVersions').networkInterfaces]",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "Microsoft.Resources/deployments/PublicIPAddressSetup",
         "Microsoft.Resources/deployments/VirtualNetworkSetup"
@@ -286,7 +294,7 @@
     {
       "type": "Microsoft.Resources/deployments",
       "name": "ChefAutomateCreateVM",
-      "apiVersion": "2016-02-01",
+      "apiVersion": "[variables('apiVersions').deployments]",
       "dependsOn": [
         "Microsoft.Resources/deployments/StorageAccountSetup",
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
@@ -294,7 +302,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('template_urls').virtualMachine]",
+          "uri": "[variables('templateUrls').virtualMachine]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -303,6 +311,9 @@
           },
           "adminPassword": {
             "value": "[parameters('adminPassword')]"
+          },
+          "apiVersions": {
+            "value": "[variables('apiVersions')]"
           },
           "fqdn": {
             "value": "[reference('PublicIPAddressSetup').outputs.fqdn.value]"
@@ -317,7 +328,7 @@
             "value": "[parameters('imageVersion')]"
           },
           "location": {
-            "value": "[variables('location')]"
+            "value": "[parameters('location')]"
           },
           "nicName": {
             "value": "[variables('nicName')]"
@@ -326,13 +337,13 @@
             "value": "[parameters('sshPublicKey')]"
           },
           "storageAccountName": {
-            "value": "[variables('storageAccountName')]"
+            "value": "[parameters('storageAccountName')]"
           },
           "vmName": {
-            "value": "[variables('vmName')]"
+            "value": "[parameters('vmName')]"
           },
           "vmSize": {
-            "value": "[variables('vmSize')]"
+            "value": "[parameters('vmSize')]"
           }
         }
       }
@@ -340,28 +351,34 @@
     {
       "type": "Microsoft.Resources/deployments",
       "name": "ChefAutomateSetupVM",
-      "apiVersion": "2016-02-01",
+      "apiVersion": "[variables('apiVersions').deployments]",
       "dependsOn": [
         "Microsoft.Resources/deployments/ChefAutomateCreateVM"
       ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('template_urls').automateSetup]",
+          "uri": "[variables('templateUrls').automateSetup]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
+          "apiVersions": {
+            "value": "[variables('apiVersions')]"
+          },
           "automateLicenseUri": {
             "value": "[parameters('automateLicenseUri')]"
+          },
+          "baseUrl": {
+            "value": "[parameters('baseUrl')]"
           },
           "fqdn": {
             "value": "[reference('PublicIPAddressSetup').outputs.fqdn.value]"
           },
-          "templateBaseUrl": {
-            "value": "[parameters('templateBaseUrl')]"
+          "location": {
+            "value": "[parameters('location')]"
           },
           "vmName": {
-            "value": "[variables('vmName')]"
+            "value": "[parameters('vmName')]"
           }
         }
       }
