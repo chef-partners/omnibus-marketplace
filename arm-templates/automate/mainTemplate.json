@@ -28,6 +28,26 @@
       },
       "defaultValue": ""
     },
+    "diagnosticStorageAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the storage account to use for diagnostics"
+      }
+    },
+    "diagnosticStorageAccountNewOrExisting": {
+      "type": "string",
+      "metadata": {
+        "description": "State whether to create or use an existing storage account"
+      },
+      "defaultValue": "new"
+    },
+    "diagnosticStorageAccountType": {
+      "type": "string",
+      "metadata": {
+        "description": "Type of storage account to create for diagnostics"
+      },
+      "defaultValue": "Standard_LRS"
+    },
     "imageProduct": {
       "type": "string",
       "metadata": {
@@ -163,6 +183,7 @@
     "apiVersions": {
       "deployments": "2016-09-01",
       "networkInterfaces": "2017-03-01",
+      "networkSecurityGroups": "2016-09-01",
       "publicIPAddresses": "2017-03-01",
       "storageAccounts": "2015-06-15",
       "virtualMachineExtensions": "2017-03-30",
@@ -170,10 +191,12 @@
       "virtualNetworks": "2016-09-01"
     },
     "nicName": "chefAutomateNic",
+    "sgName": "chefAutomateSg",
     "templateUrls": {
       "automateSetup": "[concat(parameters('baseUrl'), '/nested/automate_setup.json')]",
       "publicIPAddress": "[concat(parameters('baseUrl'), '/nested/publicipaddress_', parameters('publicIPNewOrExisting'), '.json')]",
       "storageAccount": "[concat(parameters('baseUrl'), '/nested/storageaccount_', parameters('storageAccountNewOrExisting'), '.json')]",
+      "diagnosticStorageAccount": "[concat(parameters('baseUrl'), '/nested/storageaccount_', parameters('diagnosticStorageAccountNewOrExisting'), '.json')]",
       "virtualMachine": "[concat(parameters('baseUrl'), '/nested/vm_', parameters('authenticationType'), '.json')]",
       "vnet": "[concat(parameters('baseUrl'), '/nested/vnet_', parameters('virtualNetworkNewOrExisting'), '.json')]"
     }
@@ -203,6 +226,81 @@
             "value": "[parameters('storageAccountName')]"
           }
         }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "DiagnosticStorageAccountSetup",
+      "apiVersion": "[variables('apiVersions').deployments]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('templateUrls').diagnosticStorageAccount]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "apiVersions": {
+            "value": "[variables('apiVersions')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "storageAccountType": {
+            "value": "[parameters('diagnosticStorageAccountType')]"
+          },
+          "storageAccountName": {
+            "value": "[parameters('diagnosticStorageAccountName')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[variables('sgName')]",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "ssh",
+            "properties": {
+              "priority": 1010,
+              "sourceAddressPrefix": "*",
+              "protocol": "TCP",
+              "destinationPortRange": "22",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*"
+            }
+          },
+          {
+            "name": "https",
+            "properties": {
+              "priority": 1020,
+              "sourceAddressPrefix": "*",
+              "protocol": "TCP",
+              "destinationPortRange": "443",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*"
+            }
+          },
+          {
+            "name": "git",
+            "properties": {
+              "priority": 1030,
+              "sourceAddressPrefix": "*",
+              "protocol": "TCP",
+              "destinationPortRange": "8989",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*"
+            }
+          }
+        ]
       }
     },
     {
@@ -273,7 +371,8 @@
       "location": "[parameters('location')]",
       "dependsOn": [
         "Microsoft.Resources/deployments/PublicIPAddressSetup",
-        "Microsoft.Resources/deployments/VirtualNetworkSetup"
+        "Microsoft.Resources/deployments/VirtualNetworkSetup",
+        "[concat('Microsoft.Network/networkSecurityGroups/', variables('sgName'))]"
       ],
       "properties": {
         "ipConfigurations": [ {
@@ -288,7 +387,10 @@
               }
             }
           }
-        ]
+        ],
+        "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('sgName'))]"
+        }
       }
     },
     {
@@ -297,6 +399,7 @@
       "apiVersion": "[variables('apiVersions').deployments]",
       "dependsOn": [
         "Microsoft.Resources/deployments/StorageAccountSetup",
+        "Microsoft.Resources/deployments/DiagnosticStorageAccountSetup",
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
       ],
       "properties": {
@@ -314,6 +417,9 @@
           },
           "apiVersions": {
             "value": "[variables('apiVersions')]"
+          },
+          "diagnosticStorageAccountName": {
+            "value": "[parameters('diagnosticStorageAccountName')]"
           },
           "fqdn": {
             "value": "[reference('PublicIPAddressSetup').outputs.fqdn.value]"
