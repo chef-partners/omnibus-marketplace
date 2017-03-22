@@ -183,6 +183,7 @@
     "apiVersions": {
       "deployments": "2016-09-01",
       "networkInterfaces": "2017-03-01",
+      "networkSecurityGroups": "2016-09-01",
       "publicIPAddresses": "2017-03-01",
       "storageAccounts": "2015-06-15",
       "virtualMachineExtensions": "2017-03-30",
@@ -190,6 +191,7 @@
       "virtualNetworks": "2016-09-01"
     },
     "nicName": "chefAutomateNic",
+    "sgName": "chefAutomateSg",
     "templateUrls": {
       "automateSetup": "[concat(parameters('baseUrl'), '/nested/automate_setup.json')]",
       "publicIPAddress": "[concat(parameters('baseUrl'), '/nested/publicipaddress_', parameters('publicIPNewOrExisting'), '.json')]",
@@ -250,6 +252,55 @@
             "value": "[parameters('diagnosticStorageAccountName')]"
           }
         }
+      }
+    },
+    {
+      "name": "[variables('sgName')]",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "ssh",
+            "properties": {
+              "priority": 1010,
+              "sourceAddressPrefix": "*",
+              "protocol": "TCP",
+              "destinationPortRange": "22",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*"
+            }
+          },
+          {
+            "name": "https",
+            "properties": {
+              "priority": 1020,
+              "sourceAddressPrefix": "*",
+              "protocol": "TCP",
+              "destinationPortRange": "443",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*"
+            }
+          },
+          {
+            "name": "git",
+            "properties": {
+              "priority": 1030,
+              "sourceAddressPrefix": "*",
+              "protocol": "TCP",
+              "destinationPortRange": "8989",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*"
+            }
+          }
+        ]
       }
     },
     {
@@ -320,7 +371,8 @@
       "location": "[parameters('location')]",
       "dependsOn": [
         "Microsoft.Resources/deployments/PublicIPAddressSetup",
-        "Microsoft.Resources/deployments/VirtualNetworkSetup"
+        "Microsoft.Resources/deployments/VirtualNetworkSetup",
+        "[concat('Microsoft.Network/networkSecurityGroups/', variables('sgName'))]"
       ],
       "properties": {
         "ipConfigurations": [ {
@@ -335,7 +387,10 @@
               }
             }
           }
-        ]
+        ],
+        "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('sgName'))]"
+        }
       }
     },
     {
