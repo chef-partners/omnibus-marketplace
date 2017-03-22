@@ -133,16 +133,32 @@
             "name": "storageAccount",
             "type": "Microsoft.Storage.StorageAccountSelector",
             "label": "Storage account",
-            "toolTip": "Storage Account for the Virtual Machine's Disks",
+            "toolTip": "Storage Account for the Virtual Machine's disks",
             "defaultValue": {
               "type": "Standard_LRS",
-              "name": "[take(replace(guid(), '-', ''), 15)]"
+              "name": "[concat('chefdisk', take(replace(guid(), '-', ''), 10))]"
             },
             "constraints": {
               "allowedTypes": [
                 "Standard_LRS",
                 "Standard_GRS",
                 "Premium_LRS"
+              ]
+            }
+          },
+          {
+            "name": "diagnosticStorageAccount",
+            "type": "Microsoft.Storage.StorageAccountSelector",
+            "label": "Diagnostic storage account",
+            "toolTip": "Storage Account for the Virtual Machine's diagnostics",
+            "defaultValue": {
+              "type": "Standard_LRS",
+              "name": "[concat('chefdiag', take(replace(guid(), '-', ''), 10))]"
+            },
+            "constraints": {
+              "allowedTypes": [
+                "Standard_LRS",
+                "Standard_GRS"
               ]
             }
           },
@@ -237,6 +253,9 @@
       "adminUsername": "[basics('adminUsername')]",
       "authenticationType": "[basics('SSHCredentials').authenticationType]",
       "automateLicenseUri": "[steps('ChefAutomateSetup').automateLicenseUri]",
+      "diagnosticStorageAccountName": "[steps('VirtualMachineConfig').diagnosticStorageAccount.name]",
+      "diagnosticStorageAccountNewOrExisting": "[steps('VirtualMachineConfig').diagnosticStorageAccount.newOrExisting]",
+      "diagnosticStorageAccountType": "[steps('VirtualMachineConfig').diagnosticStorageAccount.type]",
       "location": "[location()]",
       "publicIPAddressName": "[steps('VirtualMachineConfig').publicIpAddress.name]",
       "publicIPDnsName": "[steps('VirtualMachineConfig').publicIpAddress.domainNameLabel]",

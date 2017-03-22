@@ -20,6 +20,12 @@
         "description": "ARM resource API versions"
       }
     },
+    "diagnosticStorageAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the storage account to use"
+      }
+    },
     "imageProduct": {
       "type": "string",
       "metadata": {
@@ -83,9 +89,7 @@
   },
   "variables": {
     "imagePublisher": "chef-software",
-    "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]",
-    "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), parameters('apiVersions').storageAccounts).primaryEndpoints['blob']]",
-    "vhdUri": "[concat(concat(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), parameters('apiVersions').storageAccounts).primaryEndpoints['blob'], 'vhds/'), parameters('vmName'), '.vhd')]"
+    "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]"
   },
   "resources": [
     {
@@ -131,7 +135,7 @@
           "osDisk": {
             "name": "[parameters('vmName')]",
             "vhd": {
-              "uri": "[variables('vhdUri')]"
+              "uri": "[concat(concat(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), parameters('apiVersions').storageAccounts).primaryEndpoints['blob'], 'vhds/'), parameters('vmName'), '.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -147,7 +151,7 @@
         "diagnosticsProfile": {
           "bootDiagnostics": {
             "enabled": "true",
-            "storageUri": "[variables('storageUri')]"
+            "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('diagnosticStorageAccountName')), parameters('apiVersions').storageAccounts).primaryEndpoints['blob']]"
           }
         }
       }

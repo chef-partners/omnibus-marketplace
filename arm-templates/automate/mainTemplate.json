@@ -28,6 +28,26 @@
       },
       "defaultValue": ""
     },
+    "diagnosticStorageAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the storage account to use for diagnostics"
+      }
+    },
+    "diagnosticStorageAccountNewOrExisting": {
+      "type": "string",
+      "metadata": {
+        "description": "State whether to create or use an existing storage account"
+      },
+      "defaultValue": "new"
+    },
+    "diagnosticStorageAccountType": {
+      "type": "string",
+      "metadata": {
+        "description": "Type of storage account to create for diagnostics"
+      },
+      "defaultValue": "Standard_LRS"
+    },
     "imageProduct": {
       "type": "string",
       "metadata": {
@@ -174,6 +194,7 @@
       "automateSetup": "[concat(parameters('baseUrl'), '/nested/automate_setup.json')]",
       "publicIPAddress": "[concat(parameters('baseUrl'), '/nested/publicipaddress_', parameters('publicIPNewOrExisting'), '.json')]",
       "storageAccount": "[concat(parameters('baseUrl'), '/nested/storageaccount_', parameters('storageAccountNewOrExisting'), '.json')]",
+      "diagnosticStorageAccount": "[concat(parameters('baseUrl'), '/nested/storageaccount_', parameters('diagnosticStorageAccountNewOrExisting'), '.json')]",
       "virtualMachine": "[concat(parameters('baseUrl'), '/nested/vm_', parameters('authenticationType'), '.json')]",
       "vnet": "[concat(parameters('baseUrl'), '/nested/vnet_', parameters('virtualNetworkNewOrExisting'), '.json')]"
     }
@@ -201,6 +222,32 @@
           },
           "storageAccountName": {
             "value": "[parameters('storageAccountName')]"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "DiagnosticStorageAccountSetup",
+      "apiVersion": "[variables('apiVersions').deployments]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('templateUrls').diagnosticStorageAccount]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "apiVersions": {
+            "value": "[variables('apiVersions')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "storageAccountType": {
+            "value": "[parameters('diagnosticStorageAccountType')]"
+          },
+          "storageAccountName": {
+            "value": "[parameters('diagnosticStorageAccountName')]"
           }
         }
       }
@@ -297,6 +344,7 @@
       "apiVersion": "[variables('apiVersions').deployments]",
       "dependsOn": [
         "Microsoft.Resources/deployments/StorageAccountSetup",
+        "Microsoft.Resources/deployments/DiagnosticStorageAccountSetup",
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
       ],
       "properties": {
@@ -314,6 +362,9 @@
           },
           "apiVersions": {
             "value": "[variables('apiVersions')]"
+          },
+          "diagnosticStorageAccountName": {
+            "value": "[parameters('diagnosticStorageAccountName')]"
           },
           "fqdn": {
             "value": "[reference('PublicIPAddressSetup').outputs.fqdn.value]"
