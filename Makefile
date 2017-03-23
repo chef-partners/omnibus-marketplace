@@ -79,7 +79,10 @@ load-%:
 
 arm-publish: arm-validate arm-create-zip
 
-arm-publish-test-matrix:
+arm-run-test-matrix:
+	cd arm-test-matrix;\
+	bundle install;\
+	bundle exec ruby ./automate_matrix.rb ../arm-templates/automate/mainTemplate.json ../arm-templates/automate/mainTemplateParameters.json
 
 arm-validate:
 	azure group template validate -f ./arm-templates/automate/mainTemplate.json -e ./arm-templates/automate/mainTemplateParameters.json -g automatearmtest
