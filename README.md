@@ -7,8 +7,8 @@ support for cloud marketplaces.
 All The Things
 --------------
 1. [Configuration](#configuration)
-  * [Example chef-server.rb](#example-server-config)
   * [Example marketplace.rb](#example-marketplace-config)
+  * [Deprecated Features](#deprecated-features)
 1. [chef-marketplace-ctl](#chef-marketplace-ctl)
   * [chef-marketplace-ctl setup](#setup)
   * [chef-marketplace-ctl reconfigure](#reconfigure)
@@ -18,6 +18,13 @@ All The Things
   * [chef-marketplace-ctl register-node](#register-node)
   * [chef-marketplace-ctl prepare-for-publishing](#prepare-for-publishing)
   * [chef-marketplace-ctl test](#test)
+1. [Biscotti Sevice](#biscotti-service)
+1. [Reckoner Sevice](#reckoner-service)
+1. [Azure Solution Template](#azure-solution-template)
+  * [Using the template](#using-the-template)
+  * [Developing the template](#developing-the-template)
+  * [Testing changes](#testing-changes)
+  * [Publishing the template](#publishing-the-template)
 1. [Kitchen-Based Build Environment](#kitchen-based-build-environment)
 1. [Contributing](#contributing)
 
@@ -26,16 +33,6 @@ Configuration
 The `chef-marketplace` package supports a number of user supplied customization
 options.  Like the majority of Chef products, the syntax is `Mixlib::Config`
 based and the file should be located at `/etc/chef-marketplace/marketplace.rb`
-
-** Configuration is required to enable the chef-marketplace plugin: **
-* The `role` **_must_** be configured in the `marketplace.rb` file
-* The `topology` **_must_** be set to `chef-marketplace` in the
-  `chef-server.rb` configuration file
-
-#### Example Server Config
-```ruby
-topology 'chef-marketplace'
-```
 
 #### Example Marketplace Config
 ```ruby
@@ -48,17 +45,17 @@ support.email = 'some@email.com'
 # Marketplace specific documentation
 documentation.url = 'http://myorg.com/docs'
 
-# The amount of nodes this Chef server is licensed for
+# The amount of nodes the license includes
 license.count '25'
 
 # The billing type
 license.type 'fixed'
 
 # Which role the instance is supposed to play
-role 'aio' # or 'server'
+role 'aio' # or 'server' or 'automate'
 
 # Which Cloud Platform the instance is running on
-platform 'aws'
+platform 'aws' # or 'azure'
 
 # Default user for cloud-init
 user 'ec2-user'
@@ -92,11 +89,28 @@ reckoner.enabled = true
 # Set the ec2 product code for the ec2 updater
 reckoner.product_code = 'XXXXXXXXXXXXXXXXXXXX'
 
-# Enable/Disable the Biscotti initial authorization cookie signing deamon
+# Enable/Disable the biscotti service
 biscotti.enabled = true
 
 # Enable/Disable the Manage marketplace sign up
 manage.marketplace.sign_up.enabled = true
+```
+
+### Deprecated Features
+In the older Chef Server AIO images the chef-marketplace package utilized the
+chef-marketplace plugin system. It did this to ease configuring Chef Analytics
+and and oc-id. In this scenario the following configuration was required:
+
+* The `role` **_must_** be configured in the `marketplace.rb` file
+* The `topology` **_must_** be set to `chef-marketplace` in the
+  `chef-server.rb` configuration file
+
+In Chef Automate marketplace images this is not required as Chef Analytics is
+not included.
+
+#### Example Server Config
+```ruby
+topology 'chef-marketplace'
 ```
 
 chef-marketplace-ctl
@@ -135,9 +149,11 @@ user configurable attributes.
 #### Options
 `-y, --yes` Upgrade Marketplace and all installed components for the
   configured role
-`-s, --server` Upgrade Chef Server, Reporting and Manage
+`-s, --server` Upgrade Chef Server (Reporting and Manage are also updated in AIO mode)
 `-m, --marketplace` Upgrade Marketplace
 `-a, --analytics` Upgrade Chef Analytics
+`-c, --compliance` Upgrade Chef Compliance
+`-d, --automate` Upgrade Chef Automate
 
 ### Hostname
 `chef-marketplace-ctl hostname` will set or return the system hostname.  If the
@@ -182,6 +198,165 @@ state, and shell history.
 `chef-marketplace-ctl test` Perform's unit and functional tests to validate a
 successful package installation and working build. This is run in our development
 continuous delivery pipeline to ensure the package works as expected.
+
+Biscotti Sevice
+---------------
+TODO: Add documentation regarding the `biscotti` martketplace service.
+
+Reckoner Sevice
+---------------
+TODO: Add documentation regarding the `reckoner` martketplace service.
+
+Azure Solution Template
+----------------------
+With the Chef Automate Azure Marketplace offering we decided to take a simpler
+approach to the marketplace offering and limit the scope to a single Azure
+Solution Template for provisioning and configuring a BYOL Chef Automate
+virtual machine in the Azure cloud. We use the image artifact that is
+created and publised via the `marketplace_image` repository as our base image
+reference in the solution template. Prior Chef Server AIO Marketplace releases
+were images only.
+
+### Using the template
+There are several options for using the Solution Template. If you want to test
+or use what is publicly available in the marketplace, login to the Azure
+portal and search the Marketplace for `Chef Automate`. If you're using Chef's
+primary subscription you may also see `Chef Automate (Staged)` which is the
+latest staged offer that we're working to publish. To launch it, fill out all
+required options, agree to the purchase agreement and launch it. After the
+ARM deployment has completed you'll need to access the setup page, complete the
+setup and download the stater kit. The deployment outputs should include the
+`chefAutomateURL` that you'll need to complete the setup.
+
+```shell
+Outputs            :
+Name             Type    Value
+---------------  ------  ---------------------------------------------------------------
+fqdn             String  automatetestvm.eastus.cloudapp.azure.com
+sshCommand       String  ssh azure@automatetestvm.eastus.cloudapp.azure.com
+chefAutomateURL  String  https://automatetestvm.eastus.cloudapp.azure.com/biscotti/setup
+```
+
+You can manually launch the latest template via Make:
+
+`make arm-test`
+
+or via the Azure CLI with:
+
+```shell
+azure login
+azure group create -n "yournewresourcegroup" -l "East US"
+azure group deployment create \
+  -f ./arm-templates/automate/mainTemplate.json \
+  -e ./arm-templates/automate/mainTemplateParameters.json \
+  -g yournewresourcegroup
+```
+
+### Developing the template
+The Azure Marketplace Solution Template comprises of a UI definition, a
+corresponding Azure Resource Manager(ARM) template, and any included ARM
+sub-templates, extension scripts, and files.
+
+The UI definition file is comprised of Marketplace UI Elements
+which will define the UI experience in the Marketplace. Anything that is user
+defined and required in the ARM templates will need to be exported via
+the definition outputs which must correspond to the parameter inputs in the
+ARM template.
+
+### Testing changes
+The sub-template import model in Azure requires that all templates that are
+conditionally used be available as a web resource. Therefore, when
+making modifications you'll always want to push your template and UI changes to
+a feature branch and update the the `baseUrl` parameter in
+`arm-templates/automate/mainTemplateParameters.json` to be your new feature
+branch.
+
+Use `make arm-validate` to validate the ARM template via the ARM API and verify
+that the the UI definition schema validates against the JSON schema. *You must
+fix _any_ errors here in order to publish.*
+
+Use `make-ui-test-href` to generate an Azure Portal href that you can paste into
+your browsers address bar to open your UI Definition in the Azure Portal. This
+is useful because you can iterate on a UI definition quickly without requiring
+a staged Solution Template. It's also conveninent as it doesn't initiate an ARM
+template launch so you don't have to create resources when working on UI. It also
+displays the outputs of the UI defition in your browsers Javascript console when
+you use the launch button. You can use that to verify the output of the UI
+definition match the ARM template parameters.
+
+### Publishing the template
+In order to publish the template all work on the feature branch must be merged
+to master. After this has happened you will need to create a Solution Template
+archive with the UI definition, the main ARM template and all nested sub-templates
+and extensions that the ARM template requires.
+
+#### Stage published template
+Use `make arm-publish` to validate the template and create a zip file.
+
+Login to the [Azure publishing portal](http://publish.windowsazure.com), locate
+the Chef Automate Solution Template.
+
+Use the `TOPOLOGIES` section to create a new version and upload the Solution
+Template zip file.
+
+Use the `PUBLISH` section to push the new version to staging.
+
+After the staging has completed (can be several hours to several days) you will
+need to test the template.
+
+#### Test the staged template
+Testing the staged template involves testing both the all UI permutations and
+a minimum of 30 ARM template launches.
+
+Near complete testing of UI elements is currently possible in 3 passes. The goal
+here is to validate all branching options in the template (storage types,
+regions, SSH auth, existing resource re-use, etc.) For all three passes below
+you'll need to locate the staged template in the Azure Marketplace and run
+through each scenario while ensuring that you complete the setup and validate
+a working Chef Automate install.
+
+##### Pass #1 (defaults)
+* Use defaults where possible
+* Use SSH Password auth
+* Don't upload a `delivery.license` file
+
+##### Pass #2 (re-use)
+* Delete resources that won't be re-used from pass #1:
+  * The virtual machine
+  * The network interface
+  * The network security group
+* Re-use existing resources from Pass #1 for all resource types that support it:
+  * The public IP address
+  * The storage account
+  * The diagnostic storage account
+  * The virtual network
+
+##### Pass #3 (non-defaults)
+* Use non default options wherever possible:
+  * The virtual machine name
+  * The username
+  * Use SSH Public Key auth
+  * Use a region that is not `East US`
+  * Use a VM size that is not `Standard_D2_v2`
+  * Use a premium storage account for disks
+  * Use a different subnet
+  * Upload a `delivery.license` file
+
+If all three of these scenarios complete without error you should be reasonably
+confident that the UI definition and ARM template work as expected. Now you'll
+need to run the test matrix. This process will run the master branch version of
+the ARM template (which should be the version staged) 30+ times to verify that
+it works as expected in several permutations. Currently it verifies usability in
+all regions, using new resources, reusing existing resources and using different
+storage types. If your changes create a new permutation it is advised to add a
+secenario to the automate test matrix to ensure that it is verified.
+
+Use `make arm-publish-test-matrix` to run the tests. If the tests succeed a zip
+artifact containing the logs of each run will be output. You'll need to provide
+the log archive to Microsoft when you request publishing to production.
+
+Though each scenario cleans up after itself you should make sure to manually 
+delete any lingering test resouces and/or resource groups.
 
 Kitchen-based Build Environment
 -------------------------------

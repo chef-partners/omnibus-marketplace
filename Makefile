@@ -79,6 +79,8 @@ load-%:
 
 arm-publish: arm-validate arm-create-zip
 
+arm-publish-test-matrix:
+
 arm-validate:
 	azure group template validate -f ./arm-templates/automate/mainTemplate.json -e ./arm-templates/automate/mainTemplateParameters.json -g automatearmtest
 	npm install && npm install grunt --global && grunt test -folder=./arm-templates/automate
