@@ -8,18 +8,6 @@
         "description": "ARM resource API versions"
       }
     },
-    "publicIPAddressName": {
-      "type": "string",
-      "metadata": {
-        "description": "Name to give to the Public IP Address"
-      }
-    },
-    "publicIPAddressType": {
-      "type": "string",
-      "metadata": {
-        "description": "Type of public ip address"
-      }
-    },
     "dnsLabelPrefix": {
       "type": "string"
     },
@@ -27,6 +15,24 @@
       "type": "string",
       "metadata": {
         "description": "Azure location for the resource"
+      }
+    },
+    "publicIPAddressName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name to give to the Public IP Address"
+      }
+    },
+    "publicIPAddressResourceGroup": {
+      "type": "string",
+      "metadata": {
+        "description": "The Public IP Addresses Resource Group"
+      }
+    },
+    "publicIPAddressType": {
+      "type": "string",
+      "metadata": {
+        "description": "Type of public ip address"
       }
     }
   },
@@ -50,7 +56,7 @@
   ],
   "outputs": {
     "publicIpId": {
-      "value": "[resourceId(concat('Microsoft.Network','/','publicIPAddresses'),parameters('publicIPAddressName'))]",
+      "value": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddressName'))]",
       "type": "string"
     },
     "fqdn": {

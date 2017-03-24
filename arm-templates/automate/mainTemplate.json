@@ -48,6 +48,13 @@
       },
       "defaultValue": "Standard_LRS"
     },
+    "diagnosticStorageAccountResourceGroup": {
+      "type": "string",
+      "metadata": {
+        "description": "Resouce Group of the storage account to use for diagnostics"
+      },
+      "defaultValue": ""
+    },
     "imageProduct": {
       "type": "string",
       "metadata": {
@@ -80,6 +87,13 @@
       "metadata": {
         "description": "Name to give to the Public IP address of the machine"
       }
+    },
+    "publicIPAddressResourceGroup": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Public IP Adresseses Resource Group"
+      },
+      "defaultValue": ""
     },
     "publicIPDnsName": {
       "type": "string",
@@ -127,6 +141,13 @@
       },
       "defaultValue": "Standard_LRS"
     },
+    "storageAccountResourceGroup": {
+      "type": "string",
+      "metadata": {
+        "description": "Resouce Group of the storage account to use for Virtual Machine disks"
+      },
+      "defaultValue": ""
+    },
     "subnetName": {
       "type": "string",
       "metadata": {
@@ -158,6 +179,13 @@
         "description": "State whether the virtual network exists or not"
       },
       "defaultValue": "new"
+    },
+    "virtualNetworkResourceGroup": {
+      "type": "string",
+      "metadata": {
+        "description": "Resouce Group of the virtual network"
+      },
+      "defaultValue": ""
     },
     "vmName": {
       "type": "string",
@@ -219,11 +247,14 @@
           "location": {
             "value": "[parameters('location')]"
           },
-          "storageAccountType": {
-            "value": "[parameters('storageAccountType')]"
-          },
           "storageAccountName": {
             "value": "[parameters('storageAccountName')]"
+          },
+          "storageAccountResourceGroup": {
+            "value": "[parameters('storageAccountResourceGroup')]"
+          },
+          "storageAccountType": {
+            "value": "[parameters('storageAccountType')]"
           }
         }
       }
@@ -245,11 +276,14 @@
           "location": {
             "value": "[parameters('location')]"
           },
-          "storageAccountType": {
-            "value": "[parameters('diagnosticStorageAccountType')]"
-          },
           "storageAccountName": {
             "value": "[parameters('diagnosticStorageAccountName')]"
+          },
+          "storageAccountResourceGroup": {
+            "value": "[parameters('diagnosticStorageAccountResourceGroup')]"
+          },
+          "storageAccountType": {
+            "value": "[parameters('diagnosticStorageAccountType')]"
           }
         }
       }
@@ -317,17 +351,20 @@
           "apiVersions": {
             "value": "[variables('apiVersions')]"
           },
+          "dnsLabelPrefix": {
+            "value": "[parameters('publicIPDnsName')]"
+          },
           "location": {
             "value": "[parameters('location')]"
           },
           "publicIPAddressName": {
             "value": "[parameters('publicIPAddressName')]"
           },
+          "publicIPAddressResourceGroup": {
+            "value": "[parameters('publicIPAddressResourceGroup')]"
+          },
           "publicIPAddressType": {
             "value": "Dynamic"
-          },
-          "dnsLabelPrefix": {
-            "value": "[parameters('publicIPDnsName')]"
           }
         }
       }
@@ -346,20 +383,23 @@
           "apiVersions": {
             "value": "[variables('apiVersions')]"
           },
-          "virtualNetworkName": {
-            "value": "[parameters('virtualNetworkName')]"
-          },
           "location": {
             "value": "[parameters('location')]"
           },
-          "vnetAddressPrefix": {
-            "value": "[parameters('virtualNetworkAddressPrefix')]"
+          "subnetPrefix": {
+            "value": "[parameters('subnetPrefix')]"
           },
           "subnetName": {
             "value": "[parameters('subnetName')]"
           },
-          "subnetPrefix": {
-            "value": "[parameters('subnetPrefix')]"
+          "virtualNetworkName": {
+            "value": "[parameters('virtualNetworkName')]"
+          },
+          "virtualNetworkResourceGroup": {
+            "value": "[parameters('virtualNetworkResourceGroup')]"
+          },
+          "virtualNetworkAddressPrefix": {
+            "value": "[parameters('virtualNetworkAddressPrefix')]"
           }
         }
       }
@@ -375,7 +415,8 @@
         "[concat('Microsoft.Network/networkSecurityGroups/', variables('sgName'))]"
       ],
       "properties": {
-        "ipConfigurations": [ {
+        "ipConfigurations": [
+          {
             "name": "ipconfig1",
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
@@ -421,6 +462,9 @@
           "diagnosticStorageAccountName": {
             "value": "[parameters('diagnosticStorageAccountName')]"
           },
+          "diagnosticStorageAccountResourceGroup": {
+            "value": "[reference('DiagnosticStorageAccountSetup').outputs.storageAccountResourceGroup.value]"
+          },
           "fqdn": {
             "value": "[reference('PublicIPAddressSetup').outputs.fqdn.value]"
           },
@@ -444,6 +488,9 @@
           },
           "storageAccountName": {
             "value": "[parameters('storageAccountName')]"
+          },
+          "storageAccountResourceGroup": {
+            "value": "[reference('StorageAccountSetup').outputs.storageAccountResourceGroup.value]"
           },
           "vmName": {
             "value": "[parameters('vmName')]"

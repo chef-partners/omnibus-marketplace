@@ -28,10 +28,20 @@
         "Description": "The type of the Storage Account created"
       },
       "defaultValue": "Standard_LRS"
+    },
+    "storageAccountResourceGroup": {
+      "type": "string",
+      "metadata": {
+        "Description": "The Resource Group for the new storage account"
+      }
     }
   },
   "resources": [
   ],
   "outputs": {
+    "storageAccountResourceGroup": {
+      "type": "string",
+      "value": "[parameters('storageAccountResourceGroup')]"
+    }
   }
 }

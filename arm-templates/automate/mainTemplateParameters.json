@@ -12,7 +12,7 @@
       "value": "password"
     },
     "automateLicenseUri": {
-      "value": "https://github.com/chef-partners/omnibus-marketplace/blob/ryan/cloud-283/files/chef-marketplace-cookbooks/chef-marketplace/files/default/delivery.license?raw=true"
+      "value": "https://github.com/chef-partners/omnibus-marketplace/blob/master/files/chef-marketplace-cookbooks/chef-marketplace/files/default/delivery.license?raw=true"
     },
     "diagnosticStorageAccountName": {
       "value": "automatediagstorage"
@@ -81,7 +81,7 @@
       "value": "Standard_D2_v2"
     },
     "baseUrl": {
-      "value": "https://raw.githubusercontent.com/chef-partners/omnibus-marketplace/ryan/cloud-283/arm-templates/automate"
+      "value": "https://raw.githubusercontent.com/chef-partners/omnibus-marketplace/master/arm-templates/automate"
     }
   }
 }
