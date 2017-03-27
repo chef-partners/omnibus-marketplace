@@ -26,6 +26,12 @@
         "description": "The name of the storage account to use"
       }
     },
+    "diagnosticStorageAccountResourceGroup": {
+      "type": "string",
+      "metadata": {
+        "description": "The Resource Group of the diagnostic storage account"
+      }
+    },
     "imageProduct": {
       "type": "string",
       "metadata": {
@@ -78,6 +84,12 @@
       "type": "string",
       "metadata": {
         "description": "The name of the storage account to use"
+      }
+    },
+    "storageAccountResourceGroup": {
+      "type": "string",
+      "metadata": {
+        "description": "The Resource Group of the storage account"
       }
     },
     "nicName": {
@@ -135,7 +147,7 @@
           "osDisk": {
             "name": "[parameters('vmName')]",
             "vhd": {
-              "uri": "[concat(concat(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), parameters('apiVersions').storageAccounts).primaryEndpoints['blob'], 'vhds/'), parameters('vmName'), '.vhd')]"
+              "uri": "[concat(concat(reference(resourceId(parameters('storageAccountResourceGroup'), 'Microsoft.Storage/storageAccounts', parameters('storageAccountName')), parameters('apiVersions').storageAccounts).primaryEndpoints['blob'], 'vhds/'), parameters('vmName'), '.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -151,7 +163,7 @@
         "diagnosticsProfile": {
           "bootDiagnostics": {
             "enabled": "true",
-            "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('diagnosticStorageAccountName')), parameters('apiVersions').storageAccounts).primaryEndpoints['blob']]"
+            "storageUri": "[reference(resourceId(parameters('diagnosticStorageAccountResourceGroup'), 'Microsoft.Storage/storageAccounts', parameters('diagnosticStorageAccountName')), parameters('apiVersions').storageAccounts).primaryEndpoints['blob']]"
           }
         }
       }

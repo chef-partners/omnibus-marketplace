@@ -170,10 +170,11 @@
               "domainNameLabel": "Chef Automate FQDN DNS Label"
             },
             "toolTip": {
+              "publicIpAddress": "The public IP Address to use for Chef Automate",
               "domainNameLabel": "The DNS label to use as the Chef Automate FQDN"
             },
             "defaultValue": {
-              "publicIpAddressName": "ChefAutomatePublicIPAddress",
+              "publicIpAddressName": "ChefAutomatePubIP",
               "domainNameLabel": "[basics('Name')]"
             },
             "options": {
@@ -256,8 +257,10 @@
       "diagnosticStorageAccountName": "[steps('VirtualMachineConfig').diagnosticStorageAccount.name]",
       "diagnosticStorageAccountNewOrExisting": "[steps('VirtualMachineConfig').diagnosticStorageAccount.newOrExisting]",
       "diagnosticStorageAccountType": "[steps('VirtualMachineConfig').diagnosticStorageAccount.type]",
+      "diagnosticStorageAccountResourceGroup": "[steps('VirtualMachineConfig').diagnosticStorageAccount.resourceGroup]",
       "location": "[location()]",
       "publicIPAddressName": "[steps('VirtualMachineConfig').publicIpAddress.name]",
+      "publicIPAddressResourceGroup": "[steps('VirtualMachineConfig').publicIpAddress.resourceGroup]",
       "publicIPDnsName": "[steps('VirtualMachineConfig').publicIpAddress.domainNameLabel]",
       "publicIPNewOrExisting": "[steps('VirtualMachineConfig').publicIpAddress.newOrExistingOrNone]",
       "resourceGroupName": "[steps('VirtualMachineConfig').storageAccount.resourceGroup]",
@@ -265,11 +268,13 @@
       "storageAccountName": "[steps('VirtualMachineConfig').storageAccount.name]",
       "storageAccountNewOrExisting": "[steps('VirtualMachineConfig').storageAccount.newOrExisting]",
       "storageAccountType": "[steps('VirtualMachineConfig').storageAccount.type]",
+      "storageAccountResourceGroup": "[steps('VirtualMachineConfig').storageAccount.resourceGroup]",
       "subnetName": "[steps('VirtualMachineConfig').virtualNetwork.subnets.subnet1.name]",
       "subnetPrefix": "[steps('VirtualMachineConfig').virtualNetwork.subnets.subnet1.addressPrefix]",
       "virtualNetworkAddressPrefix": "[steps('VirtualMachineConfig').virtualNetwork.addressPrefix]",
       "virtualNetworkName": "[steps('VirtualMachineConfig').virtualNetwork.name]",
       "virtualNetworkNewOrExisting": "[steps('VirtualMachineConfig').virtualNetwork.newOrExisting]",
+      "virtualNetworkResourceGroup": "[steps('VirtualMachineConfig').virtualNetwork.resourceGroup]",
       "vmName": "[basics('vmName')]",
       "vmSize": "[steps('VirtualMachineConfig').vmSize]"
     }
