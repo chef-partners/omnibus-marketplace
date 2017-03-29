@@ -23,8 +23,11 @@
     "diagnosticStorageAccountType": {
       "value": "Standard_LRS"
     },
+    "diagnosticStorageAccountResourceGroup": {
+      "value": ""
+    },
     "imageProduct": {
-      "value": "chef-automate-preview"
+      "value": "chef-automate"
     },
     "imageSKU": {
       "value": "byol"
@@ -37,6 +40,9 @@
     },
     "publicIPAddressName": {
       "value": "automatetestaddr"
+    },
+    "publicIPAddressResourceGroup": {
+      "value": ""
     },
     "publicIPDnsName": {
       "value": "automatetestvm"
@@ -59,6 +65,9 @@
     "storageAccountType": {
       "value": "Standard_LRS"
     },
+    "storageAccountResourceGroup": {
+      "value": ""
+    },
     "subnetName": {
       "value": "chefautomate-subnet"
     },
@@ -73,6 +82,9 @@
     },
     "virtualNetworkNewOrExisting": {
       "value": "new"
+    },
+    "virtualNetworkResourceGroup": {
+      "value": ""
     },
     "vmName": {
       "value": "testchefautomate"

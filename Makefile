@@ -79,6 +79,11 @@ load-%:
 
 arm-publish: arm-validate arm-create-zip
 
+arm-run-test-matrix:
+	cd arm-test-matrix;\
+	bundle install;\
+	bundle exec ruby ./automate_matrix.rb ../arm-templates/automate/mainTemplate.json ../arm-templates/automate/mainTemplateParameters.json
+
 arm-validate:
 	azure group template validate -f ./arm-templates/automate/mainTemplate.json -e ./arm-templates/automate/mainTemplateParameters.json -g automatearmtest
 	npm install && npm install grunt --global && grunt test -folder=./arm-templates/automate
