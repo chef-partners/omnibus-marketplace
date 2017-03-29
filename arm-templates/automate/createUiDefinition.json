@@ -178,7 +178,7 @@
               "domainNameLabel": "[basics('Name')]"
             },
             "options": {
-              "hideNone": true
+              "hideExisting": true
             },
             "constraints": {
               "required": {
