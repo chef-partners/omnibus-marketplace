@@ -7,6 +7,7 @@
 default["chef-marketplace"].tap do |m|
   m["motd"]["enabled"] = true
   m["support"]["email"] = "aws@chef.io"
+  m["sales"]["email"] = "awesome@chef.io"
   m["documentation"]["url"] = "https://docs.chef.io/aws_marketplace.html"
   m["role"] = "server"
   m["license"]["count"] = 5

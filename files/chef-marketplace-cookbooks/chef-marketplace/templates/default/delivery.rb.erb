@@ -12,11 +12,12 @@ delivery["chef_server"]           = "https://localhost:8443/organizations/delive
 delivery["chef_server_proxy"]     = true
 delivery["chef_username"]         = "delivery"
 delivery["primary"]               = true
-delivery["marketplace_licensing"] = <%= node['chef-marketplace']['platform'] == 'aws' %>
+delivery["marketplace_licensing"] = <%= node["chef-marketplace"]["platform"] == "aws" %>
 elasticsearch["enable_auth"]      = true
 insights["enable"]                = true
 insights["enable_auth"]           = true
 kibana["enable_auth"]             = true
+nginx["expired_trial_contact"]    = "<%= node["chef-marketplace"]["sales"]["email"] %>"
 postgresql["listen_address"]      = "0.0.0.0"
 postgresql["superuser_enable"]    = true
 postgresql["superuser_username"]  = "chef-pgsql"
