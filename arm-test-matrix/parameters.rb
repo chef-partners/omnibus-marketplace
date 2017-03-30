@@ -11,8 +11,14 @@ module Template
       end
     end
 
+    attr_accessor :params
+
     def initialize(params = {})
       @params = params
+    end
+
+    def copy
+      self.dup.tap { |p| p.params = self.params.dup }
     end
 
     def to_json
@@ -26,9 +32,5 @@ module Template
     def method_missing(meth, *args, &block)
       params.send(meth, *args, &block)
     end
-
-    private
-
-    attr_reader :params
   end
 end
