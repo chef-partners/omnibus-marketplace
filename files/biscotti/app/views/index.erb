@@ -2,25 +2,25 @@
 	<div class="row">
     <div class="medium-12 medium-centered columns">
 			<div class="panel">
-        <h2>Chef Automate Marketplace Setup</h2>
+        <h4>Chef Automate <%= @biscotti_settings["cloud_marketplace"] %> Setup</h4>
       </div>
     </div>
   </div>
 	<div class="row">
     <div class="medium-12 medium columns">
       <div class="panel" style="text-align: left">
-        <h6><%= @biscotti['message'] %></h6>
+        <h6><%= @biscotti_settings['message'] %></h6>
       </div>
     </div>
   </div>
   <form action="/biscotti/" method="post">
     <div class="medium-12 medium-centered columns">
-      <label><%= @biscotti["uuid_type"] %>
-        <input type="text" name="uuid" placeholder="<%= @biscotti['uuid_type'] %>" required autofocus>
+      <label><%= @biscotti_settings["uuid_type"] %>
+        <input type="text" name="uuid" placeholder="<%= @biscotti_settings['uuid_type'] %>" required autofocus>
       </label>
     </div>
     <div class="medium-12 medium-centered columns">
-      <button class="button" type="submit" style="float:left">Launch Chef Automate</button>
+      <button class="button" type="submit" style="float:left">Setup Chef Automate</button>
     </div>
   </form>
 </div>

@@ -4,7 +4,7 @@ module Biscotti
       register Extensions::BakeryDSL
 
       get "/" do
-        @biscotti = Biscotti::App.settings.biscotti
+        @biscotti_settings = Biscotti::App.settings.biscotti
         erb :index
       end
 

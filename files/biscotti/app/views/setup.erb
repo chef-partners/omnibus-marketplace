@@ -3,7 +3,7 @@
     <div class="row">
       <div class="small-9 small-centered columns">
         <div class="panel">
-          <h2>Chef Automate Marketplace Setup</h2>
+          <h4>Chef Automate <%= @biscotti_settings["cloud_marketplace"] %> Setup</h4>
         </div>
       </div>
     </div>
@@ -81,7 +81,7 @@
 
           If you haven't already, download and install the <a target="_blank" href="https://downloads.chef.io/chefdk">ChefDK.</a> The Chef Developer Kit comes with the Ruby runtime and tooling that you'll need for interacting with Chef Automate and Chef server.
 
-          For further help getting started, see the <a target="_blank" href="https://docs.chef.io/chef_repo.html">Chef repo</a> and <a target="_blank" href="https://docs.chef.io/aws_marketplace.html">AWS Marketplace</a> documentation. For general help learning Chef you can visit the <a target="_blank" href="https://learn.chef.io/">Learn Chef tutorials</a>.
+          For further help getting started, see the <a target="_blank" href="https://docs.chef.io/chef_repo.html">Chef repo</a> and <a target="_blank" href="<%= @biscotti_settings["doc_href"] %>"><%= @biscotti_settings["cloud_marketplace"] %></a> documentation. For general help learning Chef you can visit the <a target="_blank" href="https://learn.chef.io/">Learn Chef tutorials</a>.
 
           If you need any further assistance you can contact us at support@chef.io.
         </p>
