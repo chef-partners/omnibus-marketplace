@@ -28,13 +28,10 @@ scenarios = [
   { "name" => "test-uksouth", "parameters" => { "location" => { "value" => "uksouth" } } },
   { "name" => "test-ukwest", "parameters" => { "location" => { "value" => "ukwest" } } },
   { "name" => "test-eastasia", "parameters" => { "location" => { "value" => "eastasia" } } },
-  { "name" => "test-southeasteastasia", "parameters" => { "location" => { "value" => "southeasteastasia" } } },
+  { "name" => "test-southeastasia", "parameters" => { "location" => { "value" => "southeastasia" } } },
   { "name" => "test-koreacentral", "parameters" => { "location" => { "value" => "koreacentral" } } },
   { "name" => "test-japanwest", "parameters" => { "location" => { "value" => "japanwest" } } },
   { "name" => "test-japaneast", "parameters" => { "location" => { "value" => "japaneast" } } },
-  { "name" => "test-southindia", "parameters" => { "location" => { "value" => "southindia" } } },
-  { "name" => "test-centralindia", "parameters" => { "location" => { "value" => "centralindia" } } },
-  { "name" => "test-westindia", "parameters" => { "location" => { "value" => "westindia" } } },
   { "name" => "test-australiaeast", "parameters" => { "location" => { "value" => "australiaeast" } } },
   { "name" => "test-australiasoutheast", "parameters" => { "location" => { "value" => "australiasoutheast" } } },
   { "name" => "test-license",
@@ -72,14 +69,30 @@ scenarios = [
     "parameters" => {
       "storageAccountType" => {
         "value" => "Premium_LRS",
-        },
-     },
+       },
+      "vmSize" => {
+        "value" => "Standard_DS4_v2",
+      },
+    },
+  },
+  { "name" => "test-standard-grs-diag-storage",
+    "parameters" => {
+      "diagnosticStorageAccountType" => {
+        "value" => "Standard_GRS",
+       },
+    },
   },
   { "name" => "test-vnet-config",
     "parameters" => {
+      "subnetName" => {
+        "value" => "notdefault",
+      },
       "subnetPrefix" => {
         "value" => "10.1.0.0/24",
       },
+      "virtualNetworkAddressPrefix" => {
+        "value" => "10.0.0.0/8",
+       },
       "virtualNetworkName" => {
         "value" => "vnet02",
       },
@@ -87,7 +100,7 @@ scenarios = [
   },
 ].map do |scenario|
   # Merge override parameters into default params
-  params = default_parameters.dup
+  params = default_parameters.copy
   params.override(scenario.delete("parameters")) if scenario.key?("parameters")
 
   # Global resources require unique names
