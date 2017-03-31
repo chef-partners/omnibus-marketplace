@@ -211,23 +211,31 @@
     "apiVersions": {
       "deployments": "2016-09-01",
       "networkInterfaces": "2017-03-01",
-      "networkSecurityGroups": "2016-09-01",
+      "networkSecurityGroups": "2016-12-01",
       "publicIPAddresses": "2017-03-01",
-      "storageAccounts": "2015-06-15",
+      "storageAccounts": "2016-12-01",
       "virtualMachineExtensions": "2017-03-30",
-      "virtualMachines": "2016-04-30-preview",
-      "virtualNetworks": "2016-09-01"
+      "virtualMachines": "2017-03-30",
+      "virtualNetworks": "2017-03-01"
     },
+    "fqdn": "[concat(parameters('publicIPDnsName'), '.', parameters('location'), '.cloudapp.azure.com')]",
+    "storageAccountResourceGroupnew": "[resourceGroup().name]",
+    "storageAccountResourceGroupexisting": "[parameters('storageAccountResourceGroup')]",
+    "storageAccountResourceGroup": "[variables(concat('storageAccountResourceGroup', parameters('storageAccountNewOrExisting')))]",
+    "diagnosticStorageAccountResourceGroupnew": "[resourceGroup().name]",
+    "diagnosticStorageAccountResourceGroupexisting": "[parameters('diagnosticStorageAccountResourceGroup')]",
+    "diagnosticStorageAccountResourceGroup": "[variables(concat('diagnosticStorageAccountResourceGroup', parameters('diagnosticStorageAccountNewOrExisting')))]",
     "nicName": "chefAutomateNic",
-    "sgName": "chefAutomateSg",
+    "providerGuid": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]",
     "templateUrls": {
-      "automateSetup": "[concat(parameters('baseUrl'), '/nested/automate_setup.json')]",
-      "publicIPAddress": "[concat(parameters('baseUrl'), '/nested/publicipaddress_', parameters('publicIPNewOrExisting'), '.json')]",
-      "storageAccount": "[concat(parameters('baseUrl'), '/nested/storageaccount_', parameters('storageAccountNewOrExisting'), '.json')]",
-      "diagnosticStorageAccount": "[concat(parameters('baseUrl'), '/nested/storageaccount_', parameters('diagnosticStorageAccountNewOrExisting'), '.json')]",
-      "virtualMachine": "[concat(parameters('baseUrl'), '/nested/vm_', parameters('authenticationType'), '.json')]",
-      "vnet": "[concat(parameters('baseUrl'), '/nested/vnet_', parameters('virtualNetworkNewOrExisting'), '.json')]"
-    }
+      "automateSetup": "[concat(parameters('baseUrl'), '/automate_setup.json')]",
+      "publicIPAddress": "[concat(parameters('baseUrl'), '/publicipaddress_', parameters('publicIPNewOrExisting'), '.json')]",
+      "storageAccount": "[concat(parameters('baseUrl'), '/storageaccount_', parameters('storageAccountNewOrExisting'), '.json')]",
+      "diagnosticStorageAccount": "[concat(parameters('baseUrl'), '/storageaccount_', parameters('diagnosticStorageAccountNewOrExisting'), '.json')]",
+      "virtualMachine": "[concat(parameters('baseUrl'), '/vm_', parameters('authenticationType'), '.json')]",
+      "vnet": "[concat(parameters('baseUrl'), '/vnet_', parameters('virtualNetworkNewOrExisting'), '.json')]"
+    },
+    "sgName": "chefAutomateSg"
   },
   "resources": [
     {
@@ -246,6 +254,9 @@
           },
           "location": {
             "value": "[parameters('location')]"
+          },
+          "providerGuid": {
+            "value": "[variables('providerGuid')]"
           },
           "storageAccountName": {
             "value": "[parameters('storageAccountName')]"
@@ -276,6 +287,9 @@
           "location": {
             "value": "[parameters('location')]"
           },
+          "providerGuid": {
+            "value": "[variables('providerGuid')]"
+          },
           "storageAccountName": {
             "value": "[parameters('diagnosticStorageAccountName')]"
           },
@@ -292,6 +306,10 @@
       "name": "[variables('sgName')]",
       "type": "Microsoft.Network/networkSecurityGroups",
       "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
+      "tags": {
+        "project": "Chef Automate",
+        "provider": "[variables('providerGuid')]"
+      },
       "location": "[parameters('location')]",
       "properties": {
         "securityRules": [
@@ -357,6 +375,9 @@
           "location": {
             "value": "[parameters('location')]"
           },
+          "providerGuid": {
+            "value": "[variables('providerGuid')]"
+          },
           "publicIPAddressName": {
             "value": "[parameters('publicIPAddressName')]"
           },
@@ -386,6 +407,9 @@
           "location": {
             "value": "[parameters('location')]"
           },
+          "providerGuid": {
+            "value": "[variables('providerGuid')]"
+          },
           "subnetPrefix": {
             "value": "[parameters('subnetPrefix')]"
           },
@@ -409,6 +433,10 @@
       "name": "[variables('nicName')]",
       "apiVersion": "[variables('apiVersions').networkInterfaces]",
       "location": "[parameters('location')]",
+      "tags": {
+        "project": "Chef Automate",
+        "provider": "[variables('providerGuid')]"
+      },
       "dependsOn": [
         "Microsoft.Resources/deployments/PublicIPAddressSetup",
         "Microsoft.Resources/deployments/VirtualNetworkSetup",
@@ -463,10 +491,10 @@
             "value": "[parameters('diagnosticStorageAccountName')]"
           },
           "diagnosticStorageAccountResourceGroup": {
-            "value": "[reference('DiagnosticStorageAccountSetup').outputs.storageAccountResourceGroup.value]"
+            "value": "[variables('diagnosticStorageAccountResourceGroup')]"
           },
           "fqdn": {
-            "value": "[reference('PublicIPAddressSetup').outputs.fqdn.value]"
+            "value": "[variables('fqdn')]"
           },
           "imageProduct": {
             "value": "[parameters('imageProduct')]"
@@ -483,6 +511,9 @@
           "nicName": {
             "value": "[variables('nicName')]"
           },
+          "providerGuid": {
+            "value": "[variables('providerGuid')]"
+          },
           "sshPublicKey": {
             "value": "[parameters('sshPublicKey')]"
           },
@@ -490,7 +521,7 @@
             "value": "[parameters('storageAccountName')]"
           },
           "storageAccountResourceGroup": {
-            "value": "[reference('StorageAccountSetup').outputs.storageAccountResourceGroup.value]"
+            "value": "[variables('storageAccountResourceGroup')]"
           },
           "vmName": {
             "value": "[parameters('vmName')]"
@@ -525,10 +556,13 @@
             "value": "[parameters('baseUrl')]"
           },
           "fqdn": {
-            "value": "[reference('PublicIPAddressSetup').outputs.fqdn.value]"
+            "value": "[variables('fqdn')]"
           },
           "location": {
             "value": "[parameters('location')]"
+          },
+          "providerGuid": {
+            "value": "[variables('providerGuid')]"
           },
           "vmName": {
             "value": "[parameters('vmName')]"
@@ -540,11 +574,11 @@
   "outputs": {
     "fqdn": {
       "type": "string",
-      "value": "[reference('PublicIPAddressSetup').outputs.fqdn.value]"
+      "value": "[variables('fqdn')]"
     },
     "sshCommand": {
       "type": "string",
-      "value": "[concat('ssh ', parameters('adminUsername'), '@', reference('PublicIPAddressSetup').outputs.fqdn.value)]"
+      "value": "[concat('ssh ', parameters('adminUsername'), '@', variables('fqdn'))]"
     },
     "chefAutomateURL": {
       "type": "string",

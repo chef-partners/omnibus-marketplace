@@ -11,6 +11,12 @@
     "location": {
       "type": "string"
     },
+    "providerGuid": {
+      "type": "string",
+      "metadata": {
+        "description": "The provider GUID"
+      }
+    },
     "storageAccountName": {
       "type": "string",
       "metadata": {
@@ -37,11 +43,25 @@
     }
   },
   "resources": [
+    {
+      "name": "[parameters('storageAccountName')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "[parameters('apiVersions').storageAccounts]",
+      "sku": {
+        "name": "[parameters('storageAccountType')]"
+      },
+      "kind": "Storage",
+      "location": "[parameters('location')]",
+      "tags": {
+        "project": "Chef Automate",
+        "provider": "[parameters('providerGuid')]"
+      }
+    }
   ],
   "outputs": {
     "storageAccountResourceGroup": {
       "type": "string",
-      "value": "[parameters('storageAccountResourceGroup')]"
+      "value": "[resourceGroup().name]"
     }
   }
 }

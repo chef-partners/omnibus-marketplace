@@ -34,6 +34,12 @@
         "description": "Azure location for the resource"
       }
     },
+    "providerGuid": {
+      "type": "string",
+      "metadata": {
+        "description": "The provider GUID"
+      }
+    },
     "vmName": {
       "type": "string",
       "metadata": {
@@ -42,7 +48,7 @@
     }
   },
   "variables": {
-    "scriptUrl": "[concat(parameters('baseUrl'), '/scripts/automate_setup.rb')]",
+    "scriptUrl": "[concat(parameters('baseUrl'), '/automate_setup.rb')]",
     "rubyPath": "/opt/chef-marketplace/embedded/bin/ruby",
     "setupCommand": "[concat(variables('rubyPath'), ' ./automate_setup.rb --fqdn ', parameters('fqdn'), ' --license ', parameters('automateLicenseUri'))]",
     "automateLoginURL": "[concat('https://', parameters('fqdn'), '/biscotti/setup')]"
@@ -55,12 +61,13 @@
       "location": "[parameters('location')]",
       "tags": {
         "project": "Chef Automate",
-        "provider": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]"
+        "provider": "[parameters('providerGuid')]"
       },
       "properties": {
-        "publisher": "Microsoft.OSTCExtensions",
-        "type": "CustomScriptForLinux",
-        "typeHandlerVersion": "1.4",
+        "publisher": "Microsoft.Azure.Extensions",
+        "type": "CustomScript",
+        "typeHandlerVersion": "2.0",
+        "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": ["[variables('scriptUrl')]"],
           "commandToExecute": "[variables('setupCommand')]"

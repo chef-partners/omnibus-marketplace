@@ -17,6 +17,12 @@
         "description": "Azure location for the resource"
       }
     },
+    "providerGuid": {
+      "type": "string",
+      "metadata": {
+        "description": "The provider GUID"
+      }
+    },
     "publicIPAddressName": {
       "type": "string",
       "metadata": {
@@ -36,31 +42,14 @@
       }
     }
   },
-  "resources": [
-    {
-      "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[parameters('publicIPAddressName')]",
-      "apiVersion": "[parameters('apiVersions').publicIPAddresses]",
-      "location": "[parameters('location')]",
-      "tags": {
-        "project": "Chef Automate",
-        "provider": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]"
-      },
-      "properties": {
-        "publicIPAllocationMethod": "[parameters('publicIPAddressType')]",
-        "dnsSettings": {
-          "domainNameLabel": "[parameters('dnsLabelPrefix')]"
-        }
-      }
-    }
-  ],
+  "resources": [],
   "outputs": {
     "publicIpId": {
-      "value": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddressName'))]",
+      "value": "[resourceId(parameters('publicIPAddressResourceGroup'), 'Microsoft.Network/publicIPAddresses', parameters('publicIPAddressName'))]",
       "type": "string"
     },
     "fqdn": {
-      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddressName')), parameters('apiVersions').publicIPAddresses).dnsSettings.fqdn]",
+      "value": "[reference(resourceId(parameters('publicIPAddressResourceGroup'), 'Microsoft.Network/publicIPAddresses', parameters('publicIPAddressName')), parameters('apiVersions').publicIPAddresses).dnsSettings.fqdn]",
       "type": "string"
     }
   }
