@@ -11,6 +11,9 @@
     "location": {
       "type": "string"
     },
+    "providerGuid": {
+      "type": "string"
+    },
     "subnetName": {
       "type": "string"
     },
@@ -38,7 +41,7 @@
       "apiVersion": "[parameters('apiVersions').virtualNetworks]",
       "tags": {
         "project": "Chef Automate",
-        "provider": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]"
+        "provider": "[parameters('providerGuid')]"
       },
       "location": "[parameters('location')]",
       "properties": {

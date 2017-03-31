@@ -11,6 +11,9 @@
     "location": {
       "type": "string"
     },
+    "providerGuid": {
+      "type": "string"
+    },
     "subnetName": {
       "type": "string"
     },
