@@ -27,6 +27,10 @@ class Marketplace
     default :email, "aws@chef.io"
   end
 
+  config_context :sales do
+    default :email, "awesome@chef.io"
+  end
+
   config_context :documentation do
     default :url, "https://docs.chef.io/aws_marketplace.html"
   end
