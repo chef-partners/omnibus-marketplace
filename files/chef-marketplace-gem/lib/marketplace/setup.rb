@@ -26,10 +26,16 @@ class Marketplace
       reconfigure(:marketplace)
       reload_config!
       if options.preconfigure
+        # Disable biscotti until Automate is setup so the user can't try to
+        # create users or a starter kit before Automate and Server are good
+        # to go.
+        system("chef-marketplace-ctl stop biscotti")
+
         # Just configure software if we're preconfiguring
         configure_software
         reconfigure(:marketplace)
         setup_automate if role.to_s == "automate"
+        system("chef-marketplace-ctl start biscotti")
         restart_reckoner
         return
       end
