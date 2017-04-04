@@ -4,6 +4,7 @@ module Biscotti
       register Biscotti::Extensions::StarterKitDSL
 
       get "/setup" do
+        @biscotti_settings = Biscotti::App.settings.biscotti
         erb :setup
       end
 

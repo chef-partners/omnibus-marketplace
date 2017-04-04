@@ -212,6 +212,8 @@ class Marketplace
             'uuid' => node['chef-marketplace']['biscotti']['uuid'],
             'uuid_type' => node['chef-marketplace']['biscotti']['uuid_type'],
             'token' => node['chef-marketplace']['biscotti']['token'],
+            'doc_href' => node['chef-marketplace']['documentation']['url'],
+            'cloud_marketplace' => cloud_marketplace_name,
             'redirect_path' => node['chef-marketplace']['biscotti']['redirect_path']
           },
           'platform' => node['chef-marketplace']['platform'],
@@ -221,6 +223,13 @@ class Marketplace
           }
         }
       }
+    end
+
+    def cloud_marketplace_name
+      case node['chef-marketplace']['platform']
+      when 'aws' then 'AWS Marketplace'
+      when 'azure' then 'Azure Marketplace'
+      end
     end
 
     def analytics_state_files

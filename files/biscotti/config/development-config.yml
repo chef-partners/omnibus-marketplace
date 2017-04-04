@@ -4,6 +4,8 @@ development:
     token: '12345'
     uuid_type: 'Instance ID'
     uuid: 'i-1234abcd'
+    doc_href: "https://docs.chef.io/aws_marketplace.html"
+    cloud_marketplace: "AWS Marketplace"
     credentials:
       admin_password: 'AUTOMATEADMINPASSWORD'
 
@@ -13,5 +15,7 @@ production:
     token: '12345'
     uuid_type: 'Instance ID'
     uuid: 'i-1234abcd'
+    doc_href: "https://docs.chef.io/aws_marketplace.html"
+    cloud_marketplace: "AWS Marketplace"
     credentials:
       admin_password: 'AUTOMATEADMINPASSWORD'
