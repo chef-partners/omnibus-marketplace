@@ -1,5 +1,7 @@
 source "https://rubygems.org"
 
+gem "chef", "~>12.19"
+gem "chef-zero", "<13"
 gem "chef-marketplace"
 gem "pg"
 gem "clockwork"
