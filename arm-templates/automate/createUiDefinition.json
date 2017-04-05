@@ -60,7 +60,40 @@
         "bladeTitle": "Virtual machine settings",
         "elements": [
           {
-            "name": "vmSize",
+            "name": "storageAccount",
+            "type": "Microsoft.Storage.StorageAccountSelector",
+            "label": "Storage account",
+            "toolTip": "Storage Account for the Virtual Machine's disks",
+            "defaultValue": {
+              "type": "Standard_LRS",
+              "name": "[concat('chefdisk', take(replace(guid(), '-', ''), 10))]"
+            },
+            "constraints": {
+              "allowedTypes": [
+                "Standard_LRS",
+                "Standard_GRS",
+                "Premium_LRS"
+              ]
+            }
+          },
+          {
+            "name": "diagnosticStorageAccount",
+            "type": "Microsoft.Storage.StorageAccountSelector",
+            "label": "Diagnostic storage account",
+            "toolTip": "Storage Account for the Virtual Machine's diagnostics",
+            "defaultValue": {
+              "type": "Standard_LRS",
+              "name": "[concat('chefdiag', take(replace(guid(), '-', ''), 10))]"
+            },
+            "constraints": {
+              "allowedTypes": [
+                "Standard_LRS",
+                "Standard_GRS"
+              ]
+            }
+          },
+          {
+            "name": "vmSizeStandard",
             "type": "Microsoft.Compute.SizeSelector",
             "label": "Virtual machine size",
             "toolTip": "The size of virtual machine to provision.",
@@ -127,40 +160,40 @@
               ]
             },
             "osPlatform": "Linux",
-            "count": "1"
+            "count": "1",
+            "visible": "[not(equals('Premium_LRS', steps('VirtualMachineConfig').storageAccount.type))]"
           },
           {
-            "name": "storageAccount",
-            "type": "Microsoft.Storage.StorageAccountSelector",
-            "label": "Storage account",
-            "toolTip": "Storage Account for the Virtual Machine's disks",
-            "defaultValue": {
-              "type": "Standard_LRS",
-              "name": "[concat('chefdisk', take(replace(guid(), '-', ''), 10))]"
-            },
+            "name": "vmSizePremium",
+            "type": "Microsoft.Compute.SizeSelector",
+            "label": "Virtual machine size",
+            "toolTip": "The size of virtual machine to provision.",
+            "recommendedSizes": [
+              "Standard_DS4",
+              "Standard_DS4_v2",
+              "Standard_DS5_v2"
+            ],
             "constraints": {
-              "allowedTypes": [
-                "Standard_LRS",
-                "Standard_GRS",
-                "Premium_LRS"
+              "allowedSizes": [
+                "Standard_DS4",
+                "Standard_DS12",
+                "Standard_DS13",
+                "Standard_DS14",
+                "Standard_DS4_v2",
+                "Standard_DS5_v2",
+                "Standard_DS12_v2",
+                "Standard_DS13_v2",
+                "Standard_DS14_v2",
+                "Standard_GS1",
+                "Standard_GS2",
+                "Standard_GS3",
+                "Standard_GS4",
+                "Standard_GS5"
               ]
-            }
-          },
-          {
-            "name": "diagnosticStorageAccount",
-            "type": "Microsoft.Storage.StorageAccountSelector",
-            "label": "Diagnostic storage account",
-            "toolTip": "Storage Account for the Virtual Machine's diagnostics",
-            "defaultValue": {
-              "type": "Standard_LRS",
-              "name": "[concat('chefdiag', take(replace(guid(), '-', ''), 10))]"
             },
-            "constraints": {
-              "allowedTypes": [
-                "Standard_LRS",
-                "Standard_GRS"
-              ]
-            }
+            "osPlatform": "Linux",
+            "count": "1",
+            "visible": "[equals('Premium_LRS', steps('VirtualMachineConfig').storageAccount.type)]"
           },
           {
             "name": "publicIpAddress",
@@ -276,7 +309,7 @@
       "virtualNetworkNewOrExisting": "[steps('VirtualMachineConfig').virtualNetwork.newOrExisting]",
       "virtualNetworkResourceGroup": "[steps('VirtualMachineConfig').virtualNetwork.resourceGroup]",
       "vmName": "[basics('vmName')]",
-      "vmSize": "[steps('VirtualMachineConfig').vmSize]"
+      "vmSize": "[coalesce(steps('VirtualMachineConfig').vmSizeStandard, steps('VirtualMachineConfig').vmSizePremium, 'Standard_D2_v2')]"
     }
   }
 }
