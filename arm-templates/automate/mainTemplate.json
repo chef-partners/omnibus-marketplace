@@ -518,7 +518,7 @@
           "osDisk": {
             "name": "[parameters('vmName')]",
             "vhd": {
-              "uri": "[concat(reference('StorageAccountSetup').outputs.blobEndpoint.value, 'vhds/', parameters('vmName'), '.vhd')]"
+              "uri": "[concat(reference('StorageAccountSetup').outputs.blobEndpoint.value, 'vhds/', parameters('vmName'), uniquestring(Deployment().Name), '.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
