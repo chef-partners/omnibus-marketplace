@@ -560,7 +560,7 @@
           "fileUris": [
             "[variables('scriptUrl')]"
           ],
-          "commandToExecute": "[concat(variables('rubyPath'), ' ./automate_setup.rb --fqdn ', reference('PublicIPAddressSetup').outputs.fqdn.value, ' --license ', parameters('automateLicenseUri'))]"
+          "commandToExecute": "[concat(variables('rubyPath'), ' ./automate_setup.rb --fqdn \"', reference('PublicIPAddressSetup').outputs.fqdn.value, '\" --license \"', parameters('automateLicenseUri'), '\"')]"
         }
       }
     }
