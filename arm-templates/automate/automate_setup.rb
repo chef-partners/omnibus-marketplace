@@ -13,7 +13,7 @@ require "fileutils"
 
 OptionParser.new do |opts|
   opts.on("--fqdn FQDN", String, "The machine FQDN") { |fqdn| @fqdn = fqdn }
-  opts.on("--license [LICENSE]", String, "The Automate license file") do |license|
+  opts.on("--license [LICENSE]", "The Automate license file") do |license|
     @license = license
   end
 end.parse!(ARGV)
