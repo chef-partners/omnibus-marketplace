@@ -15,7 +15,7 @@ nginx["ssl_port"]                           = 8443
 nginx["dhparam_key_length"]                 = 1024
 nginx["server_name"]                        = "<%= node["chef-marketplace"]["api_fqdn"] %>"
 oc_id["enable"]                             = false
-opscode_erchef["base_resource_url"]         = "<%= node["chef-marketplace"]["api_fqdn"] %>"
+opscode_erchef["base_resource_url"]         = "https://<%= node["chef-marketplace"]["api_fqdn"] %>"
 opscode_erchef["nginx_bookshelf_caching"]   = :on
 opscode_erchef["s3_url_expiry_window_size"] = "50%"
 opscode_erchef["search_provider"]           = "elasticsearch"
