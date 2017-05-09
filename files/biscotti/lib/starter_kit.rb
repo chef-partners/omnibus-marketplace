@@ -76,7 +76,7 @@ module Biscotti
     end
 
     def validator_key_filename
-      File.join(chef_dir, "chef-validator.pem")
+      File.join(chef_dir, "#{organization}-validator.pem")
     end
 
     def pivotal_key_filename
@@ -102,8 +102,8 @@ module Biscotti
         log_location             $stdout
         node_name                "#{username}"
         client_key               ::File.join(current_dir, "#{username}.pem")
-        validation_client_name   "chef-validator"
-        validation_key           ::File.join(current_dir, "chef-validator.pem")
+        validation_client_name   "#{organization}-validator"
+        validation_key           ::File.join(current_dir, "#{organization}-validator.pem")
         chef_server_url          "#{frontend_url}/organizations/#{organization}"
         cookbook_path            [::File.join(current_dir, "../cookbooks")]
       EOS
