@@ -66,14 +66,7 @@ class Marketplace
       # like the rest of the commands beause it's no longer useful to
       # be run from the CLI any more.
 
-      # read the secrets from disk
-      secrets_file = "/etc/chef-marketplace/chef-marketplace-secrets.json"
-      secrets = if ::File.exist?(secrets_file)
-                  Chef::JSONCompat.from_json(::File.read(secrets_file))
-                else
-                  {}
-                end
-      passwords = secrets['automate']['passwords']
+      passwords = marketplace_secrets["automate"]["passwords"]
 
       # create chef server user
       # TODO:
@@ -111,6 +104,25 @@ class Marketplace
       retry_command(create_ent)
     end
 
+    #
+    # Some versions of the Chef Server have a bug where a database preflight
+    # check will fail when using external postgres.
+    #
+    # https://github.com/chef/chef-server/pull/1264
+    #
+    # It's been fixed but has not been released. After that is the case we
+    # can remove this step.
+    #
+    def setup_chef_server_pg_password
+      # Touch the secrets file
+      chef_secrets_file = "/etc/opscode/private-chef-secrets.json"
+      FileUtils.mkdir_p(File.dirname(chef_secrets_file))
+      FileUtils.touch(chef_secrets_file)
+      db_superuser_password = marketplace_secrets["automate"]["postgresql"]["superuser_password"]
+      command = "chef-server-ctl set-db-superuser-password #{db_superuser_password} --yes"
+      retry_command(command, 1, 2)
+    end
+
     def configure_software
       case role.to_s
       when "server"
@@ -128,6 +140,7 @@ class Marketplace
         reconfigure(:compliance)
       when "automate"
         reconfigure(:delivery)
+        setup_chef_server_pg_password
         reconfigure(:server)
       else
         raise "'#{role}' is not a valid role."
@@ -156,6 +169,17 @@ class Marketplace
         marketplace_json = "/etc/chef-marketplace/chef-marketplace-running.json"
         if File.exist?(marketplace_json)
           Chef::JSONCompat.parse(IO.read(marketplace_json))["chef-marketplace"]
+        else
+          {}
+        end
+      end
+    end
+
+    def marketplace_secrets
+      @marketplace_secrets ||= begin
+        secrets_file = "/etc/chef-marketplace/chef-marketplace-secrets.json"
+        if ::File.exist?(secrets_file)
+          Chef::JSONCompat.from_json(::File.read(secrets_file))
         else
           {}
         end
