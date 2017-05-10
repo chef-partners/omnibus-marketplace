@@ -29,6 +29,12 @@ directory '/var/opt/delivery/license' do
   recursive true
 end
 
+# Disable telemetry on AWS because it's against the terms 'o service
+file '/var/opt/delivery/.telemetry.disabled' do
+  action :create_if_missing
+  only_if { node['chef-marketplace']['platform'] == 'aws' }
+end
+
 # Use a 30 day trial license if we're on Azure
 cookbook_file 'var/opt/delivery/license/delivery.license' do
   source 'delivery.license'
