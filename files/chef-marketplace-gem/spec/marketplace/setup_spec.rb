@@ -9,6 +9,20 @@ describe Marketplace::Setup do
   let(:omnibus_ctl) { double("OmnibusCtl") }
   let(:current_hostname) { "current.hostname.com" }
   let(:json) { { "chef-marketplace" => { "role" => "tofu" } }.to_json }
+  let(:secrets) do
+    {
+      "biscotti" => { "token" => "biscotti-token" },
+      "automate" => {
+        "postgresql" => { "superuser_password" => "db-pass" },
+        "data_collector" => { "token" => "dc-token" },
+        "passwords" => {
+          "chef_user" => "chef_user_pass",
+          "admin_user" => "admin_user_pass",
+          "builder_user" => "builder_user_pass",
+        },
+      },
+    }.to_json
+  end
 
   before do
     # Stub out the role
@@ -20,10 +34,21 @@ describe Marketplace::Setup do
       .to receive(:read)
       .with("/etc/chef-marketplace/chef-marketplace-running.json")
       .and_return(json)
+
+    # Stub the secrets
+    allow(File)
+      .to receive(:exist?)
+      .with("/etc/chef-marketplace/chef-marketplace-secrets.json")
+      .and_return(true)
+    allow(IO)
+      .to receive(:read)
+      .with("/etc/chef-marketplace/chef-marketplace-secrets.json")
+      .and_return(secrets)
+
     allow(options).to receive(:preconfigure).and_return(false)
   end
 
-  describe '#setup' do
+  describe "#setup" do
     before do
       allow(subject).to receive(:role).and_return(role)
       allow(subject).to receive(:redirect_user).and_return(true)
@@ -39,6 +64,8 @@ describe Marketplace::Setup do
       allow(subject).to receive(:ask_for_node_registration).and_return(true)
       allow(subject).to receive(:wait_for_cloud_init_preconfigure).and_return(true)
       allow(subject).to receive(:create_default_users).and_return(true)
+      allow(subject).to receive(:setup_chef_server_pg_password).and_return(true)
+      allow(subject).to receive(:retry_command).and_return(true)
     end
 
     context "when the server has not been preconfigured" do
@@ -134,23 +161,68 @@ describe Marketplace::Setup do
     end
 
     context "when the preconfigure option is passed" do
-      let(:role) { "aio" }
 
       before { allow(options).to receive(:preconfigure).and_return(true) }
 
-      it "only preconfigures the software" do
-        expect(subject).to receive(:configure_software).once
-        expect(subject).to_not receive(:create_default_users)
-        expect(subject).to_not receive(:update_software)
-        expect(subject).to_not receive(:agree_to_eula)
-        expect(subject).to_not receive(:redirect_user)
+      context "when the role is aio" do
+        let(:role) { "aio" }
 
-        subject.setup
+        it "only preconfigures the software" do
+          expect(subject).to receive(:configure_software).once
+          expect(subject).to_not receive(:create_default_users)
+          expect(subject).to_not receive(:update_software)
+          expect(subject).to_not receive(:agree_to_eula)
+          expect(subject).to_not receive(:redirect_user)
+
+          subject.setup
+        end
+      end
+
+      context "when the role is automate" do
+        let(:role) { "automate" }
+
+        it "sets up automate and chef server with biscotti not running" do
+          # set up marketplace
+          expect(subject).to receive(:reconfigure).with(:marketplace)
+
+          # stop biscotti until automate and chef server are running
+          expect(subject)
+            .to receive(:retry_command)
+            .with(
+              "chef-marketplace-ctl stop biscotti",
+              retries: 2)
+            .once
+
+          # set up automate
+          expect(subject).to receive(:reconfigure).with(:delivery).once
+
+          # make sure the chef server db password is set
+          expect(subject).to receive(:setup_chef_server_pg_password).once
+
+          # set up chef server
+          expect(subject).to receive(:reconfigure).with(:server).once
+
+          # make sure marketplace is running with the latest data
+          expect(subject).to receive(:reconfigure).with(:marketplace)
+
+          # set up automate users/orgs
+          expect(subject).to receive(:setup_automate).once
+
+          # restart biscotti
+          expect(subject)
+            .to receive(:retry_command)
+            .with(
+              "chef-marketplace-ctl start biscotti",
+              retries: 2)
+            .once
+
+          subject.setup
+        end
       end
     end
   end
 
-  describe '#role' do
+  describe "#role" do
     context "when chef-marketplace has been configured" do
       it "loads the role from the running json" do
         expect(subject.send(:role)).to eq("tofu")
