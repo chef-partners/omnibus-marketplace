@@ -1,4 +1,5 @@
 require "chef/json_compat"
+require "mixlib/shellout"
 require "shellwords"
 require "highline/import"
 require "marketplace/payment"
@@ -29,13 +30,13 @@ class Marketplace
         # Disable biscotti until Automate is setup so the user can't try to
         # create users or a starter kit before Automate and Server are good
         # to go.
-        system("chef-marketplace-ctl stop biscotti")
+        retry_command("chef-marketplace-ctl stop biscotti", retries: 2)
 
         # Just configure software if we're preconfiguring
         configure_software
         reconfigure(:marketplace)
         setup_automate if role.to_s == "automate"
-        system("chef-marketplace-ctl start biscotti")
+        retry_command("chef-marketplace-ctl start biscotti", retries: 2)
         restart_reckoner
         return
       end
@@ -78,10 +79,10 @@ class Marketplace
         "Automate",                         # options.first_name.to_s.shellescape,
         "User",                             # options.last_name.to_s.shellescape,
         "automate@chef.io",                 # options.email.to_s.shellescape,
-        passwords['chef_user'].shellescape, # options.password.to_s.shellescape
-        "-f /etc/delivery/delivery.pem"
+        passwords["chef_user"].shellescape, # options.password.to_s.shellescape
+        "-f /etc/delivery/delivery.pem",
       ].join(" ")
-      retry_command(create_user)
+      retry_command(create_user, retries: 1)
 
       # create chef server org
       create_org = [
@@ -91,7 +92,7 @@ class Marketplace
         "-a",
         "delivery"  # options.username.to_s.shellescape
       ].join(" ")
-      retry_command(create_org)
+      retry_command(create_org, retries: 1)
 
       # create automate enterprise
       create_ent = [
@@ -101,7 +102,7 @@ class Marketplace
         "--password=#{passwords['admin_user'].shellescape}",          # admin password
         "--builder-password=#{passwords['builder_user'].shellescape}" # builder password
       ].join(" ")
-      retry_command(create_ent)
+      retry_command(create_ent, retries: 1)
     end
 
     #
@@ -118,9 +119,11 @@ class Marketplace
       chef_secrets_file = "/etc/opscode/private-chef-secrets.json"
       FileUtils.mkdir_p(File.dirname(chef_secrets_file))
       FileUtils.touch(chef_secrets_file)
+
+      # Set the superuser password
       db_superuser_password = marketplace_secrets["automate"]["postgresql"]["superuser_password"]
       command = "chef-server-ctl set-db-superuser-password #{db_superuser_password} --yes"
-      retry_command(command, 1, 2)
+      retry_command(command, retries: 1)
     end
 
     def configure_software
@@ -216,7 +219,7 @@ class Marketplace
     end
 
     def restart_reckoner
-      system("chef-marketplace-ctl restart reckoner")
+      retry_command("chef-marketplace-ctl restart reckoner", retries: 2)
     end
 
     def validate_options
@@ -252,10 +255,10 @@ class Marketplace
         "-f #{options.first_name.to_s.shellescape}",
         "-l #{options.last_name.to_s.shellescape}",
         "-e #{options.email.to_s.shellescape}",
-        "-o #{options.organization.to_s.shellescape}"
+        "-o #{options.organization.to_s.shellescape}",
       ].join(" ")
 
-      retry_command(cmd, 2, 10)
+      retry_command(cmd, retries: 2, seconds: 10)
     end
 
     def reconfigure(product)
@@ -294,7 +297,7 @@ class Marketplace
       # the command is run by a system user lacking such variables (rc/cloud-init),
       # the reconfigure will fail because rabbitmqctl needs them to be set.
       # Until both packages have been fixed this is our workaround.
-      system({ "HOME" => "/root", "USER" => "root" }, "#{ctl_command} reconfigure")
+      retry_command("#{ctl_command} reconfigure", retries: 2, seconds: 4, env: { "HOME" => "/root", "USER" => "root" })
     end
 
     def run_analytics_preflight_check
@@ -316,10 +319,10 @@ class Marketplace
         options.first_name.to_s.shellescape,
         options.last_name.to_s.shellescape,
         options.email.to_s.shellescape,
-        options.password.to_s.shellescape
+        options.password.to_s.shellescape,
       ].join(" ")
 
-      retry_command(cmd)
+      retry_command(cmd, retries: 1)
     end
 
     def create_server_org
@@ -328,15 +331,18 @@ class Marketplace
         options.organization.to_s.shellescape,
         options.organization.to_s.shellescape,
         "-a",
-        options.username.to_s.shellescape
+        options.username.to_s.shellescape,
       ].join(" ")
 
-      retry_command(cmd)
+      retry_command(cmd, retries: 1)
     end
 
-    def retry_command(cmd, retries = 5, seconds = 2)
+    def retry_command(cmd, retries: 5, seconds: 2, env: {})
       retries.times do
-        return if run_command(cmd).success?
+        command = Mixlib::ShellOut.new(cmd)
+        command.environment = env unless env.empty?
+        command.run_command
+        return unless command.error?
         ui.say("#{cmd} failed, retrying...")
         sleep seconds
       end
@@ -385,17 +391,17 @@ class Marketplace
       when "server", "aio"
         msg << ["Next you'll want to log into the Chef management console and download the Starter Kit:",
                 "https://#{fqdn}:#{ssl_port_for(:server)}/organizations/#{options.organization}/getting_started\n",
-                "Use your username '#{options.username}' instead of your email address to login\n"
+                "Use your username '#{options.username}' instead of your email address to login\n",
                ]
       when "compliance"
         msg << ["Next you'll want to log into the Chef Compliance Web UI",
-                "https://#{fqdn}:#{ssl_port_for(:compliance)}/#/setup\n"
+                "https://#{fqdn}:#{ssl_port_for(:compliance)}/#/setup\n",
                ]
       when "analytics"
         msg << ["Next you'll want to log into the Chef Analytics Web UI",
                 "https://#{fqdn}\n",
 
-                "Use your Chef Server username instead of your email address to login\n"
+                "Use your Chef Server username instead of your email address to login\n",
                ]
       end
 
