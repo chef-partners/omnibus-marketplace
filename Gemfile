@@ -4,20 +4,13 @@ source "https://rubygems.org"
 gem "omnibus-software", github: "opscode/omnibus-software"
 gem "omnibus", github: "opscode/omnibus"
 gem "omnibus-ctl", github: "chef/omnibus-ctl"
-gem "chef", "~>12.19"
-gem "chef-zero", "~>5.3"
+gem "chef"
 gem "pry"
 gem "rubocop"
 gem "rspec"
 gem "rake"
 gem "berkshelf"
 gem "chefstyle"
-gem "chef-provisioning"
-gem "chef-provisioning-aws"
-gem "kitchen-ec2"
-gem 'rainbow', '>= 2.1.0', '< 2.2.0' # https://github.com/sickill/rainbow/issues/40
-
-gem "nokogiri", "= 1.6.8.1"
 
 # Reckoner Deps
 gem "sequel"
@@ -27,4 +20,5 @@ group :development do
   # Use Test Kitchen with Vagrant for converging the build environment
   gem "test-kitchen"
   gem "kitchen-vagrant"
+  gem "kitchen-ec2"
 end

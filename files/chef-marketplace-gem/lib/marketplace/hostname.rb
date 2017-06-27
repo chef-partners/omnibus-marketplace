@@ -3,7 +3,7 @@ require "ohai"
 class Marketplace
   class Hostname
     def resolve
-      Ohai::System.new.all_plugins("hostname").first.data["fqdn"]
+      Ohai::System.new.all_plugins("hostname")["fqdn"]
     end
 
     def associate_eip(hostname)

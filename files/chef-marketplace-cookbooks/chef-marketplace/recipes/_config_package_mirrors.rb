@@ -7,8 +7,8 @@ when "redhat"
   end
 when "centos"
   %w{base extras plus updates}.each do |repo|
-    node.set["yum"][repo]["enabled"] = true
-    node.set["yum"][repo]["managed"] = true
+    node.default["yum"][repo]["enabled"] = true
+    node.default["yum"][repo]["managed"] = true
   end
 
   include_recipe "yum-centos::default"

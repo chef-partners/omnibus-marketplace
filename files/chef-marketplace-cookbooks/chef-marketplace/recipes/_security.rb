@@ -10,7 +10,7 @@ sshd_config_mode = node["platform_family"] == "rhel" ? "0600" : "0644"
   end
 end
 
-node.set["openssh"]["server"]["client_alive_interval"] = 180 if node["chef-marketplace"]["platform"] == "azure"
+node.default["openssh"]["server"]["client_alive_interval"] = 180 if node["chef-marketplace"]["platform"] == "azure"
 
 template "/etc/ssh/sshd_config" do
   source "sshd-config.erb"

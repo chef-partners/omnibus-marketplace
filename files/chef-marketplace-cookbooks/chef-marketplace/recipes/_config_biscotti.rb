@@ -19,11 +19,11 @@ end
 uuid_type, uuid =
   case node['chef-marketplace']['platform']
   when 'google'
-    ['Project Name', node.gce.project.projectId]
+    ['Project Name', node['gce']['project']['projectId']]
   when 'azure'
-    ['VM Name', node.hostname]
+    ['VM Name', node['hostname']]
   else # aws, testing
-    ['Instance ID', node.ec2.instance_id]
+    ['Instance ID', node['ec2']['instance_id']]
   end
 
 node.default['chef-marketplace']['biscotti']['nginx']['add_on_dir'] =

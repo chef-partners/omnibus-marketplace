@@ -4,39 +4,34 @@ DEPENDENCIES
     metadata: true
   enterprise
     git: https://github.com/opscode-cookbooks/enterprise-chef-common.git
-    revision: af59ec951bd5d31135ca69a86b70cd97b445f491
+    revision: 79bc265efe2ad17ade8026f3a7e4f53cec219a49
   hostname
     git: https://github.com/3ofcoins/chef-cookbook-hostname.git
-    revision: 565b26905509da7494e502476a99d0b82c5f4604
-    branch: v0.4.0
+    revision: ebdf656a0994a063cd9abe3f80794c7672b777d2
+    branch: v0.4.2
 
 GRAPH
-  apt (5.0.0)
-    compat_resource (>= 12.14.7)
-  chef-ingredient (0.21.0)
-    compat_resource (>= 12.10)
+  chef-ingredient (2.1.2)
   chef-marketplace (0.0.1)
-    apt (>= 0.0.0)
     chef-ingredient (>= 0.0.0)
     enterprise (>= 0.0.0)
     hostname (>= 0.0.0)
     motd (>= 0.0.0)
     yum-centos (>= 0.0.0)
-  chef_handler (2.0.0)
-  compat_resource (12.16.1)
-  enterprise (0.10.2)
-    runit (> 1.0.0)
-  hostname (0.4.0)
+  chef_handler (3.0.1)
+  compat_resource (12.19.0)
+  enterprise (0.10.3)
+    runit (> 1.6.0)
+  hostname (0.4.2)
     hostsfile (>= 0.0.0)
   hostsfile (2.4.5)
   motd (0.6.4)
     chef_handler (>= 0.0.0)
-  packagecloud (0.2.5)
-  runit (3.0.0)
+  packagecloud (0.3.0)
+  runit (3.0.5)
     packagecloud (>= 0.0.0)
     yum-epel (>= 0.0.0)
-  yum (4.1.0)
-  yum-centos (1.0.0)
-    yum (>= 3.10)
-  yum-epel (1.0.2)
-    yum (>= 3.6)
+  yum-centos (2.3.0)
+    compat_resource (>= 12.16.3)
+  yum-epel (2.1.2)
+    compat_resource (>= 12.16.3)
