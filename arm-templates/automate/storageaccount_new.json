@@ -47,10 +47,9 @@
       "name": "[parameters('storageAccountName')]",
       "type": "Microsoft.Storage/storageAccounts",
       "apiVersion": "[parameters('apiVersions').storageAccounts]",
-      "sku": {
-        "name": "[parameters('storageAccountType')]"
+      "properties":{
+        "accountType": "[parameters('storageAccountType')]"
       },
-      "kind": "Storage",
       "location": "[parameters('location')]",
       "tags": {
         "project": "Chef Automate",

@@ -210,14 +210,14 @@
   },
   "variables": {
     "apiVersions": {
-      "deployments": "2016-09-01",
-      "networkInterfaces": "2017-03-01",
-      "networkSecurityGroups": "2016-12-01",
-      "publicIPAddresses": "2017-03-01",
-      "storageAccounts": "2016-12-01",
-      "virtualMachineExtensions": "2017-03-30",
-      "virtualMachines": "2017-03-30",
-      "virtualNetworks": "2017-03-01"
+      "deployments": "2016-06-01",
+      "networkInterfaces": "2015-06-15",
+      "networkSecurityGroups": "2015-06-15",
+      "publicIPAddresses": "2015-06-15",
+      "storageAccounts": "2015-06-15",
+      "virtualMachineExtensions": "2016-03-30",
+      "virtualMachines": "2016-03-30",
+      "virtualNetworks": "2015-06-15"
     },
     "imagePublisher": "chef-software",
     "diagnosticStorageAccountResourceGroupnew": "[resourceGroup().name]",
@@ -552,9 +552,9 @@
         "provider": "[variables('providerGuid')]"
       },
       "properties": {
-        "publisher": "Microsoft.Azure.Extensions",
-        "type": "CustomScript",
-        "typeHandlerVersion": "2.0",
+        "publisher": "Microsoft.OSTCExtensions",
+        "type": "CustomScriptForLinux",
+        "typeHandlerVersion": "1.3",
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
