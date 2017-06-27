@@ -8,8 +8,11 @@ install_dir "/opt/chef-marketplace"
 build_version Omnibus::BuildVersion.semver
 build_iteration 1
 
+# NOTE: If you update ruby's minor version make sure you update the gem install
+#       paths in the other software definitions.
 override :ruby, version: "2.3.3"
-override :chef, version: "v12.19.36"
+
+#override :chef, version: "v12.19.36"
 
 dependency "preparation"
 dependency "postgresql92" # only the client

@@ -21,8 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "sequel"
   spec.add_dependency "pg"
   spec.add_dependency "highline"
-  spec.add_dependency "chef"
-  spec.add_dependency "chef-zero", "< 13.0"
+  spec.add_dependency "chef", "~>13"
   spec.add_dependency "aws-sdk"
   spec.add_dependency "elasticsearch"
 

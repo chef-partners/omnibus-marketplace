@@ -6,7 +6,7 @@
 
 return if node["chef-marketplace"]["api_fqdn"]
 
-node.set["chef-marketplace"]["api_fqdn"] =
+node.default["chef-marketplace"]["api_fqdn"] =
   if node.key?("cloud_v2") && !node["cloud_v2"].nil?
     if node["cloud_v2"]["provider"] == "gce"
       node["cloud_v2"]["public_ipv4"] if node["cloud_v2"]["public_ipv4"] && !node["cloud_v2"]["public_ipv4"].empty?
@@ -17,4 +17,4 @@ node.set["chef-marketplace"]["api_fqdn"] =
     end
   end
 
-node.set["chef-marketplace"]["api_fqdn"] = node["fqdn"] unless node["chef-marketplace"]["api_fqdn"] && !node["chef-marketplace"]["api_fqdn"].empty?
+node.override["chef-marketplace"]["api_fqdn"] = node["fqdn"] unless node["chef-marketplace"]["api_fqdn"] && !node["chef-marketplace"]["api_fqdn"].empty?

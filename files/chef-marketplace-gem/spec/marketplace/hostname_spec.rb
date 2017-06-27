@@ -10,10 +10,7 @@ describe Marketplace::Hostname do
 
   before do
     allow(Ohai::System).to receive(:new).and_return(ohai)
-    allow(ohai)
-      .to receive_message_chain(:all_plugins,
-                                :first,
-                                data: { "fqdn" => current_hostname })
+    allow(ohai).to receive(:all_plugins).and_return({ "fqdn" => current_hostname })
   end
 
   describe '#resolve' do
