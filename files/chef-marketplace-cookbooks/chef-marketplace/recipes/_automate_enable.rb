@@ -25,6 +25,10 @@ template '/etc/delivery/delivery.rb' do
   source 'delivery.rb.erb'
 end
 
+link '/etc/delivery/builder_key' do
+  to '/etc/delivery/builder.pem'
+end
+
 directory '/var/opt/delivery/license' do
   recursive true
 end
