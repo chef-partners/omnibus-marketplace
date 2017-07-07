@@ -284,6 +284,9 @@ displays the outputs of the UI defition in your browsers Javascript console when
 you use the launch button. You can use that to verify the output of the UI
 definition match the ARM template parameters.
 
+Use `make arm-run-test-matrix` to run the full test matrix to ensure there are
+no regressions. This can take a few hours.
+
 ### Publishing the template
 In order to publish the template all work on the feature branch must be merged
 to master. After this has happened you will need to create a Solution Template
@@ -351,7 +354,7 @@ all regions, using new resources, reusing existing resources and using different
 storage types. If your changes create a new permutation it is advised to add a
 secenario to the automate test matrix to ensure that it is verified.
 
-Use `make arm-publish-test-matrix` to run the tests. If the tests succeed a zip
+Use `make arm-run-test-matrix` to run the tests. If the tests succeed a zip
 artifact containing the logs of each run will be output. You'll need to provide
 the log archive to Microsoft when you request publishing to production.
 
