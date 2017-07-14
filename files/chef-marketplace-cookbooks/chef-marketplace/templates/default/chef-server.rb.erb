@@ -16,7 +16,7 @@ nginx["dhparam_key_length"]                 = 1024
 nginx["ssl_protocols"]                      = "TLSv1.2"
 nginx["server_name"]                        = "<%= node["chef-marketplace"]["api_fqdn"] %>"
 oc_id["enable"]                             = false
-oc_chef_pedant["chef_server"]               = "<%= node["chef-marketplace"]["api_fqdn"] %>"
+oc_chef_pedant["chef_server"]               = "https://<%= node["chef-marketplace"]["api_fqdn"] %>"
 opscode_erchef["base_resource_url"]         = "https://<%= node["chef-marketplace"]["api_fqdn"] %>"
 opscode_erchef["nginx_bookshelf_caching"]   = :on
 opscode_erchef["s3_url_expiry_window_size"] = "50%"
