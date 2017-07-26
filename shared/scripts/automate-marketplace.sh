@@ -35,6 +35,9 @@ if [ ! -z ${metadata_ip} ]; then
   iptables -t nat -p tcp -A OUTPUT -d 169.254.169.254 -j DNAT --to-destination ${metadata_ip}:9666
 fi
 
+# Please chef-server-ctl's preflight checks
+sysctl -w net.ipv6.conf.lo.disable_ipv6=0
+
 # Make chef-client think we're in ec2
 mkdir -p /etc/chef/ohai/hints
 touch /etc/chef/ohai/hints/ec2.json
@@ -69,6 +72,9 @@ else
   chef-marketplace-ctl setup --preconfigure
   touch /var/opt/chef-marketplace/preconfigured
 fi
+
+# Setup chef-client-test
+/opt/chefdk/bin/chef-apply /shared/recipes/setup-chef-client-test.rb
 
 # Something useful that also keeps the container running...
 chef-marketplace-ctl tail

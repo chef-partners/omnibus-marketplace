@@ -1,0 +1,69 @@
+version: '2'
+services:
+  # This is Automate in "Marketplace mode" which consists of:
+  #  * Chef Server
+  #  * Chef Automate
+  #  * Chef Marketplace
+  automate:
+    hostname: automate-marketplace
+    privileged: true # for iptables
+    image: devchef/chef-server-12
+    mem_limit: 4G
+    expose:
+      - "22"
+      - "443"
+      # Git Port
+      - "8989"
+      # Push Job Ports
+      - "10000-10003"
+    ports:
+      - "443:443" # workflow/viz UI
+    volumes:
+      - ./shared:/shared
+      - ./.chef/keys:/volumes/keys # mount chef-server keys to host for knife
+      - ./files/chef-marketplace-ctl-commands:/sync/ctl-commands
+      - ./files/chef-marketplace-cookbooks:/sync/marketplace-cookbooks
+      - ./files/chef-marketplace-gem:/sync/chef-marketplace-gem
+      - ./files/reckoner:/sync/reckoner
+      - ./files/biscotti:/sync/biscotti
+      - ./pkg:/omnibus-pkgs
+    environment:
+      # override devchef/chef-server-12 defaults
+      - CHEF_FQDN=automate-marketplace.test
+      - CHEF_USER=delivery
+      - CHEF_NAME=Delivery User
+      - CHEF_ORG_SHORT=acme
+      - CHEF_ORG_FULL=Acme Co
+      # Marketplace package
+      - CHANNEL=${CHANNEL}
+      - VERSION=${VERSION}
+      - U_CHANNEL=${U_CHANNEL}
+      - U_VERSION=${U_VERSION}
+      # Chef Automate
+      - CA_CHANNEL=${CA_CHANNEL}
+      # Chef Server
+      - CS_CHANNEL=${CS_CHANNEL}
+    command: bash -c /shared/scripts/automate-marketplace.sh
+  # This is a simple sinatra app that will act as an ec2 metadata server which
+  # will allow us to to mimick being in ec2.
+  ec2-metadata:
+    image: devchef/chefdk:latest
+    ports:
+      - "9666:9666"
+    volumes:
+      - ./shared/scripts/ec2-metadata.sh:/usr/src/ec2-metadata.sh
+    command: bash /usr/src/ec2-metadata.sh
+  # This is a chef-client that's configured to converge against our test
+  # server. It includes the `audit` cookbook to ensure that we're compliance
+  # data is being sent and includes runs the latest version
+  # automate-liveness-agent to send node_pings
+  chef-client-test:
+    networks:
+      marketplace:
+        ipv4_address: 172.16.239.5
+        aliases:
+          - chef-client.test
+    image: devchef/chefdk:latest
+    volumes:
+      - ./shared/:/shared
+    command: bash /shared/scripts/chef-client-test.sh
