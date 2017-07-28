@@ -98,4 +98,7 @@ arm-test:
 arm-create-zip:
 	cd ./arm-templates/automate && zip -r "../../automate_arm_`date -u +"%Y-%m-%dT%H:%M:%SZ"`.zip" ./*
 
+run-chef-client-test:
+	docker-compose -f docker-compose-tests.yml run chef-client-test
+
 .PHONY: clean start test

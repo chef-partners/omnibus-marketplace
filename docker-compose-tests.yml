@@ -14,6 +14,19 @@ networks:
           gateway: 172.16.239.1
 
 services:
+  chef-client-test:
+    extends:
+      file: docker-compose-services.yml
+      service: chef-client-test
+    networks:
+      marketplace:
+        ipv4_address: 172.16.239.5
+        aliases:
+          - chef-client.test
+    links:
+      - automate:automate
+    depends_on:
+      - automate
   automate:
     extends:
       file: docker-compose-services.yml
