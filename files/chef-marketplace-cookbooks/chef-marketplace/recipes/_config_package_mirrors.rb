@@ -12,6 +12,4 @@ when "centos"
   end
 
   include_recipe "yum-centos::default"
-when "ubuntu"
-  include_recipe "apt::default"
 end
