@@ -29,6 +29,7 @@ postgresql["db_superuser"]                  = "chef-pgsql"
 postgresql["db_superuser_password"]         = "<%= node["chef-marketplace"]["automate"]["postgresql"]["superuser_password"] %>"
 postgresql["external"]                      = true
 postgresql["vip"]                           = "127.0.0.1"
+profiles["root_url"]                        = "https://localhost"
 rabbitmq["enable"]                          = false
 rabbitmq["management_enabled"]              = false
 rabbitmq["queue_length_monitor_enabled"]    = false

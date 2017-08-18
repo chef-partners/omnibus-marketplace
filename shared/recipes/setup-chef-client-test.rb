@@ -59,9 +59,11 @@ with_chef_server 'https://127.0.0.1/organizations/test',
     attributes(
       'audit' => {
         'reporter' => 'chef-server-automate',
-        'inspec_version' => '1.31.1',
+        'fetcher' => 'chef-server',
+        'inspec_version' => '1.33.1',
         'profiles' => [
-          { 'name' => 'linux', 'url' => 'https://github.com/dev-sec/linux-baseline/archive/2.1.0.zip' },
+          { 'name' => 'linux-baseline', 'url' => 'https://github.com/dev-sec/linux-baseline/archive/2.1.0.zip' },
+          { 'name' => 'linux-patch-baseline', 'compliance' => 'test/linux-patch-baseline' },
         ],
       }
     )
@@ -97,4 +99,16 @@ bash 'upload-cookbooks' do
   EOS
 
   live_stream true
+end
+
+directory "/var/opt/delivery/compliance/profiles/test" do
+  owner "delivery"
+  group "delivery"
+  recursive true
+end
+
+remote_file "/var/opt/delivery/compliance/profiles/test/linux-patch-baseline-0.3.0.tar.gz" do
+  owner "delivery"
+  group "delivery"
+  source "file:///shared/files/linux-patch-baseline-0.3.0.tar.gz"
 end
