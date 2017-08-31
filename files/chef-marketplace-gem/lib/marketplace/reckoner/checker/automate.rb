@@ -18,8 +18,6 @@ class Marketplace
         end
 
         def current_usage
-          count = 0
-
           # Limit our result set to 100 nodes and allow the scrolling identifier
           # to exist for 5 minutes.
           result = es.search(
@@ -29,13 +27,17 @@ class Marketplace
             size: "100",
             body: {
               query: {
-                filtered: {
-                  filter: { term: { exists: "true" } },
+                bool: {
+                  must: {
+                    term: { exists: "true" },
+                  },
                 },
               },
               _source: %w{checkin},
             }
           )
+
+          count = result["hits"]["hits"].count
 
           # Iterate over our our search collection and count the active nodes
           loop do
