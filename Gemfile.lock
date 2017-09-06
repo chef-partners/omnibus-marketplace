@@ -313,7 +313,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  aws-sdk
+  aws-sdk (~> 2)
   berkshelf
   chef
   chefstyle

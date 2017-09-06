@@ -22,8 +22,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency "pg"
   spec.add_dependency "highline"
   spec.add_dependency "chef", "~>13"
-  spec.add_dependency "aws-sdk"
-  spec.add_dependency "elasticsearch"
+  spec.add_dependency "aws-sdk", "~> 2"
+  spec.add_dependency "elasticsearch", "~> 5"
 
   spec.add_development_dependency "bundler", "~> 1.6"
   spec.add_development_dependency "rake"
