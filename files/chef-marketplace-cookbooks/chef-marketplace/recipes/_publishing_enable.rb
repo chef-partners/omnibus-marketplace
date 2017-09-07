@@ -22,6 +22,8 @@ user node["chef-marketplace"]["user"] do
   home "/home/#{node['chef-marketplace']['user']}"
   shell "/bin/bash"
   action [:create, :lock]
+
+  not_if { node["chef-marketplace"]["user"] == "root" }
 end
 
 package "cloud-init" do

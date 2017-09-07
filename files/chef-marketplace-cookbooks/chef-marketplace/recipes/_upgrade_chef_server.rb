@@ -23,8 +23,22 @@ bash "chef-server-ctl stop" do
   only_if { chef_server_configured? }
 end
 
+# Download the package for installation if running on Alibaba
+if node["chef-marketplace"].key?("product_urls") &&
+  node["chef-marketplace"]["product_urls"].key?("chef_server")
+ target_path = File.join(Chef::Config[:file_cache_path], File.basename(node["chef-marketplace"]["product_urls"]["chef_server"]))
+end
+remote_file target_path do
+  source node["chef-marketplace"]["product_urls"]["chef_server"]
+
+  only_if { node["chef-marketplace"]["platform"] == "alibaba" }
+end
+
 chef_ingredient "chef-server" do
   action :upgrade
+
+  # Use the package sourec if this is running on Alibaba
+  package_source target_path if node["chef-marketplace"]["platform"] == "alibaba"
 
   notifies :run, "bash[chef-server-ctl reconfigure]", :immediately
   notifies :run, "bash[chef-server-ctl upgrade]", :immediately
