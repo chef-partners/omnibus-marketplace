@@ -51,11 +51,7 @@ default["chef-marketplace"].tap do |m|
   # Biscotti defaults
   m["biscotti"]["enabled"] = false
   m["biscotti"]["port"] = 9666
-  m["biscotti"]["listen_address"] = "127.0.0.1"
-  m["product_urls"] = {
-    'automate' => 'http://chef-software.oss-cn-beijing.aliyuncs.com/automate_1.6.95-1_amd64.deb',
-    'chef_server' => 'http://chef-software.oss-cn-beijing.aliyuncs.com/chef-server-core_12.15.8-1_amd64.deb',
-  }
+  m["biscotti"]["listen_address"] = "127.0.0.1",
 end
 
 default["enterprise"]["name"] = "chef-marketplace"

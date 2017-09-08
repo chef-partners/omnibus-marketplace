@@ -28,6 +28,9 @@ end
 
 package "cloud-init" do
   action :install
+
+  options '-o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"' if node["chef-marketplace"]["platform"] == "alibaba"
+
   only_if { mirrors_reachable? }
 end
 
@@ -79,7 +82,8 @@ template "/etc/cloud/cloud.cfg" do
     gecos: cloud_cfg_gecos,
     ssh_pwauth: cloud_cfg_ssh_pwauth,
     locale_configfile: cloud_cfg_locale_configfile,
-    distro: cloud_cfg_distro
+    distro: cloud_cfg_distro,
+    platform: node["chef-marketplace"]["platform"]
   )
   not_if { node["chef-marketplace"]["platform"] == "azure" }
   action :create

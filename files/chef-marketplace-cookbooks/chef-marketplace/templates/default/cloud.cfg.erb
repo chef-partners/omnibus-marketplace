@@ -1,7 +1,7 @@
 users:
  - default
 
-disable_root: true
+disable_root: <%= @platform == "alibaba" ? false : true %>
 preserve_hostname: false
 
 ssh_pwauth: <%= @ssh_pwauth %>

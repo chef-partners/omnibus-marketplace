@@ -13,14 +13,11 @@ end
 
 # Chef Automate
 
-# Download the package for installation if running on Alibaba
-if node["chef-marketplace"].key?("product_urls") &&
-   node["chef-marketplace"]["product_urls"].key?("automate")
-  target_path = File.join(Chef::Config[:file_cache_path], File.basename(node["chef-marketplace"]["product_urls"]["automate"]))
-end
+# If running on Alibaba download the Automate package for local installation
+url = download_url("automate")
+target_path = File.join(Chef::Config[:file_cache_path], File.basename(url))
 remote_file target_path do
-  source node["chef-marketplace"]["product_urls"]["automate"]
-
+  source url
   only_if { node["chef-marketplace"]["platform"] == "alibaba" }
 end
 

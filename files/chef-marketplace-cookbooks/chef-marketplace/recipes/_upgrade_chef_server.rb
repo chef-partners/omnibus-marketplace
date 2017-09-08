@@ -23,14 +23,11 @@ bash "chef-server-ctl stop" do
   only_if { chef_server_configured? }
 end
 
-# Download the package for installation if running on Alibaba
-if node["chef-marketplace"].key?("product_urls") &&
-  node["chef-marketplace"]["product_urls"].key?("chef_server")
- target_path = File.join(Chef::Config[:file_cache_path], File.basename(node["chef-marketplace"]["product_urls"]["chef_server"]))
-end
+# If running on Alibaba download the Chef Server package for local installation
+url = download_url("chef_server")
+target_path = File.join(Chef::Config[:file_cache_path], File.basename(url))
 remote_file target_path do
-  source node["chef-marketplace"]["product_urls"]["chef_server"]
-
+  source url
   only_if { node["chef-marketplace"]["platform"] == "alibaba" }
 end
 
