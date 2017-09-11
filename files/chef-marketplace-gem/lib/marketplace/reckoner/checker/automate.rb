@@ -23,7 +23,6 @@ class Marketplace
           result = es.search(
             index: "node-state",
             scroll: "5m",
-            search_type: "scan",
             size: "100",
             body: {
               query: {
