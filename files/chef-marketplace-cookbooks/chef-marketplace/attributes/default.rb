@@ -51,7 +51,7 @@ default["chef-marketplace"].tap do |m|
   # Biscotti defaults
   m["biscotti"]["enabled"] = false
   m["biscotti"]["port"] = 9666
-  m["biscotti"]["listen_address"] = "127.0.0.1",
+  m["biscotti"]["listen_address"] = "127.0.0.1"
 end
 
 default["enterprise"]["name"] = "chef-marketplace"

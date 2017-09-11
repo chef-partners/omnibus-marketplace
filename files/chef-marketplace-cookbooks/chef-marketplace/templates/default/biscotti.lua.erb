@@ -7,7 +7,7 @@ if ngx.var.http_x_ops_userid then
 end
 <% end -%>
 
-<% if node['chef-marketplace']['platform'] == 'azure' -%>
+<% if node['chef-marketplace']['platform'] == 'azure' || node['chef-marketplace']['platform'] == 'alibaba' -%>
 -- When we're on Azure we don't need to validate anything so we'll just return
 if true then
     return
