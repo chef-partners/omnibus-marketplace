@@ -50,12 +50,7 @@ class Marketplace
     end
 
     def cloud_cfg_ssh_pwauth
-      case node['chef-marketplace']['platform']
-      when 'azure', 'alibaba'
-        true
-      else
-        false
-      end
+      node['chef-marketplace']['platform'] == 'azure' ? true : false
     end
 
     def cloud_cfg_locale_configfile
