@@ -1,6 +1,19 @@
 #!/bin/bash
+
+echo "mkdir: /var/opt/chef-marketplace" > /var/log/marketplace-preconfigure.log 2>&1
 mkdir -p /var/opt/chef-marketplace/
+
+echo "touch:  /var/opt/chef-marketplace/cloud_init_running" >> /var/log/marketplace-preconfigure.log 2>&1
 touch /var/opt/chef-marketplace/cloud_init_running
-chef-marketplace-ctl setup --preconfigure
+
+echo "sleep: 10" >> /var/log/marketplace-preconfigure.log 2>&1
+sleep 10
+
+echo "run: chef-marketplace-ctl setup --preconfigure" >> /var/log/marketplace-preconfigure.log 2>&1
+chef-marketplace-ctl setup --preconfigure >> /var/log/marketplace-preconfigure.log 2>&1
+
+echo "touch: /var/opt/chef-marketplave/preconfigured" >> /var/log/marketplace-preconfigure.log 2>&1
 touch /var/opt/chef-marketplace/preconfigured
+
+echo "rm: /var/opt/chef-marketplace/cloud_init_running" >> /var/log/marketplace-preconfigure.log 2>&1
 rm -rf /var/opt/chef-marketplace/cloud_init_running

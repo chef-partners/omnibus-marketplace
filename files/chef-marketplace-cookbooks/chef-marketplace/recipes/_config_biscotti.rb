@@ -20,7 +20,7 @@ uuid_type, uuid =
   case node['chef-marketplace']['platform']
   when 'google'
     ['Project Name', node['gce']['project']['projectId']]
-  when 'azure'
+  when 'azure', 'alibaba'
     ['VM Name', node['hostname']]
   else # aws, testing
     ['Instance ID', node['ec2']['instance_id']]

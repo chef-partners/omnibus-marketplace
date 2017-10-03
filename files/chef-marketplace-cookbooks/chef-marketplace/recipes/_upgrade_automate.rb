@@ -12,8 +12,20 @@ bash 'delivery-ctl start' do
 end
 
 # Chef Automate
+
+# If running on Alibaba download the Automate package for local installation
+url = download_url("automate")
+target_path = File.join(Chef::Config[:file_cache_path], File.basename(url))
+remote_file target_path do
+  source url
+  only_if { node["chef-marketplace"]["platform"] == "alibaba" }
+end
+
 chef_ingredient 'delivery' do
   action :upgrade
+
+  # Use the package sourec if this is running on Alibaba
+  package_source target_path if node["chef-marketplace"]["platform"] == "alibaba"
 
   notifies :run, 'bash[delivery-ctl reconfigure]', :immediately
   notifies :run, 'bash[yum-clean-all]', :immediately

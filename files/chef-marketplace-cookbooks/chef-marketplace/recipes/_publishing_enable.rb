@@ -22,11 +22,14 @@ user node["chef-marketplace"]["user"] do
   home "/home/#{node['chef-marketplace']['user']}"
   shell "/bin/bash"
   action [:create, :lock]
+
+  not_if { node["chef-marketplace"]["user"] == "root" }
 end
 
 package "cloud-init" do
   action :install
-  only_if { mirrors_reachable? }
+
+  only_if { mirrors_reachable? && node["chef-marketplace"]["platform"] != "alibaba" }
 end
 
 directory "/var/lib/cloud/scripts/per-instance" do

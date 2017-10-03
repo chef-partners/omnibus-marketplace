@@ -12,6 +12,12 @@ end
 
 node.normal["openssh"]["server"]["client_alive_interval"] = 180 if node["chef-marketplace"]["platform"] == "azure"
 
+# Modify parameters if running on Alibaba
+if node["chef-marketplace"]["platform"] == "alibaba"
+  node.normal["openssh"]["server"]["permit_root_login"] = "yes"
+  node.normal["openssh"]["server"]["challenge_response_authentication"] = "yes"
+end
+
 template "/etc/ssh/sshd_config" do
   source "sshd-config.erb"
   mode sshd_config_mode

@@ -386,6 +386,16 @@ class Marketplace
                               node["chef-marketplace"]["biscotti"]["token"],
                               node["chef-marketplace"]["biscotti"]["uuid"])
     end
+
+    def download_url(product)
+      file_path = '/tmp/product_download_urls.json'
+      if node["chef-marketplace"]["platform"] == "alibaba" && File.exist?(file_path)
+         data_hash = JSON.parse(File.read(file_path))
+
+         # return the selected product url
+         data_hash["urls"][product]
+      end
+    end
   end
 end
 

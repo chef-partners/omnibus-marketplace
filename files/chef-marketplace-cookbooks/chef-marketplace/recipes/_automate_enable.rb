@@ -39,9 +39,9 @@ file '/var/opt/delivery/.telemetry.disabled' do
   only_if { node['chef-marketplace']['platform'] == 'aws' }
 end
 
-# Use a 30 day trial license if we're on Azure
+# Use a 30 day trial license if we're on Azure or Alibaba
 cookbook_file 'var/opt/delivery/license/delivery.license' do
   source 'delivery.license'
   action :create_if_missing
-  only_if { node['chef-marketplace']['platform'] == 'azure' }
+  only_if { node['chef-marketplace']['platform'] == 'azure' || node['chef-marketplace']['platform'] == 'alibaba' }
 end
