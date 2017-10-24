@@ -46,12 +46,12 @@ class Marketplace
     # The number of nodes that are not billable
     default :free_node_count, 5
 
-    # Licensing model, eg: 'fixed' or 'flexible'
+    # Licensing model, eg: 'fixed', 'flexible', 'BYOL'
     default :type, "fixed"
   end
 
   # Which role the marketplace addition is to play:
-  # 'server', 'aio', 'analytics', 'compliance'
+  # 'automate', 'server', 'aio', 'analytics', 'compliance'
   default :role, "server"
 
   # The marketplace platform, eg: 'aws', 'openstack', 'azure', 'gce', etc.
@@ -87,7 +87,7 @@ class Marketplace
 
   # Set to true if you don't want to use outbound networks, eg: package mirrors
   default :disable_outbound_traffic, false
-  class<<self
+  class << self
     alias :disable_outboud_traffic :disable_outbound_traffic
   end
 

@@ -61,7 +61,7 @@ destroy:
 	docker-compose rm --force
 
 logs:
-	docker-compose logs --follow
+	docker-compose logs --follow --tail=25
 
 shell:
 	docker-compose exec automate bash
