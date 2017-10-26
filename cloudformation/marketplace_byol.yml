@@ -1,0 +1,337 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  Chef Automate AWS Marketplace BYOL Template: This template provisions and
+  configures the latest Chef Automate marketplace image.
+Parameters:
+  InstanceType:
+    Description: Automate EC2 instance type
+    Type: String
+    Default: t2.medium
+    AllowedValues:
+      - t2.medium
+      - t2.large
+      - m4.large
+      - m4.xlarge
+      - m4.2xlarge
+      - m4.4xlarge
+      - m4.10xlarge
+      - c4.large
+      - c4.xlarge
+      - c4.2xlarge
+      - c4.4xlarge
+      - c4.8xlarge
+      - g2.2xlarge
+      - g2.8xlarge
+      - r3.large
+      - r3.xlarge
+      - r3.2xlarge
+      - r3.4xlarge
+      - r3.8xlarge
+      - i2.xlarge
+      - i2.2xlarge
+      - i2.4xlarge
+      - i2.8xlarge
+      - d2.xlarge
+      - d2.2xlarge
+      - d2.4xlarge
+      - d2.8xlarge
+      - hi1.4xlarge
+      - hs1.8xlarge
+      - cr1.8xlarge
+      - cc2.8xlarge
+      - cg1.4xlarge
+    ConstraintDescription: must be a valid EC2 instance type.
+  SshKeyPairName:
+    Description: The name of an existing EC2 SSH KeyPair to enable SSH access
+      to the instance.
+    Type: 'AWS::EC2::KeyPair::KeyName'
+    ConstraintDescription: must be the name of an existing EC2 KeyPair.
+  SshSecurityGroupCidrBlock:
+    Description: A CIDR block representing which range to grant SSH access.
+    Type: String
+    MinLength: '9'
+    MaxLength: '18'
+    Default: 127.0.0.1/32
+    AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})'
+    ConstraintDescription: must be a valid IP CIDR block of the form x.x.x.x/x.
+  ChefAutomateSecurityGroupCidrBlock:
+    Description: A CIDR block representing which range to grant access to
+      Chef Automate and Chef server.
+    Type: String
+    MinLength: '9'
+    MaxLength: '18'
+    Default: 0.0.0.0/0
+    AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})'
+    ConstraintDescription: must be a valid IP CIDR block of the form x.x.x.x/x.
+  VPCCidrBlock:
+    Description: The Chef Automate VPC CIDR Block
+    Type: String
+    Default: 10.0.0.0/24
+    AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})'
+    ConstraintDescription: must be a valid IP CIDR block of the form x.x.x.x/x.
+  VPCSubnetCidrBlock:
+    Description: The Chef Automate VPC subnet CIDR Block
+    Type: String
+    Default: 10.0.0.0/24
+    AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})'
+    ConstraintDescription: must be a valid IP CIDR block of the form x.x.x.x/x.
+  LicenseBase64:
+    Description: (Optional) A Base64 encoded Chef Automate license
+    Type: String
+  LicenseUrl:
+    Description: (Optional) The URL of a Chef Automate license
+    Type: String
+Conditions:
+  HasBase64License: !Not
+    - !Equals
+      - ''
+      - !Ref LicenseBase64
+  HasLicenseUrl: !Not
+    - !Equals
+      - ''
+      - !Ref LicenseUrl
+  UseTempLicense: !Not
+    - !Or
+      - !Condition HasBase64License
+      - !Condition HasLicenseUrl
+Mappings:
+  AWSAMIMap:
+    us-east-1:
+      ID: ami-5a202c21
+    us-west-2:
+      ID: ami-5a202c21
+    us-west-1:
+      ID: ami-5a202c21
+    eu-west-1:
+      ID: ami-5a202c21
+    eu-west-2:
+      ID: ami-5a202c21
+    eu-central-1:
+      ID: ami-5a202c21
+    ap-northeast-1:
+      ID: ami-5a202c21
+    ap-northeast-2:
+      ID: ami-5a202c21
+    ap-southeast-1:
+      ID: ami-5a202c21
+    ap-southeast-2:
+      ID: ami-5a202c21
+    ap-south-1:
+      ID: ami-5a202c21
+    us-east-2:
+      ID: ami-5a202c21
+    ca-central-1:
+      ID: ami-5a202c21
+    sa-east-1:
+      ID: ami-5a202c21
+    cn-north-1:
+      ID: ami-5a202c21
+Resources:
+  VPC:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      CidrBlock: !Ref VPCCidrBlock
+      Tags:
+        - Key: Application
+          Value: !Ref 'AWS::StackId'
+  Subnet:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !Ref VPCSubnetCidrBlock
+      Tags:
+        - Key: Application
+          Value: !Ref 'AWS::StackId'
+  InternetGateway:
+    Type: 'AWS::EC2::InternetGateway'
+    Properties:
+      Tags:
+        - Key: Application
+          Value: !Ref 'AWS::StackId'
+  AttachGateway:
+    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+  RouteTable:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Application
+          Value: !Ref 'AWS::StackId'
+  Route:
+    Type: 'AWS::EC2::Route'
+    DependsOn: AttachGateway
+    Properties:
+      RouteTableId: !Ref RouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+  SubnetRouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref Subnet
+      RouteTableId: !Ref RouteTable
+  NetworkAcl:
+    Type: 'AWS::EC2::NetworkAcl'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Application
+          Value: !Ref 'AWS::StackId'
+  InboundGitNetworkAclEntry:
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      NetworkAclId: !Ref NetworkAcl
+      RuleNumber: '100'
+      Protocol: '6'
+      RuleAction: allow
+      Egress: 'false'
+      CidrBlock: !Ref ChefAutomateSecurityGroupCidrBlock
+      PortRange:
+        From: '8989'
+        To: '8989'
+  InboundSSHNetworkAclEntry:
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      NetworkAclId: !Ref NetworkAcl
+      RuleNumber: '101'
+      Protocol: '6'
+      RuleAction: allow
+      Egress: 'false'
+      CidrBlock: !Ref SshSecurityGroupCidrBlock
+      PortRange:
+        From: '22'
+        To: '22'
+  InboundHTTPSNetworkAclEntry:
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      NetworkAclId: !Ref NetworkAcl
+      RuleNumber: '102'
+      Protocol: '6'
+      RuleAction: allow
+      Egress: 'false'
+      CidrBlock: !Ref ChefAutomateSecurityGroupCidrBlock
+      PortRange:
+        From: '443'
+        To: '443'
+  OutBoundHTTPSNetworkAclEntry:
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      NetworkAclId: !Ref NetworkAcl
+      RuleNumber: '101'
+      Protocol: '6'
+      RuleAction: allow
+      Egress: 'true'
+      CidrBlock: 0.0.0.0/0
+      PortRange:
+        From: '443'
+        To: '443'
+  OutBoundResponsePortsNetworkAclEntry:
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      NetworkAclId: !Ref NetworkAcl
+      RuleNumber: '102'
+      Protocol: '6'
+      RuleAction: allow
+      Egress: 'true'
+      CidrBlock: 0.0.0.0/0
+      PortRange:
+        From: '1024'
+        To: '65535'
+  SubnetNetworkAclAssociation:
+    Type: 'AWS::EC2::SubnetNetworkAclAssociation'
+    Properties:
+      SubnetId: !Ref Subnet
+      NetworkAclId: !Ref NetworkAcl
+  IPAddress:
+    Type: 'AWS::EC2::EIP'
+    DependsOn: AttachGateway
+    Properties:
+      Domain: vpc
+      InstanceId: !Ref AutomateInstance
+  InstanceSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: Enable application and ssh access to Chef Automate
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: !Ref SshSecurityGroupCidrBlock
+        - IpProtocol: tcp
+          FromPort: '443'
+          ToPort: '443'
+          CidrIp: !Ref ChefAutomateSecurityGroupCidrBlock
+        - IpProtocol: tcp
+          FromPort: '8989'
+          ToPort: '8989'
+          CidrIp: !Ref ChefAutomateSecurityGroupCidrBlock
+  AutomateInstance:
+    Type: 'AWS::EC2::Instance'
+    DependsOn: AttachGateway
+    Metadata:
+      Comment: Create an instance of the Chef Automate Marketplace AMI
+    Properties:
+      ImageId: !FindInMap
+        - AWSAMIMap
+        - !Ref 'AWS::Region'
+        - ID
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref SshKeyPairName
+      Tags:
+        - Key: Application
+          Value: !Ref 'AWS::StackId'
+      NetworkInterfaces:
+        - GroupSet:
+            - !Ref InstanceSecurityGroup
+          AssociatePublicIpAddress: 'true'
+          DeviceIndex: '0'
+          DeleteOnTermination: 'true'
+          SubnetId: !Ref Subnet
+      UserData: !Base64
+        'Fn::Join':
+          - ''
+          - - |
+              #!/bin/bash -ex
+            - |
+            - !If
+              - HasBase64License
+              - !Join
+                - ''
+                - - 'chef-marketplace-ctl setup --preconfigure --base64 '
+                  - !Ref LicenseBase64
+              - !Ref 'AWS::NoValue'
+            - !If
+              - HasLicenseUrl
+              - !Join
+                - ''
+                - - 'chef-marketplace-ctl setup --preconfigure --license-url '
+                  - !Ref LicenseUrl
+              - !Ref 'AWS::NoValue'
+            - !If
+              - UseTempLicense
+              - 'chef-marketplace-ctl setup --preconfigure'
+              - !Ref 'AWS::NoValue'
+            - |
+            - '/opt/aws/bin/cfn-signal -e $? '
+            - '         --stack '
+            - !Ref 'AWS::StackName'
+            - '         --resource AutomateInstance '
+            - '         --region '
+            - !Ref 'AWS::Region'
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT15M
+Outputs:
+  URL:
+    Value: !Join
+      - ''
+      - - 'http://'
+        - !GetAtt
+          - AutomateInstance
+          - PublicIp
+        - '/biscotti/setup'
+    Description: Access the URL to complete the setup
