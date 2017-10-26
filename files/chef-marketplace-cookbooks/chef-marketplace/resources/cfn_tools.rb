@@ -28,9 +28,15 @@ action :install do
           cd aws-cfn-bootstrap-*
           python setup.py build
           python setup.py install
-          ln -s /usr/init/redhat/cfn-hup /etc/init.d/cfn-hup
-          chmod 775 /usr/init/redhat/cfn-hup
         EOH
+      end
+
+      link "/etc/init.d/cfn-hup" do
+        to "/usr/init/redhat/cfn-hup"
+      end
+
+      file "/usr/init/redhat/cfn-hup" do
+        mode 0775
       end
 
       cfn_binary_names.each do |cmd|
