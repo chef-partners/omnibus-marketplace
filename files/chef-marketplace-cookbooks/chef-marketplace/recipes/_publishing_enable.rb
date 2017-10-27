@@ -43,7 +43,7 @@ service "firewalld" do
   only_if { node["platform"] == "centos" && node["platform_version"].start_with?("7.") }
 end
 
-cfn_tools "centos7" do
+chef_marketplace_cfn_tools "centos7" do
   action :install
   only_if { node["chef-marketplace"]["platform"] == "aws" }
 end
