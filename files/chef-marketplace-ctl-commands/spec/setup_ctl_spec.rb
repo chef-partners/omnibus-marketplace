@@ -40,12 +40,9 @@ describe "chef-marketplace-ctl setup" do
       opts = OpenStruct.new
       opts[option_name] = option_value
 
-      # agree_to_eula, register_node, and preconfigure are false by default
-      opts["agree_to_eula"] = false unless option_name == "agree_to_eula"
-      opts["register_node"] = false unless option_name == "register_node"
-      opts["preconfigure"] = false unless option_name == "preconfigure"
-
-      expect(Marketplace).to receive(:setup).with(opts, omnibus_ctl)
+      expect(Marketplace).to receive(:setup) do |o, omnibus_ctl|
+        expect(o.send(option_name)).to eq(option_value)
+      end
       expect(Kernel).to_not receive(:eval)
 
       marketplace_ctl.execute("setup #{input}")
@@ -53,15 +50,17 @@ describe "chef-marketplace-ctl setup" do
   end
 
   [
-    ["--eula",                  "agree_to_eula",  true                ],
-    ["--register",              "register_node",  true                ],
-    ["--preconfigure",          "preconfigure",   true                ],
-    [ "-u julia",               "username",       "julia"             ],
-    [ "-p drowssap",            "password",       "drowssap"          ],
-    [ "-f julia",               "first_name",     "julia"             ],
-    [ "-l child",               "last_name",      "child"             ],
-    [ "-e julia@child.com",     "email",          "julia@child.com"   ],
-    [ "-o marvelous",           "organization",   "marvelous"         ]
+    [ "--eula", "agree_to_eula", true ],
+    [ "--register", "register_node", true ],
+    [ "--preconfigure", "preconfigure", true ],
+    [ "--license-url http://example.org/delivery.license", "license_url", "http://example.org/delivery.license" ],
+    [ "--license-base64 ZGVsaXZlcnktbGl==", "license_base64", "ZGVsaXZlcnktbGl==" ],
+    [ "-u julia", "username", "julia" ],
+    [ "-p drowssap", "password", "drowssap" ],
+    [ "-f julia", "first_name", "julia" ],
+    [ "-l child", "last_name", "child" ],
+    [ "-e julia@child.com", "email", "julia@child.com" ],
+    [ "-o marvelous", "organization", "marvelous" ],
   ].each do |params|
     context "when the input is #{params[0]}" do
       it_behaves_like "chef-marketplace-ctl cli arguments" do
