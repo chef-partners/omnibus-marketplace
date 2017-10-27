@@ -25,6 +25,9 @@ describe Marketplace::Setup do
   end
 
   before do
+    allow(File).to receive(:exist?).and_call_original
+    allow(IO).to receive(:read).and_call_original
+
     # Stub out the role
     allow(File)
       .to receive(:exist?)
@@ -66,6 +69,7 @@ describe Marketplace::Setup do
       allow(subject).to receive(:create_default_users).and_return(true)
       allow(subject).to receive(:setup_chef_server_pg_password).and_return(true)
       allow(subject).to receive(:retry_command).and_return(true)
+      allow(subject).to receive(:setup_license).and_return(true)
     end
 
     context "when the server has not been preconfigured" do
@@ -193,6 +197,9 @@ describe Marketplace::Setup do
               retries: 2)
             .once
 
+          # setup the initial license
+          expect(subject).to receive(:setup_license).once
+
           # set up automate
           expect(subject).to receive(:reconfigure).with(:delivery).once
 
@@ -240,6 +247,70 @@ describe Marketplace::Setup do
       it "raises a system exit" do
         expect { subject.send(:role) }
           .to raise_error(SystemExit) { |e| expect(e.status).to eq(1) }
+      end
+    end
+  end
+
+  describe "#setup_license" do
+    let(:file) { Tempfile.new("license") }
+    let(:url) { "http://aws.s3.mybucket/my/delivery.license" }
+    let(:encoded_license) { "bGljZW5zZQ==\n" }
+    let(:decoded_license) { "license" }
+    let(:options) { OpenStruct.new(license_url: nil, license_base64: nil ) }
+
+    before do
+      allow(FileUtils)
+        .to receive(:mkdir_p)
+        .with("/var/opt/delivery/license")
+        .and_return(true)
+
+      allow(File).to receive(:open).and_call_original
+      allow(File)
+        .to receive(:open)
+        .with("/var/opt/delivery/license/delivery.license", "a+")
+        .and_yield(file)
+    end
+
+    after do
+      FileUtils.rm(file)
+    end
+
+    it "ensures the license directory exists" do
+      allow(FileUtils)
+        .to receive(:mkdir_p)
+        .with("/var/opt/delivery/license")
+        .and_return(true)
+
+      subject.send(:setup_license)
+    end
+
+    context "when the license url is given" do
+      let(:options) do
+        OpenStruct.new(license_url: url, license_base64: nil )
+      end
+
+      it "writes the license from the remote url" do
+        allow(subject)
+          .to receive(:open)
+          .with(URI(url))
+          .and_yield(StringIO.new(decoded_license))
+
+        expect(subject).to receive(:open).with(URI(url))
+        expect(file).to receive(:write).with(decoded_license)
+
+        subject.send(:setup_license)
+      end
+    end
+
+    context "when the base64 license is given" do
+      let(:options) do
+        OpenStruct.new(license_url: nil, license_base64: encoded_license )
+      end
+
+      it "decodes the license and writes the license file" do
+        expect(file).to receive(:write).with(decoded_license)
+
+        subject.send(:setup_license)
       end
     end
   end

@@ -5,6 +5,8 @@ add_command_under_category "setup", "Setup", "Set up the Chef Server Marketplace
   options.agree_to_eula = false
   options.register_node = false
   options.preconfigure = false
+  options.license_url = nil
+  options.license_base64 = nil
 
   OptionParser.new do |opts|
     opts.banner = "Usage: chef-marketplace-ctl setup [options]"
@@ -48,6 +50,14 @@ add_command_under_category "setup", "Setup", "Set up the Chef Server Marketplace
 
     opts.on("--preconfigure", "Preconfigure option used by cloud-init during boot") do
       options.preconfigure = true
+    end
+
+    opts.on("--license-url URL", "A URL to a Chef Automate license") do |url|
+      options.license_url = url
+    end
+
+    opts.on("--license-base64 ENCODED_LICENSE", "A base64 enconded Chef Automate license") do |license|
+      options.license_base64 = license
     end
 
     opts.on("-h", "--help", "Show this message") do
