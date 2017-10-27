@@ -43,5 +43,5 @@ end
 cookbook_file 'var/opt/delivery/license/delivery.license' do
   source 'delivery.license'
   action :create_if_missing
-  only_if { node['chef-marketplace']['platform'] == 'azure' }
+  not_if { node["chef-marketplace"]["license"]["type"] == "flexible" }
 end
