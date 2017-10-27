@@ -1,3 +1,4 @@
+---
 branches:
   only:
     - master
@@ -19,14 +20,4 @@ matrix:
   include:
     - env:
         - NAME=syntax-ruby
-      addons:
-        apt:
-          sources:
-            - chef-stable-precise
-          packages:
-            - chefdk
-      cache:
-        directories:
-      install:
-        - eval "$(/opt/chefdk/bin/chef shell-init bash)"
-      script: 'chef gem install bundler && bundle install && bundle exec rspec'
+      script: 'bundle exec rake spec'
