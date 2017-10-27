@@ -1,0 +1,32 @@
+branches:
+  only:
+    - master
+
+dist: trusty
+sudo: false
+
+# Set the default language to ruby
+language: ruby
+
+cache:
+  bundler: true
+  directories:
+    - $HOME/tools
+
+matrix:
+  fast_finish: true
+
+  include:
+    - env:
+        - NAME=syntax-ruby
+      addons:
+        apt:
+          sources:
+            - chef-stable-precise
+          packages:
+            - chefdk
+      cache:
+        directories:
+      install:
+        - eval "$(/opt/chefdk/bin/chef shell-init bash)"
+      script: 'chef gem install bundler && bundle install && bundle exec rspec'
