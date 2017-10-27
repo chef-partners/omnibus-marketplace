@@ -2,6 +2,8 @@ require "chef/json_compat"
 require "mixlib/shellout"
 require "shellwords"
 require "highline/import"
+require "open-uri"
+require "base64"
 require "marketplace/payment"
 require "marketplace/options"
 require "timeout"
@@ -33,6 +35,7 @@ class Marketplace
         retry_command("chef-marketplace-ctl stop biscotti", retries: 2)
 
         # Just configure software if we're preconfiguring
+        setup_license if role.to_s == "automate"
         configure_software
         reconfigure(:marketplace)
         setup_automate if role.to_s == "automate"
@@ -103,6 +106,29 @@ class Marketplace
         "--builder-password=#{passwords['builder_user'].shellescape}" # builder password
       ].join(" ")
       retry_command(create_ent, retries: 1)
+    end
+
+    #
+    # If either of the initial license setup options have been passed via the
+    # CLI then we need to try and setup the initial license.
+    #
+    def setup_license
+      license_path = "/var/opt/delivery/license/delivery.license"
+      FileUtils.mkdir_p(File.dirname(license_path))
+
+      if options.license_url
+        open(URI(options.license_url.to_s)) do |body|
+          File.open(license_path, "a+") do |file|
+            file.write(body.read)
+          end
+        end
+      end
+
+      if options.license_base64
+        File.open(license_path, "a+") do |file|
+          file.write(Base64.decode64(options.license_base64.to_s))
+        end
+      end
     end
 
     #
