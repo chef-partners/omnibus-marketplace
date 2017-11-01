@@ -12,6 +12,9 @@ build_iteration 1
 #       paths in the other software definitions.
 override :ruby, version: "2.4.2"
 
+# Pin to 13.6.0 until master gets more stable
+override :'chef-gem', version: "13.6.0"
+
 dependency "preparation"
 dependency "postgresql92" # only the client
 dependency "sequel-gem"
@@ -19,7 +22,7 @@ dependency "pg-gem"
 dependency "server-plugin-cookbooks"
 dependency "reckoner"
 dependency "biscotti"
-dependency "chef"
+dependency "chef-gem"
 dependency "chef-marketplace-ctl"
 dependency "chef-marketplace-gem"
 dependency "chef-marketplace-cookbooks"
