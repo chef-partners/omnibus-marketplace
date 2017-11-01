@@ -118,14 +118,14 @@ class Marketplace
 
       if options.license_url
         open(URI(options.license_url.to_s)) do |body|
-          File.open(license_path, "a+") do |file|
+          File.open(license_path, "w+") do |file|
             file.write(body.read)
           end
         end
       end
 
       if options.license_base64
-        File.open(license_path, "a+") do |file|
+        File.open(license_path, "w+") do |file|
           file.write(Base64.decode64(options.license_base64.to_s))
         end
       end

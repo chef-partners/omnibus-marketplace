@@ -12,7 +12,9 @@ delivery["chef_server"]           = "https://localhost:8443/organizations/delive
 delivery["chef_server_proxy"]     = true
 delivery["chef_username"]         = "delivery"
 delivery["primary"]               = true
-delivery["marketplace_licensing"] = <%= node["chef-marketplace"]["platform"] == "aws" %>
+<% if node["chef-marketplace"]["platform"] == "aws" && node["chef-marketplace"]["license"]["type"] == "flexible" -%>
+delivery["marketplace_licensing"] = true
+<% end -%>
 elasticsearch["enable_auth"]      = true
 insights["enable"]                = true
 insights["enable_auth"]           = true
