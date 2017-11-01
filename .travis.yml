@@ -1,23 +1,26 @@
----
 branches:
   only:
-    - master
+  - master
 
 dist: trusty
+
 sudo: false
 
-# Set the default language to ruby
 language: ruby
 
 cache:
   bundler: true
   directories:
-    - $HOME/tools
+  - "$HOME/tools"
 
 matrix:
   fast_finish: true
-
   include:
-    - env:
-        - NAME=syntax-ruby
-      script: 'bundle exec rake spec'
+  - env:
+    - NAME=syntax-ruby
+    script: bundle exec rake spec
+
+notifications:
+  email: false
+  slack:
+    secure: OQVBPvaLHEoMlSSB4z1pAqFoB5S2E19KRt4tcoMp9A2R41lpwVeTIWrw+I4OPb3Bh+LHZ37ZRMvmyeCNuQsLG2zNPQwZo4kyXkycAO2Py/DjN7nfrk5RSlTQ98NrStcFGUkAa2nU/ZgsedADt709L/m8OmyU+FV/GK4Uw1z3L4oZ+IRT92RC4nAYwkObCzOUR91I9J4Y2+7YW7Ehkof8JM7kfYcO75+vDgSR/rQxrPPB/fAGzGgTaTOf2nlYfG+3s8sTRVrbcffFaSKvF1Ep9x1P/1XaHPfDm8/NJfzOsC+6vsnWCz+x5VV520+0PiUzsX6+TbDR0H8yO0xjby9i0btaZyHueMtZaDN+Nh1PbUB6JmPOKG4cyXtiR1Jsx+PeqkcZjyGGHOcsfuku0T0dfBKxyO+Mtg1maCPJBBkcLPKbOCTjIOxEuSNXMgFDX3hLeVcPgaEYHAqdKNK0Xnsd7ikm+iLEuTtrqcSZIyqGcEzm7PUSUP9fBxnqcWnMEr6n4LgSYsVC19nsbNWmcKRWrk2B33r0yqsO4DWd5+SYE7JbYUyD7TEYqanxdhN4Mnv/shOMBguJw+KxsAOY5pvd12ZTh4NWYpakdkuE36/cjnKon/9OnxsxcHFTpWbEqq+6sgq3DHNDHEF9sIibiNhOn94kQlEivUGKz1ufFPr9+gA=

@@ -267,7 +267,7 @@ describe Marketplace::Setup do
       allow(File).to receive(:open).and_call_original
       allow(File)
         .to receive(:open)
-        .with("/var/opt/delivery/license/delivery.license", "a+")
+        .with("/var/opt/delivery/license/delivery.license", "w+")
         .and_yield(file)
     end
 
