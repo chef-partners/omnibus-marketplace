@@ -7,8 +7,6 @@ long_description  "Sets up the Chef server Marketplace additions"
 version           "0.0.1"
 supports          "centos"
 
-gem "cheffish"
-
 depends "motd"
 depends "chef-ingredient"
 depends "yum-centos"
