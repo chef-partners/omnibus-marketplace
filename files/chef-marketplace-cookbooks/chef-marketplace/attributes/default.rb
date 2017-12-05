@@ -45,6 +45,7 @@ default["chef-marketplace"].tap do |m|
   m["biscotti"]["log_rotation"]["num_to_keep"] = 10
   # Reckoner defaults
   m["reckoner"]["enabled"] = false
+  m["reckoner"]["auth_required"] = true
   m["reckoner"]["region"] = "us-east-1"
   m["reckoner"]["usage_dimension"] = "ProvisionedHosts"
   m["reckoner"]["eetee"]["endpoint"] = nil
