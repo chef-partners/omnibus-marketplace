@@ -5,11 +5,3 @@ task :console, :env do |_, args|
   require "pry"
   Pry.start
 end
-
-namespace :assets do
-  desc "Precompile assets"
-  task :precompile do
-    system("npm install")
-    system("npm run build")
-  end
-end

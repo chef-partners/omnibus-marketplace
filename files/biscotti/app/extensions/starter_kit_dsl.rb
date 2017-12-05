@@ -4,9 +4,11 @@ module Biscotti
       module_function
 
       module Helpers
+        include Biscotti::Extensions::JSONDSL::Helpers
+
         def create_key_pair
-          if !params["pubkey"].empty?
-            [params["pubkey"], nil]
+          if !payload["pubkey"].empty?
+            [payload["pubkey"], nil]
           else
             key = OpenSSL::PKey::RSA.new(2048)
             [key.public_key.to_pem, key.to_pem]
@@ -15,12 +17,12 @@ module Biscotti
 
         def setup_chef_server(args)
           chef_server = Biscotti::ChefServerSetup.new(
-            organization: params["organization"].downcase,
-            username: params["username"].downcase,
-            last_name: params["lastname"],
-            first_name: params["firstname"],
-            email: params["email"].downcase,
-            password: params["password"],
+            organization: payload["organization"].downcase,
+            username: payload["username"].downcase,
+            last_name: payload["lastname"],
+            first_name: payload["firstname"],
+            email: payload["email"].downcase,
+            password: payload["password"],
             **args
           )
           validator_key = chef_server.create_org
@@ -32,11 +34,11 @@ module Biscotti
         def setup_chef_automate(args)
           chef_automate = Biscotti::ChefAutomateSetup.new(
             admin_password: Biscotti::App.settings.automate["credentials"]["admin_password"],
-            first_name: params["firstname"],
-            last_name: params["lastname"],
-            username: params["username"].downcase,
-            email: params["email"].downcase,
-            password: params["password"],
+            first_name: payload["firstname"],
+            last_name: payload["lastname"],
+            username: payload["username"].downcase,
+            email: payload["email"].downcase,
+            password: payload["password"],
             **args
           )
           chef_automate.create_user
@@ -49,27 +51,29 @@ module Biscotti
             admin_password: Biscotti::App.settings.automate["credentials"]["admin_password"],
             builder_password: Biscotti::App.settings.automate["credentials"]["builder_password"],
             frontend_url: Biscotti::App.settings.frontend_url,
-            organization: params["organization"].downcase,
-            username: params["username"].downcase,
-            last_name: params["lastname"],
-            first_name: params["firstname"],
-            email: params["email"].downcase,
-            password: params["password"],
+            organization: payload["organization"].downcase,
+            username: payload["username"].downcase,
+            last_name: payload["lastname"],
+            first_name: payload["firstname"],
+            email: payload["email"].downcase,
+            password: payload["password"],
             **args
           )
         end
 
         def register_node
-          Biscotti::NodeRegistration.new(
-            platform: Biscotti::App.settings.platform,
-            platform_uuid: Biscotti::App.settings.biscotti["uuid"],
-            license: "flexible",
-            role: "automate",
-            last_name: params["lastname"],
-            first_name: params["firstname"],
-            email: params["email"].downcase,
-            organization: params["organization"].downcase
-          ).register if params["supportaccount"]
+          if payload["supportaccount"]
+            Biscotti::NodeRegistration.new(
+              platform: Biscotti::App.settings.platform,
+              platform_uuid: Biscotti::App.settings.biscotti["uuid"],
+              license: "flexible",
+              role: "automate",
+              last_name: payload["lastname"],
+              first_name: payload["firstname"],
+              email: payload["email"].downcase,
+              organization: payload["organization"].downcase
+            ).register
+          end
         end
       end
 

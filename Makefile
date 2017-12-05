@@ -69,10 +69,10 @@ shell:
 build-gem:
 	cd ./files/chef-marketplace-gem && gem build chef-marketplace*.gemspec
 
-compile-biscotti-assets:
-	cd ./files/biscotti && npm install && npm run build
+build-biscotti:
+	cd ./files/biscotti && npm cache verify && npm install -g @angular/cli && npm install && ng build
 
-load: compile-biscotti-assets load-biscotti load-cookbook build-gem load-gem load-reckoner load-omnibus-ctl
+load: build-biscotti load-biscotti load-cookbook build-gem load-gem load-reckoner load-omnibus-ctl
 
 load-%:
 	docker-compose exec automate "/shared/scripts/load-$*.sh"

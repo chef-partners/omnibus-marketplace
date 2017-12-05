@@ -7,8 +7,10 @@ development:
     doc_href: "https://docs.chef.io/aws_marketplace.html"
     cloud_marketplace: "AWS Marketplace"
     auth_required: true
+  automate:
     credentials:
-      admin_password: 'AUTOMATEADMINPASSWORD'
+      admin_password: 'adminpassword'
+      builder_password: 'builderpassword'
 
 production:
   biscotti:
@@ -19,5 +21,7 @@ production:
     doc_href: "https://docs.chef.io/aws_marketplace.html"
     cloud_marketplace: "AWS Marketplace"
     auth_required: true
+  automate:
     credentials:
-      admin_password: 'AUTOMATEADMINPASSWORD'
+      admin_password: 'adminpassword'
+      builder_password: 'builderpassword'

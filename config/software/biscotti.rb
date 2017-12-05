@@ -13,6 +13,10 @@ build do
   env["PATH"] = "#{env["PATH"]}:#{install_dir}/embedded/nodejs/bin"
 
   bundle "install --path=#{install_dir}/embedded/service/gem", env: env
-  bundle "exec rake assets:precompile", env: env
+  command "rm -rf node_modules/* && " \
+          "rm -rf package-lock.json && " \
+          "npm install -g @angular/cli && " \
+          "npm install && " \
+          "ng build --prod", env: env
   sync project_dir, "#{install_dir}/embedded/service/biscotti/", exclude: "node_modules"
 end
