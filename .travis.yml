@@ -1,6 +1,6 @@
 branches:
   only:
-  - master
+    - master
 
 dist: trusty
 
@@ -11,14 +11,22 @@ language: ruby
 cache:
   bundler: true
   directories:
-  - "$HOME/tools"
+    - "$HOME/tools"
 
 matrix:
   fast_finish: true
   include:
-  - env:
-    - NAME=syntax-ruby
-    script: bundle exec rake spec
+    - env:
+        - NAME=syntax-ruby
+      script: bundle exec rake spec
+    - env:
+        - NAME=lint-biscotti-frontend
+      language: node_js
+      before_script:
+      script: "cd files/biscotti && npm install && npm install -g @angular/cli && ng lint"
+      cache:
+        directories:
+          - files/biscotti/node_modules
 
 notifications:
   email: false

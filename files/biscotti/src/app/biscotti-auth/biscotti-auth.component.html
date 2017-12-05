@@ -1,0 +1,36 @@
+<mat-card class="biscotti-auth-form">
+  <mat-card-title>
+    Setup Authorization
+  </mat-card-title>
+  <mat-card-subtitle>
+    {{config.message}}
+  </mat-card-subtitle>
+  <form novalidate
+        (ngSubmit)="onSubmit(authForm)"
+        #authForm="ngForm"
+        >
+    <mat-card-content>
+      <mat-form-field>
+        <input matInput
+               placeholder="Enter your {{config.uuidType}}"
+               type="text"
+               name="uuid"
+               required
+               [(ngModel)]="model.uuid"
+               #uuid="ngModel" >
+      </mat-form-field>
+      <mat-error *ngIf="uuid.invalid && uuid.touched">
+        You must enter an {{config.uuidType}}
+      </mat-error>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button
+              color="primary"
+              type="create"
+              [disabled]="!authForm.form.valid || !model.uuid"
+              >
+        Authorize
+      </button>
+    </mat-card-actions>
+  </form>
+</mat-card>
