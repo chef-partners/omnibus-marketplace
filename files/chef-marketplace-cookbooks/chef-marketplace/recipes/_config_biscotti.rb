@@ -8,7 +8,7 @@ when 'automate'
   node.default['chef-marketplace']['biscotti']['redirect_path'] = '/biscotti/setup'
   node.default['chef-marketplace']['automate']['credentials'] = {
     'admin_password' => node['chef-marketplace']['automate']['passwords']['admin_user'],
-    'builder_password' => node['chef-marketplace']['automate']['passwords']['builder_user']
+    'builder_password' => node['chef-marketplace']['automate']['passwords']['builder_user'],
   }
 when 'compliance'
   node.default['chef-marketplace']['biscotti']['nginx']['dir'] = '/var/opt/chef-compliance/nginx'
@@ -32,7 +32,12 @@ node.default['chef-marketplace']['biscotti']['nginx']['scripts_dir'] =
   ::File.join(node['chef-marketplace']['biscotti']['nginx']['dir'], 'etc', 'scripts')
 node.default['chef-marketplace']['biscotti']['nginx']['biscotti_lua_file'] =
   ::File.join(node['chef-marketplace']['biscotti']['nginx']['scripts_dir'], 'biscotti.lua')
-node.default['chef-marketplace']['biscotti']['uuid_type'] = uuid_type
-node.default['chef-marketplace']['biscotti']['uuid'] = uuid
-node.default['chef-marketplace']['biscotti']['message'] =
-  "Please enter your #{uuid_type} to continue to the web interface"
+
+# Authorization related attributes. Right now we only really need these for AWS.
+if node['chef-marketplace']['platform'] == 'aws'
+  node.default['chef-marketplace']['biscotti']['uuid_type'] = uuid_type
+  node.default['chef-marketplace']['biscotti']['uuid'] = uuid
+  node.default['chef-marketplace']['biscotti']['message'] =
+    "To begin configuring Chef Automate, enter the #{uuid_type} for the Ec2 instance. The #{uuid_type} can be found in the AWS Console."
+  node.default['chef-marketplace']['biscotti']['auth_required'] = true
+end

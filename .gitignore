@@ -8,6 +8,10 @@ pkg/*
 bin/*
 files/**/cache/
 files/biscotti/assets/*
+files/biscotti/public/*
+files/biscotti/node_modules/*
 vendor/cookbooks
 automate_arm*.zip
 node_modules/*
+npm-debug.log
+package-lock.json

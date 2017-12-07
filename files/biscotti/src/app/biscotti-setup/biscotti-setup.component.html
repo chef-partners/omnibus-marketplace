@@ -1,0 +1,202 @@
+<div class="biscotti-setup-form-container">
+  <mat-card role="landmark">
+    <mat-card-header *ngIf="!createComplete">
+      <mat-card-title class="biscotti-setup-header">
+        Chef Automate Setup
+      </mat-card-title>
+    </mat-card-header>
+
+      <form novalidate
+            (ngSubmit)="onSubmit(setupForm)"
+            #setupForm="ngForm"
+            >
+        <mat-card-content *ngIf="!submitted">
+          <mat-grid-list cols="4"
+                         rowHeight="80"
+                         >
+            <mat-grid-tile colspan="2"
+                           rowspan="1"
+                           class="biscotti-text-input">
+              <mat-form-field>
+                <input matInput
+                       placeholder="Enter your first name"
+                       type="text"
+                       name="firstName"
+                       required
+                       pattern="[a-zA-Z\s]+"
+                       [(ngModel)]="model.firstname"
+                       #fname="ngModel" >
+                <mat-error *ngIf="fname.invalid && fname.touched">
+                  You must enter a first name. Special characters are not allowed.
+                </mat-error>
+              </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile colspan="2"
+                           rowspan="1"
+                           class="biscotti-text-input">
+              <mat-form-field>
+                <input matInput
+                       placeholder="Enter your last name"
+                       name="lastName"
+                       type="text"
+                       required
+                       pattern="[a-zA-Z\s]+"
+                       [(ngModel)]="model.lastname"
+                       #lname="ngModel">
+                <mat-error *ngIf="lname.invalid && lname.touched && !setupForm.submitted">
+                  You must enter a last name. Special characters are not allowed.
+                </mat-error>
+              </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile colspan="2" rowspan="1" class="biscotti-text-input">
+              <mat-form-field>
+                <input matInput
+                       placeholder="Enter your username"
+                       type="text"
+                       name="username"
+                       required
+                       pattern="[a-zA-Z]+"
+                       [(ngModel)]="model.username"
+                       #uname="ngModel">
+                <mat-error *ngIf="uname.invalid && uname.touched && !setupForm.submitted">
+                  You must enter a username. Special characters and spaces are not allowed.
+                </mat-error>
+              </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile colspan="2" rowspan="1" class="biscotti-text-input">
+              <mat-form-field>
+                <input matInput
+                       placeholder="Enter your email"
+                       type="email"
+                       name="email"
+                       pattern='^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))'
+                       required
+                       email
+                       [(ngModel)]="model.email"
+                       #email="ngModel">
+                <mat-error *ngIf="email.invalid && email.touched && !setupForm.submitted">
+                  You must enter a valid email address.
+                </mat-error>
+              </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile colspan="2" rowspan="1" class="biscotti-text-input">
+              <mat-form-field>
+                <input matInput
+                       placeholder="Enter your password"
+                       type="password"
+                       name="password"
+                       required
+                       minlength="8"
+                       appEqualTo="confirmPassword"
+                       appForwardErrors="true"
+                       [(ngModel)]="model.password"
+                       #password="ngModel">
+                <mat-error *ngIf="password.invalid && password.touched && !setupForm.submitted">
+                  You must enter a password that is at at least 8 characters long
+                </mat-error>
+              </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile colspan="2" rowspan="1" class="biscotti-text-input">
+              <mat-form-field>
+                <input matInput
+                       placeholder="Confirm your password"
+                       type="password"
+                       name="confirmPassword"
+                       required
+                       appEqualTo="password"
+                       [(ngModel)]="confirmPassword"
+                       #confirm="ngModel">
+                <mat-error *ngIf="confirm.invalid && confirm.touched && !setupForm.submitted">
+                  Your passwords must match
+                </mat-error>
+              </mat-form-field>
+            </mat-grid-tile>
+
+          <mat-grid-tile colspan="1" rowspan="1">
+            <mat-slide-toggle [checked]="model.supportaccount"
+                              [(ngModel)]="model.supportaccount"
+                              value="true"
+                              name="supportaccount">
+            </mat-slide-toggle>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="3" rowspan="1">
+            <span>
+               Create a support account to enable the Chef Base Support included with your Chef Automate subscription.
+           </span>
+          </mat-grid-tile>
+
+          <mat-grid-tile colspan="1" rowspan="1">
+            <mat-slide-toggle [checked]="model.eula"
+                              [(ngModel)]="model.eula"
+                              #eula="ngModel"
+                              value="true"
+                              name="eula"
+                              requiredTrue>
+            </mat-slide-toggle>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="3" rowspan="1">
+            <span>
+              I have read and accept the <a href="https://www.chef.io/online-master-agreement/">EULA and Master Agreement</a>
+           </span>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </mat-card-content>
+
+      <mat-card-content *ngIf="submitted && !createComplete">
+        <mat-spinner></mat-spinner>
+      </mat-card-content>
+
+      <mat-card-content *ngIf="createComplete">
+        <p>
+        The starter kit contains everything you need to begin working with Chef Automate and Chef server on the {{config.cloudMarketplace}}.
+        </p>
+        <p>
+        Inside the zip archive you'll find your user and admin credentials to interact with the Chef Automate Web UI, API and Chef Server API. The archive also contains a skeleton Chef server chef-repo that has been populated with knife configuration files that you can use to interact with the Chef server using knife.
+        </p>
+        <p>
+        If you haven't already, download and install the <a target="_blank" href="https://downloads.chef.io/chefdk">ChefDK.</a> The Chef Developer Kit comes with the Ruby runtime and tooling that you'll need for interacting with Chef Automate and Chef server.
+        </p>
+        <p>
+          For general help learning Chef you can visit the <a target="_blank" href="https://learn.chef.io/">Learn Chef tutorials</a>.
+          If you need any further assistance you can find documentation at <a target="_blank" href="{{config.docHref}}">docs.chef.io</a>
+          or contact us at <a href="mailto:support@chef.io">support@chef.io</a>.
+        </p>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="!setupForm.form.valid || !model.eula || submitted"
+                *ngIf="!submitted"
+                >
+          Set Up Chef Automate
+        </button>
+
+        <button mat-raised-button
+                color="primary"
+                type="button"
+                (click)="downloadStarterKit()"
+                [disabled]="!createComplete"
+                *ngIf="submitted"
+                >
+          Download Starter Kit
+        </button>
+
+        <button mat-raised-button
+                type="button"
+                (click)="redirectToLogin()"
+                [disabled]="!downloadComplete"
+                *ngIf="submitted"
+                >
+          Login to Chef Automate
+        </button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</div>

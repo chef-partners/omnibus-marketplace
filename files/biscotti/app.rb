@@ -12,6 +12,7 @@ require "app/routes"
 module Biscotti
   class App < Sinatra::Base
     enable :sessions
+    enable :logging
 
     set public_folder: "public"
 
@@ -24,5 +25,6 @@ module Biscotti
 
     use Biscotti::Routes::Index
     use Biscotti::Routes::Setup
+    use Biscotti::Routes::Config
   end
 end

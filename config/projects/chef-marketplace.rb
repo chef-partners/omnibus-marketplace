@@ -15,7 +15,7 @@ override :ruby, version: "2.4.2"
 # Pin to 13.6.0 until master gets more stable
 override :'chef-gem', version: "13.6.0"
 
-# Ping rubygems to 2.6.x because 2.7.x breaks bundlers gracefull install
+# Pin rubygems to 2.6.x because 2.7.x breaks bundlers gracefull install
 override :rubygems, version: "2.6.14"
 
 dependency "preparation"

@@ -213,6 +213,7 @@ class Marketplace
             'uuid_type' => node['chef-marketplace']['biscotti']['uuid_type'],
             'token' => node['chef-marketplace']['biscotti']['token'],
             'doc_href' => node['chef-marketplace']['documentation']['url'],
+            'auth_required' => node['chef-marketplace']['biscotti']['auth_required'],
             'cloud_marketplace' => cloud_marketplace_name,
             'redirect_path' => node['chef-marketplace']['biscotti']['redirect_path']
           },

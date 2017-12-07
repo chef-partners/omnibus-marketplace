@@ -1,0 +1,77 @@
+$bold-weight: 700;
+$regular-weight: 400;
+$light-weight: 300;
+
+@font-face {
+  font-family: "MuliBold";
+  src: url("/assets/fonts/muli/Muli-Bold.ttf");
+  font-weight: $bold-weight;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Muli";
+  src: url("/assets/fonts/muli/Muli-Regular.ttf");
+  font-weight: $regular-weight;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "MuliItalic";
+  src: url("/assets/fonts/muli/Muli-Italic.ttf");
+  font-weight: $regular-weight;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "MuliLight";
+  src: url("/assets/fonts/muli/Muli-Light.ttf");
+  font-weight: $light-weight;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "MuliLightItalic";
+  src: url("/assets/fonts/muli/Muli-LightItalic.ttf");
+  font-weight: $light-weight;
+  font-style: italic;
+}
+
+.regular {
+  font-family: 'Muli', arial, sans-serif;
+  font-weight: $regular-weight;
+  font-style: normal;
+}
+
+.light {
+  font-family: 'MuliLight', arial, sans-serif;
+  font-weight: $light-weight;
+  font-style: normal;
+}
+
+.light-italic {
+  font-family: 'MuliLightItalic', arial, sans-serif;
+  font-weight: $light-weight;
+  font-style: italic;
+}
+
+.italic {
+  font-family: 'MuliRegularItalic', arial, sans-serif;
+  font-weight: $light-weight;
+  font-style: italic;
+}
+
+.strong {
+  font-family: 'MuliBold', arial, sans-serif;
+  font-weight: $bold-weight;
+  font-style: normal;
+}
+
+.strong-italic {
+  font-family: 'MuliBoldItalic', arial, sans-serif;
+  font-weight: $bold-weight;
+  font-style: italic;
+}
+
+$font-family: 'Muli', Helvetica, Arial, sans-serif;
+$base-font-size: 16px;

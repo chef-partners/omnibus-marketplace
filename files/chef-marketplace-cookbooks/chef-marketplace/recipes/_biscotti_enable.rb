@@ -24,13 +24,10 @@ nginx_biscotti_external =
   end
 end
 
-template nginx_biscotti_lua do
-  source "biscotti.lua.erb"
-  owner "root"
-  group "root"
-  mode "0644"
-  action :create
-  variables(token_hmac: biscotti_token_hmac)
+# Auth is done entirely in the setup app now, therefore we can remove the
+# old lua cookie authorization.
+file nginx_biscotti_lua do
+  action :delete
 end
 
 template nginx_biscotti_upstream do

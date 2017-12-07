@@ -1,0 +1,7 @@
+<div *ngIf="config.message; else loading">
+  <app-biscotti-auth *ngIf="showAuth()"></app-biscotti-auth>
+  <app-biscotti-setup *ngIf="showSetup()"></app-biscotti-setup>
+</div>
+<ng-template #loading>
+  <mat-spinner class="app-loading"></mat-spinner>
+</ng-template>

@@ -6,6 +6,7 @@ development:
     uuid: 'i-1234abcd'
     doc_href: "https://docs.chef.io/aws_marketplace.html"
     cloud_marketplace: "AWS Marketplace"
+    auth_required: true
     credentials:
       admin_password: 'AUTOMATEADMINPASSWORD'
 
@@ -17,5 +18,6 @@ production:
     uuid: 'i-1234abcd'
     doc_href: "https://docs.chef.io/aws_marketplace.html"
     cloud_marketplace: "AWS Marketplace"
+    auth_required: true
     credentials:
       admin_password: 'AUTOMATEADMINPASSWORD'
