@@ -18,6 +18,9 @@ override :'chef-gem', version: "13.6.0"
 # Pin rubygems to 2.6.x because 2.7.x breaks bundlers gracefull install
 override :rubygems, version: "2.6.14"
 
+# Master points to an unreleased chef version (in current)
+override :'berkshelf-no-depselector', version: "v6.3.1"
+
 dependency "preparation"
 dependency "postgresql92" # only the client
 dependency "sequel-gem"
