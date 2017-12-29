@@ -38,7 +38,8 @@ describe Marketplace::Reckoner::Updater::Ec2 do
 
     allow(Aws::MarketplaceMetering::Client).to receive(:new).with(region: "us-west-2").and_return(usage_meter)
     allow(Net::HTTP).to receive(:get_response).and_return(httpok)
-    allow(Time).to receive_message_chain(:now, :utc).and_return(time)
+    allow(Time).to receive(:now).and_call_original
+    allow(Time).to receive(:now).and_return(time)
     allow(updater).to receive(:load_credentials).and_return(true)
   end
 
