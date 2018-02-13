@@ -105,7 +105,7 @@ class Marketplace
         "--password=#{passwords['admin_user'].shellescape}",          # admin password
         "--builder-password=#{passwords['builder_user'].shellescape}" # builder password
       ].join(" ")
-      retry_command(create_ent, retries: 1)
+      retry_command(create_ent, retries: 3, seconds: 10)
     end
 
     #
