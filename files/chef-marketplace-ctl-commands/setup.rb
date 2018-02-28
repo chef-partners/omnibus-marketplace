@@ -7,6 +7,7 @@ add_command_under_category "setup", "Setup", "Set up the Chef Server Marketplace
   options.preconfigure = false
   options.license_url = nil
   options.license_base64 = nil
+  options.debug = false
 
   OptionParser.new do |opts|
     opts.banner = "Usage: chef-marketplace-ctl setup [options]"
@@ -58,6 +59,10 @@ add_command_under_category "setup", "Setup", "Set up the Chef Server Marketplace
 
     opts.on("--license-base64 ENCODED_LICENSE", "A base64 enconded Chef Automate license") do |license|
       options.license_base64 = license
+    end
+
+    opts.on("--debug", "Enable debug logging output.") do
+      options.debug = true
     end
 
     opts.on("-h", "--help", "Show this message") do
