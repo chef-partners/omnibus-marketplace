@@ -97,6 +97,11 @@ class Marketplace
       ].join(" ")
       retry_command(create_org, retries: 1)
 
+      # Try to wait for automate to come up before attempting to create the
+      # automate enterprise. This has the added bonus of being able to log
+      # the state of all the services while we wait.
+      retry_command("delivery-ctl status", retries: 60, seconds: 2) # Wait up to two minutes.
+
       # create automate enterprise
       create_ent = [
         "delivery-ctl create-enterprise",
@@ -367,6 +372,7 @@ class Marketplace
       retries.times do
         command = Mixlib::ShellOut.new(cmd)
         command.environment = env unless env.empty?
+        command.live_stream = STDOUT if options.debug
         command.run_command
         return unless command.error?
         ui.say("#{cmd} failed, retrying...")
