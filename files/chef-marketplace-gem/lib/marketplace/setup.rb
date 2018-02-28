@@ -77,24 +77,25 @@ class Marketplace
       # * determine correct email
       # * create user with existing delivery.{pem,pub}
       create_user = [
-        "chef-server-ctl user-create",
-        "delivery",                         # options.username.to_s.shellescape,
-        "Automate",                         # options.first_name.to_s.shellescape,
-        "User",                             # options.last_name.to_s.shellescape,
-        "automate@chef.io",                 # options.email.to_s.shellescape,
-        passwords["chef_user"].shellescape, # options.password.to_s.shellescape
-        "-f /etc/delivery/delivery.pem",
-      ].join(" ")
+        "chef-server-ctl",
+        "user-create",
+        "delivery",                         # options.username,
+        "Automate",                         # options.first_name,
+        "User",                             # options.last_name,
+        "automate@chef.io",                 # options.email,
+        passwords["chef_user"],             # options.password
+        "-f", "/etc/delivery/delivery.pem",
+      ].shelljoin
       retry_command(create_user, retries: 1)
 
       # create chef server org
       create_org = [
-        "chef-server-ctl org-create",
-        "delivery", # options.organization.to_s.shellescape,
-        "delivery", # options.organization.to_s.shellescape,
-        "-a",
-        "delivery"  # options.username.to_s.shellescape
-      ].join(" ")
+        "chef-server-ctl",
+        "org-create",
+        "delivery",       # options.organization,
+        "delivery",       # options.organization,
+        "-a", "delivery"  # options.username
+      ].shelljoin
       retry_command(create_org, retries: 1)
 
       # Try to wait for automate to come up before attempting to create the
@@ -104,12 +105,13 @@ class Marketplace
 
       # create automate enterprise
       create_ent = [
-        "delivery-ctl create-enterprise",
+        "delivery-ctl",
+        "create-enterprise",
         "default",                                                    # enterprise name
         "--ssh-pub-key-file=/etc/delivery/builder.pub",               # builder public key
-        "--password=#{passwords['admin_user'].shellescape}",          # admin password
-        "--builder-password=#{passwords['builder_user'].shellescape}" # builder password
-      ].join(" ")
+        "--password=#{passwords['admin_user']}",                      # admin password
+        "--builder-password=#{passwords['builder_user']}"             # builder password
+      ].shelljoin
       retry_command(create_ent, retries: 3, seconds: 10)
     end
 
