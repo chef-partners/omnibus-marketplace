@@ -32,10 +32,14 @@ open("/etc/chef-marketplace/marketplace.rb", "a") do |config|
   config.puts(%Q{api_fqdn "#{@fqdn}"})
 end
 
+environment = {
+  'HOME' => '/root'
+}
+
 # Configure the hostname
-hostname = Mixlib::ShellOut.new("chef-marketplace-ctl hostname #{@fqdn}")
+hostname = Mixlib::ShellOut.new("chef-marketplace-ctl hostname #{@fqdn}", env: environment)
 hostname.run_command
 
 # Configure Automate
-configure = Mixlib::ShellOut.new("chef-marketplace-ctl setup --preconfigure")
+configure = Mixlib::ShellOut.new("chef-marketplace-ctl setup --preconfigure", env: environment)
 configure.run_command
