@@ -253,6 +253,7 @@ Resources:
           - |+
 
           - - '#!/bin/bash -ex'
+            - export HOME=/root
             - !If
               - HasLicenseUrl
               - !Sub >-

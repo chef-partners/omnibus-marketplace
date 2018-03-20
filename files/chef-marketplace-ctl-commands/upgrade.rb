@@ -1,5 +1,7 @@
 require "json"
 
+RELEASE_CHANNELS = %w(unstable current stable)
+
 add_command_under_category "upgrade", "Maintenance", "Upgrade or install Chef software", 2 do
   config = {
     "chef-marketplace" => {
@@ -62,6 +64,10 @@ add_command_under_category "upgrade", "Maintenance", "Upgrade or install Chef so
 
     opts.on("-d", "--automate", "Upgrade Chef Automate") do
       config["chef-marketplace"]["upgrade_packages"] << "automate"
+    end
+
+    opts.on("-r RELEASE_CHANNEL", "--channel RELEASE_CHANNEL", RELEASE_CHANNELS, "Release channel to use for downloading packages to install") do |channel|
+      config["chef-marketplace"]["update_channel"] = channel.to_sym
     end
 
     opts.on("-h", "--help", "Show this message") do

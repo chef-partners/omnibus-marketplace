@@ -16,6 +16,7 @@ default["chef-marketplace"].tap do |m|
   m["platform"] = "aws"
   m["user"] = "ec2-user"
   m["api_ssl_port"] = 443
+  m["update_channel"] = :stable
   m["reporting"]["cron"]["enabled"] = true
   m["reporting"]["cron"]["expression"] = "0 0 * * *"
   m["reporting"]["cron"]["year"] = "date +%Y"
