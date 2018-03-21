@@ -1,5 +1,13 @@
 # Chef Marketplace Changelog
+<!-- usage documentation: http://expeditor-docs.es.chef.io/configuration/changelog/ -->
+<!-- latest_release -->
+<!-- latest_release -->
 
+<!-- release_rollup -->
+<!-- release_rollup -->
+
+<!-- latest_stable_release -->
+<!-- latest_stable_release -->
 # 0.0.12 (2016-05-26)
 
 ## chef-marketplace-cookbooks
