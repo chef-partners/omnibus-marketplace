@@ -3,11 +3,15 @@
 <!-- latest_release -->
 <!-- latest_release -->
 
-<!-- release_rollup -->
+<!-- release_rollup since=0.3.1 -->
+### Changes since 0.3.1 release
 <!-- release_rollup -->
 
 <!-- latest_stable_release -->
+## [0.3.1](https://github.com/chef-partners/omnibus-marketplace/tree/0.3.1) (2018-03-22)
 <!-- latest_stable_release -->
+
+
 # 0.0.12 (2016-05-26)
 
 ## chef-marketplace-cookbooks
