@@ -10,7 +10,7 @@ build_iteration 1
 
 # NOTE: If you update ruby's minor version make sure you update the gem install
 #       paths in the other software definitions.
-override :ruby, version: "2.4.2"
+override :ruby, version: "2.4.3"
 
 # Pin to 13.6.0 until master gets more stable
 override :'chef-gem', version: "13.6.0"
