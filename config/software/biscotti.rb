@@ -14,7 +14,6 @@ build do
 
   bundle "install --path=#{install_dir}/embedded/service/gem", env: env
   command "rm -rf node_modules/* && " \
-          "rm -rf package-lock.json && " \
           "npm install -g @angular/cli && " \
           "npm install && " \
           "ng build --prod", env: env
