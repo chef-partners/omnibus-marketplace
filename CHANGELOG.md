@@ -1,9 +1,17 @@
 # Chef Marketplace Changelog
 <!-- usage documentation: http://expeditor-docs.es.chef.io/configuration/changelog/ -->
-<!-- latest_release -->
+<!-- latest_release 0.3.4 -->
+## [0.3.4](https://github.com/chef-partners/omnibus-marketplace/tree/0.3.4) (2018-03-28)
+
+#### Merged Pull Requests
+- Update AMIs in cloudformation template. [#113](https://github.com/chef-partners/omnibus-marketplace/pull/113) ([rhass](https://github.com/rhass))
 <!-- latest_release -->
 
-<!-- release_rollup -->
+<!-- release_rollup since=0.3.3 -->
+### Changes since 0.3.3 release
+
+#### Merged Pull Requests
+- Update AMIs in cloudformation template. [#113](https://github.com/chef-partners/omnibus-marketplace/pull/113) ([rhass](https://github.com/rhass)) <!-- 0.3.4 -->
 <!-- release_rollup -->
 
 <!-- latest_stable_release -->
