@@ -1,22 +1,19 @@
 # Chef Marketplace Changelog
 <!-- usage documentation: http://expeditor-docs.es.chef.io/configuration/changelog/ -->
-<!-- latest_release 0.3.3 -->
+<!-- latest_release -->
+<!-- latest_release -->
+
+<!-- release_rollup -->
+<!-- release_rollup -->
+
+<!-- latest_stable_release -->
 ## [0.3.3](https://github.com/chef-partners/omnibus-marketplace/tree/0.3.3) (2018-03-28)
 
 #### Merged Pull Requests
 - Fix regression with downloading Starter Kit [#112](https://github.com/chef-partners/omnibus-marketplace/pull/112) ([rhass](https://github.com/rhass))
-<!-- latest_release -->
-
-<!-- release_rollup since=0.3.1 -->
-### Changes since 0.3.1 release
-
-#### Merged Pull Requests
-- Fix regression with downloading Starter Kit [#112](https://github.com/chef-partners/omnibus-marketplace/pull/112) ([rhass](https://github.com/rhass)) <!-- 0.3.3 -->
-<!-- release_rollup -->
-
 <!-- latest_stable_release -->
+
 ## [0.3.1](https://github.com/chef-partners/omnibus-marketplace/tree/0.3.1) (2018-03-22)
-<!-- latest_stable_release -->
 
 
 # 0.0.12 (2016-05-26)
