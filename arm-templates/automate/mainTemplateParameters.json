@@ -27,7 +27,7 @@
       "value": ""
     },
     "imageProduct": {
-      "value": "chef-automate-vm-image"
+      "value": "chef-automate-vm-image-preview"
     },
     "imageSKU": {
       "value": "byol"
@@ -93,7 +93,7 @@
       "value": "Standard_D2_v2"
     },
     "baseUrl": {
-      "value": "https://raw.githubusercontent.com/chef-partners/omnibus-marketplace/master/arm-templates/automate"
+      "value": "https://raw.githubusercontent.com/chef-partners/omnibus-marketplace/azure-test/arm-templates/automate/"
     }
   }
 }
