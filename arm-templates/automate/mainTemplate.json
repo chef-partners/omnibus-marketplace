@@ -205,7 +205,7 @@
         "description": "Base URL for dependent assets",
         "artifactsBaseUrl": ""
       },
-      "defaultValue": "https://raw.githubusercontent.com/chef-partners/omnibus-marketplace/master/arm-templates/automate"
+      "defaultValue": "https://raw.githubusercontent.com/chef-partners/omnibus-marketplace/azure-baseline/arm-templates/automate"
     }
   },
   "variables": {
