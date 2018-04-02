@@ -37,9 +37,12 @@ environment = {
 }
 
 # Configure the hostname
-hostname = Mixlib::ShellOut.new("chef-marketplace-ctl hostname #{@fqdn}", env: environment)
+hostname = Mixlib::ShellOut.new("chef-marketplace-ctl hostname #{@fqdn}")
+hostname.environment = environment
 hostname.run_command
 
 # Configure Automate
-configure = Mixlib::ShellOut.new("chef-marketplace-ctl setup --preconfigure", env: environment)
+configure = Mixlib::ShellOut.new("chef-marketplace-ctl setup --preconfigure --debug")
+configure.environment = environment
+configure.timeout = 1200
 configure.run_command

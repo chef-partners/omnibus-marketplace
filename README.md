@@ -209,6 +209,11 @@ TODO: Add documentation regarding the `reckoner` martketplace service.
 
 Azure Solution Template
 ----------------------
+The Azure Solution Template defines the scripts and configuration used by the
+Azure Marketplace to create and configure an Chef Automate instance in Azure.
+This is akin the CloudFormation template used by the AWS Marketplace. This
+template does not include the machine image itself.
+ 
 With the Chef Automate Azure Marketplace offering we decided to take a simpler
 approach to the marketplace offering and limit the scope to a single Azure
 Solution Template for provisioning and configuring a BYOL Chef Automate
@@ -275,7 +280,7 @@ Use `make arm-validate` to validate the ARM template via the ARM API and verify
 that the the UI definition schema validates against the JSON schema. *You must
 fix _any_ errors here in order to publish.*
 
-Use `make-ui-test-href` to generate an Azure Portal href that you can paste into
+Use `make arm-ui-test-href` to generate an Azure Portal href that you can paste into
 your browsers address bar to open your UI Definition in the Azure Portal. This
 is useful because you can iterate on a UI definition quickly without requiring
 a staged Solution Template. It's also conveninent as it doesn't initiate an ARM

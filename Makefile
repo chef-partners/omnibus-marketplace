@@ -18,7 +18,7 @@ rebuild-all:
 	docker-compose stop && \
 	docker-compose rm -fv && \
 	docker-compose build --no-cache && \
-	docker-compose up -d
+	docker-compose up
 
 login-%:
 	docker-compose exec $* bash
@@ -27,7 +27,7 @@ rebuild-%:
 	docker-compose stop $* && \
 	docker-compose rm -fv $* && \
 	docker-compose build --no-cache $* && \
-	docker-compose up -d $*
+	docker-compose up $*
 
 down:
 	docker-compose down --rmi all --volumes --remove-orphans

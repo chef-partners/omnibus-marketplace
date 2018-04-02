@@ -5,7 +5,7 @@ require('load-grunt-tasks')(grunt);
 var branch=process.env.sourcebranch;
 var folder=grunt.option('folder')||branch||'.';
 var solutionjsonfiles = [`${folder}/**/*.json`,`!${folder}/node_modules/**/*.json`];
-var createUIDefinition=`${folder}/createUIDefinition.json`;
+var createUIDefinition=`${folder}/createUiDefinition.json`;
 
 grunt.initConfig({
     fileExists: {
