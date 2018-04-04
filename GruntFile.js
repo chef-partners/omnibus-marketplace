@@ -5,13 +5,13 @@ require('load-grunt-tasks')(grunt);
 var branch=process.env.sourcebranch;
 var folder=grunt.option('folder')||branch||'.';
 var solutionjsonfiles = [`${folder}/**/*.json`,`!${folder}/node_modules/**/*.json`];
-var createUIDefinition=`${folder}/createUIDefinition.json`;
+var createUiDefinition=`${folder}/createUiDefinition.json`;
 
 grunt.initConfig({
     fileExists: {
             scripts: [`${folder}/mainTemplate.json`]
     },
-    uidef: grunt.file.readJSON(createUIDefinition),
+    uidef: grunt.file.readJSON(createUiDefinition),
     jsonlint: {
         all: {
             src: solutionjsonfiles
@@ -24,7 +24,7 @@ grunt.initConfig({
             banUnknownProperties: true
         },
         myTarget: {
-            src: [createUIDefinition]
+            src: [createUiDefinition]
         }
     }
 });
