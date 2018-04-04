@@ -1,6 +1,8 @@
 #!/bin/bash
+export HOME="/root"
+
 mkdir -p /var/opt/chef-marketplace/
 touch /var/opt/chef-marketplace/cloud_init_running
-chef-marketplace-ctl setup --preconfigure
-touch /var/opt/chef-marketplace/preconfigured
+chef-marketplace-ctl setup --preconfigure && touch /var/opt/chef-marketplace/preconfigured
+
 rm -rf /var/opt/chef-marketplace/cloud_init_running
