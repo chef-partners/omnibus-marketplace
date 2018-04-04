@@ -1,16 +1,17 @@
 # Chef Marketplace Changelog
 <!-- usage documentation: http://expeditor-docs.es.chef.io/configuration/changelog/ -->
-<!-- latest_release 0.3.6 -->
-## [0.3.6](https://github.com/chef-partners/omnibus-marketplace/tree/0.3.6) (2018-04-04)
+<!-- latest_release 0.3.7 -->
+## [0.3.7](https://github.com/chef-partners/omnibus-marketplace/tree/0.3.7) (2018-04-04)
 
 #### Merged Pull Requests
-- Bug Fixes for Azure and AWS Metered [#115](https://github.com/chef-partners/omnibus-marketplace/pull/115) ([rhass](https://github.com/rhass))
+- Trigger release builds on merge. [#116](https://github.com/chef-partners/omnibus-marketplace/pull/116) ([rhass](https://github.com/rhass))
 <!-- latest_release -->
 
 <!-- release_rollup since=0.3.3 -->
 ### Changes since 0.3.3 release
 
 #### Merged Pull Requests
+- Trigger release builds on merge. [#116](https://github.com/chef-partners/omnibus-marketplace/pull/116) ([rhass](https://github.com/rhass)) <!-- 0.3.7 -->
 - Bug Fixes for Azure and AWS Metered [#115](https://github.com/chef-partners/omnibus-marketplace/pull/115) ([rhass](https://github.com/rhass)) <!-- 0.3.6 -->
 - Increase timeout during preconfigure in Azure. [#114](https://github.com/chef-partners/omnibus-marketplace/pull/114) ([rhass](https://github.com/rhass)) <!-- 0.3.5 -->
 - Update AMIs in cloudformation template. [#113](https://github.com/chef-partners/omnibus-marketplace/pull/113) ([rhass](https://github.com/rhass)) <!-- 0.3.4 -->
