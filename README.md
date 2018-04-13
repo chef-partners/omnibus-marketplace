@@ -133,6 +133,7 @@ While this command can still be used the web based setup is preferred.
 * `--register` Agree to register the node with Chef Software
 * `--eula` Agree to Chef Software's End User License Agreement
 * `--preconfigure` Preconfigure the requires services
+* `--debug` Output logs from executed commands to STDOUT.
 * `-h, --help` Display help information
 
 ### Reconfigure
@@ -199,6 +200,74 @@ state, and shell history.
 successful package installation and working build. This is run in our development
 continuous delivery pipeline to ensure the package works as expected.
 
+### Debugging
+The`setup` subcommand has a `--debug` option which can be used to get detailed 
+output from all the commands run during the preconfigure process. This can be
+added to the Azure ARM template or AWS CloudFormation template as needed.
+
+#### Azure
+Logs from the ARM template script can be found here:
+`/var/log/azure/Microsoft.OSTCExtensions.CustomScriptForLinux/1.5.2.2/extension.log`
+
+The script itself can be found here:
+`/var/lib/waagent/Microsoft.OSTCExtensions.CustomScriptForLinux-1.5.2.2/download/0/`
+
+##### Adding debug option
+To add the `--debug` flag, you will need to modify the command executed here:
+https://github.com/chef-partners/omnibus-marketplace/blob/master/arm-templates/automate/automate_setup.rb#L45
+
+#### AWS
+We currently have to offerings in AWS which operate slightly differenly in the
+manner in which they are provisioned. The BYOL version uses CloudFormation,
+while the Metered offering includes a pre-baked init script. With the
+CloudFormation template, you can make the change and test with no other
+modifications or actions required.
+
+However, since the metered version has the scriped baked into the AMI,
+both a new version of the chef-marketplace and a new AMI build will be required 
+to be able to use the change.
+
+##### Adding the debug option
+###### BYOL
+To add the `--debug` flag, you will need to modify the CloudFormation template similar
+to the example below:
+
+```
+--- a/cloudformation/marketplace_byol.yml
++++ b/cloudformation/marketplace_byol.yml
+@@ -257,7 +257,7 @@ Resources:
+             - !If
+               - HasLicenseUrl
+               - !Sub >-
+-                chef-marketplace-ctl setup --preconfigure --license-url ${LicenseUrl}
++                chef-marketplace-ctl setup --preconfigure --license-url ${LicenseUrl} --debug 2>&1 >/var/log/cfn-userdata.log
+               - chef-marketplace-ctl setup --preconfigure
+```
+
+It may also be helpful to change the `cfn-signal` command to always return `0`
+rather than `$?` if your instance is getting terminated due to a failure.
+
+Warning: The output will contain sensitive information such as private keys.
+Do not keep this flag enabled for production deployments.
+
+###### Metered
+To add the `--debug` flag to a metered AMI, modify the preconfigure command here:
+
+https://github.com/chef-partners/omnibus-marketplace/blob/master/files/chef-marketplace-cookbooks/chef-marketplace/templates/default/chef-marketplace-cloud-init-setup.erb
+
+The following is an example of the required change:
+```
+--- a/files/chef-marketplace-cookbooks/chef-marketplace/templates/default/chef-marketplace-cloud-init-setup.erb
++++ b/files/chef-marketplace-cookbooks/chef-marketplace/templates/default/chef-marketplace-cloud-init-setup.erb
+@@ -3,6 +3,7 @@ export HOME="/root"
+ 
+ mkdir -p /var/opt/chef-marketplace/
+ touch /var/opt/chef-marketplace/cloud_init_running
+-chef-marketplace-ctl setup --preconfigure && touch /var/opt/chef-marketplace/preconfigured
++chef-marketplace-ctl setup --preconfigure --debug 2>&1 >>/var/log/userdata.log && \
++touch /var/opt/chef-marketplace/preconfigured
+```
+
 Biscotti Sevice
 ---------------
 TODO: Add documentation regarding the `biscotti` martketplace service.
@@ -252,6 +321,9 @@ azure group deployment create \
   -g yournewresourcegroup
 ```
 
+
+
+
 ### Developing the template
 The Azure Marketplace Solution Template comprises of a UI definition, a
 corresponding Azure Resource Manager(ARM) template, and any included ARM
@@ -271,6 +343,11 @@ a feature branch and update the the `baseUrl` parameter in
 `arm-templates/automate/mainTemplateParameters.json` to be your new feature
 branch.
 
+You may to create the deployment group before you can test any changes. To do
+this run, `azure group create -n automatearmtest -l eastus` or 
+`az group create --name automatearmtest -l "East US"` depending on the Azure CLI
+version you are using.
+
 Use `make arm-validate` to validate the ARM template via the ARM API and verify
 that the the UI definition schema validates against the JSON schema. *You must
 fix _any_ errors here in order to publish.*
@@ -287,6 +364,20 @@ definition match the ARM template parameters.
 Use `make arm-run-test-matrix` to run the full test matrix to ensure there are
 no regressions. This can take a few hours.
 
+#### Configuring the Azure Instance type
+In some cases you will find a need to configure a specific Azure instance type.
+This can be done by setting the value for `vmSize` in
+`arm-templates/automate/mainTemplateParameters.json`.
+
+#### Launching a Single Instance
+To create a single Azure instance for testing, you can run the command:
+`make arm-test`. This VM instance can be found in the Azure account under the
+resource group `automatearmtest`.
+
+The SSH username and password can be found in the `adminUsername` and 
+`adminPassword` parameters of the `arm-templates/automate/mainTemplateParameters.json`
+file.
+
 ### Publishing the template
 In order to publish the template all work on the feature branch must be merged
 to master. After this has happened you will need to create a Solution Template
@@ -296,13 +387,17 @@ and extensions that the ARM template requires.
 #### Stage published template
 Use `make arm-publish` to validate the template and create a zip file.
 
-Login to the [Azure publishing portal](http://publish.windowsazure.com), locate
-the Chef Automate Solution Template.
-
-Use the `TOPOLOGIES` section to create a new version and upload the Solution
-Template zip file.
-
-Use the `PUBLISH` section to push the new version to staging.
+1. Login to the [Azure Cloud Partner Portal](https://cloudpartner.azure.com)
+1. Go the "All offers" section.
+1. Choose "Chef Automate" from the list of offers. Note the ARM Solution Template
+is a different offer than the VM image.
+1. From the "Chef Automate" offer, click on the "SKUs" section and select the 
+"allinone" sku.
+1. Scroll to the bottom of "Package Details" and click "New Package."
+1. Provide a version for the ARM template and click "Upload." Select the zip file
+artifact generated by `make arm-publish`.
+1. Click "Save."
+1. Click "Publish."
 
 After the staging has completed (can be several hours to several days) you will
 need to test the template.
