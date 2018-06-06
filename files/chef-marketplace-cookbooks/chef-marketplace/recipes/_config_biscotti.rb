@@ -21,7 +21,7 @@ uuid_type, uuid =
   when 'google'
     ['Project Name', node['gce']['project']['projectId']]
   when 'azure'
-    ['VM Name', node['hostname']]
+    ['vmId', node['azure']['metadata']['compute']['vmId']]
   else # aws, testing
     ['Instance ID', node['ec2']['instance_id']]
   end
@@ -33,11 +33,20 @@ node.default['chef-marketplace']['biscotti']['nginx']['scripts_dir'] =
 node.default['chef-marketplace']['biscotti']['nginx']['biscotti_lua_file'] =
   ::File.join(node['chef-marketplace']['biscotti']['nginx']['scripts_dir'], 'biscotti.lua')
 
+node.default['chef-marketplace']['biscotti']['uuid_type'] = uuid_type
+node.default['chef-marketplace']['biscotti']['uuid'] = uuid
+
 # Authorization related attributes. Right now we only really need these for AWS.
-if node['chef-marketplace']['platform'] == 'aws'
-  node.default['chef-marketplace']['biscotti']['uuid_type'] = uuid_type
-  node.default['chef-marketplace']['biscotti']['uuid'] = uuid
+case node['chef-marketplace']['platform']
+when 'aws'
   node.default['chef-marketplace']['biscotti']['message'] =
     "To begin configuring Chef Automate, enter the #{uuid_type} for the Ec2 instance. The #{uuid_type} can be found in the AWS Console."
   node.default['chef-marketplace']['biscotti']['auth_required'] = true
+when 'azure'
+  node.default['chef-marketplace']['biscotti']['message'] = "To begin configuring Chef Automate, enter the Azure unique vmId. The vmId can be found by logging into the instance and running the command: `sudo chef-marketplace-ctl show-instance-id`"
+
+  node.default['chef-marketplace']['biscotti']['auth_required'] = true
+else
+  node.default['chef-marketplace']['biscotti']['message'] = "#{node['chef-marketplace']['platform']} is not a supported cloud provider."
+  node.default['chef-marketplace']['biscotti']['auth_required'] = false
 end
