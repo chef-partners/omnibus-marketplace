@@ -1,21 +1,19 @@
 # Chef Marketplace Changelog
 <!-- usage documentation: http://expeditor-docs.es.chef.io/configuration/changelog/ -->
-<!-- latest_release 0.3.9 -->
-## [0.3.9](https://github.com/chef-partners/omnibus-marketplace/tree/0.3.9) (2018-06-06)
-
-#### Merged Pull Requests
-- Fix biscotti on Azure [#118](https://github.com/chef-partners/omnibus-marketplace/pull/118) ([rhass](https://github.com/rhass))
+<!-- latest_release -->
 <!-- latest_release -->
 
-<!-- release_rollup since=0.3.7 -->
-### Changes since 0.3.7 release
-
-#### Merged Pull Requests
-- Fix biscotti on Azure [#118](https://github.com/chef-partners/omnibus-marketplace/pull/118) ([rhass](https://github.com/rhass)) <!-- 0.3.9 -->
-- Improve and update documentation. [#117](https://github.com/chef-partners/omnibus-marketplace/pull/117) ([rhass](https://github.com/rhass)) <!-- 0.3.8 -->
+<!-- release_rollup -->
 <!-- release_rollup -->
 
 <!-- latest_stable_release -->
+## [0.3.9](https://github.com/chef-partners/omnibus-marketplace/tree/0.3.9) (2018-06-06)
+
+#### Merged Pull Requests
+- Improve and update documentation. [#117](https://github.com/chef-partners/omnibus-marketplace/pull/117) ([rhass](https://github.com/rhass))
+- Fix biscotti on Azure [#118](https://github.com/chef-partners/omnibus-marketplace/pull/118) ([rhass](https://github.com/rhass))
+<!-- latest_stable_release -->
+
 ## [0.3.7](https://github.com/chef-partners/omnibus-marketplace/tree/0.3.7) (2018-04-05)
 
 #### Merged Pull Requests
@@ -23,7 +21,6 @@
 - Increase timeout during preconfigure in Azure. [#114](https://github.com/chef-partners/omnibus-marketplace/pull/114) ([rhass](https://github.com/rhass))
 - Bug Fixes for Azure and AWS Metered [#115](https://github.com/chef-partners/omnibus-marketplace/pull/115) ([rhass](https://github.com/rhass))
 - Trigger release builds on merge. [#116](https://github.com/chef-partners/omnibus-marketplace/pull/116) ([rhass](https://github.com/rhass))
-<!-- latest_stable_release -->
 
 ## [0.3.3](https://github.com/chef-partners/omnibus-marketplace/tree/0.3.3) (2018-03-28)
 
