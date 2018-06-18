@@ -14,7 +14,7 @@ directory "/var/log/chef-marketplace/reckoner" do
   action :create
 end
 
-template "/var/opt/chef-marketplace/reckoner/etc/reckoner.rb" do
+template node["chef-marketplace"]["reckoner"]["config_file"] do
   source "reckoner.rb.erb"
   owner "root"
   group "root"
@@ -24,7 +24,7 @@ template "/var/opt/chef-marketplace/reckoner/etc/reckoner.rb" do
 end
 
 link "/opt/chef-marketplace/embedded/service/reckoner/conf/reckoner.rb" do
-  to "/var/opt/chef-marketplace/reckoner/etc/reckoner.rb"
+  to node["chef-marketplace"]["reckoner"]["config_file"]
 end
 
 component_runit_service "reckoner" do

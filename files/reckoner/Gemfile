@@ -1,8 +1,5 @@
 source "https://rubygems.org"
 
-gem "chef", "~>13"
-gem "chef-marketplace" #, path: File.expand_path("../chef-marketplace-gem")
-gem "pg"
-gem "clockwork"
-gem "elasticsearch"
-gem "aws-sdk", "~> 2"
+gemspec
+
+gem "chef-marketplace", path: File.expand_path("../chef-marketplace-gem")

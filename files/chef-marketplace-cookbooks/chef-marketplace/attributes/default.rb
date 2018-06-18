@@ -38,6 +38,7 @@ default["chef-marketplace"].tap do |m|
   # These are used by the enterprise-chef-common cookbook
   m["sysvinit_id"] = "MP"
   m["install_path"] = "/opt/chef-marketplace"
+  m["reckoner"]["config_file"] = "/var/opt/chef-marketplace/reckoner/etc/reckoner.rb"
   m["reckoner"]["log_directory"] = "/var/log/chef-marketplace/reckoner"
   m["reckoner"]["log_rotation"]["file_maxbytes"] = 104_857_600
   m["reckoner"]["log_rotation"]["num_to_keep"] = 10
