@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "activesupport",     "~> 5.2"
   s.add_dependency "aws-sdk",           "~> 2"
-  s.add_dependency "chef",              "~>13"
+  s.add_dependency "chef",              "~> 13"
   s.add_dependency "chef-marketplace",  "~> 0"
   s.add_dependency "clockwork",         "~> 2.0"
   s.add_dependency "elasticsearch",     "~> 5.0"

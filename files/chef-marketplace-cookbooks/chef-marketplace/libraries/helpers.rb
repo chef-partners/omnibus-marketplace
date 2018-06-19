@@ -174,6 +174,7 @@ class Marketplace
         trim_actions_db.rb
         register_node.rb
         prepare_for_publishing.rb
+        show_instance_id.rb
       )
       disabled_commands = []
 
