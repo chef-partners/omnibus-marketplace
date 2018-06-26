@@ -8,4 +8,4 @@ exec chpst \
   -P \
   -U <%= node['chef-marketplace']['runit']['user']['username'] %> \
   -u <%= node['chef-marketplace']['runit']['user']['username'] %> \
-  /opt/chef-marketplace/embedded/bin/bundle exec bin/reckoner
+  /opt/chef-marketplace/bin/reckoner "<%= node["chef-marketplace"]["reckoner"]["config_file"] %>"

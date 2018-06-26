@@ -3,10 +3,13 @@
 STDERR.sync = STDOUT.sync = true
 
 require 'clockwork'
+require 'active_support/time' # Allow numeric durations (eg: 1.minutes)
 require 'marketplace/reckoner'
 
 module Clockwork
-  Marketplace::Reckoner::Config.from_file(File.expand_path('../../conf/reckoner.rb', __FILE__))
+  config = ARGV.fetch(0, "/var/opt/chef-marketplace/reckoner/etc/reckoner.rb")
+
+  Marketplace::Reckoner::Config.from_file(File.expand_path(config, __FILE__))
 
   every(1.hour, 'update.usage') { Marketplace::Reckoner.update_usage } if Marketplace::Reckoner::enabled_in_config?
   every(1.day, 'eetee.daily')   { Marketplace::Reckoner::Eetee.daily_runner } if Marketplace::Reckoner::Eetee.enabled_in_config?

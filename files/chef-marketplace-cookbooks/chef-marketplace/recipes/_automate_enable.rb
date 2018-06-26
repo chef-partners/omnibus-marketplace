@@ -40,7 +40,7 @@ file '/var/opt/delivery/.telemetry.disabled' do
 end
 
 # Use a 30 day trial license if we're on Azure
-cookbook_file 'var/opt/delivery/license/delivery.license' do
+cookbook_file '/var/opt/delivery/license/delivery.license' do
   source 'delivery.license'
   action :create_if_missing
   not_if { node["chef-marketplace"]["license"]["type"] == "flexible" }

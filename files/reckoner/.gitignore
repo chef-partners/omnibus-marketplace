@@ -1,2 +1,4 @@
 Gemfile.lock
 conf/reckoner.rb
+.bundle
+*.gem
