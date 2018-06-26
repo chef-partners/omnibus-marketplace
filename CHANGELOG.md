@@ -1,26 +1,23 @@
 # Chef Marketplace Changelog
 <!-- usage documentation: http://expeditor-docs.es.chef.io/configuration/changelog/ -->
-<!-- latest_release 0.3.10 -->
+<!-- latest_release -->
+<!-- latest_release -->
+
+<!-- release_rollup -->
+<!-- release_rollup -->
+
+<!-- latest_stable_release -->
 ## [0.3.10](https://github.com/chef-partners/omnibus-marketplace/tree/0.3.10) (2018-06-26)
 
 #### Merged Pull Requests
 - Appbundle Reckoner &amp; Fix bugs in service [#119](https://github.com/chef-partners/omnibus-marketplace/pull/119) ([rhass](https://github.com/rhass))
-<!-- latest_release -->
-
-<!-- release_rollup since=0.3.9 -->
-### Changes since 0.3.9 release
-
-#### Merged Pull Requests
-- Appbundle Reckoner &amp; Fix bugs in service [#119](https://github.com/chef-partners/omnibus-marketplace/pull/119) ([rhass](https://github.com/rhass)) <!-- 0.3.10 -->
-<!-- release_rollup -->
-
 <!-- latest_stable_release -->
+
 ## [0.3.9](https://github.com/chef-partners/omnibus-marketplace/tree/0.3.9) (2018-06-06)
 
 #### Merged Pull Requests
 - Improve and update documentation. [#117](https://github.com/chef-partners/omnibus-marketplace/pull/117) ([rhass](https://github.com/rhass))
 - Fix biscotti on Azure [#118](https://github.com/chef-partners/omnibus-marketplace/pull/118) ([rhass](https://github.com/rhass))
-<!-- latest_stable_release -->
 
 ## [0.3.7](https://github.com/chef-partners/omnibus-marketplace/tree/0.3.7) (2018-04-05)
 
