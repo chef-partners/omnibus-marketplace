@@ -16,6 +16,10 @@ gem "chefstyle"
 gem "sequel"
 gem "aws-sdk", "~> 2"
 
+# Ad-Hoc Debugging
+gem 'pry-remote'
+gem 'pry-byebug'
+
 group :development do
   # Use Test Kitchen with Vagrant for converging the build environment
   gem "test-kitchen"

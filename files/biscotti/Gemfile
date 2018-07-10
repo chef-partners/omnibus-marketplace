@@ -10,6 +10,10 @@ gem "chef", "~>13"
 gem "rest-client"
 gem "rubyzip"
 
+# Ad-Hoc Debugging
+gem "pry-remote"
+gem "pry-byebug"
+
 group :development do
   gem "pry"
   gem "rubocop"
