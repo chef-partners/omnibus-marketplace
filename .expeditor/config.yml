@@ -2,6 +2,13 @@
 
 product_key: marketplace
 
+pipelines:
+  - omnibus/release
+  - omnibus/adhoc:
+      definition: .expeditor/release.omnibus.yml
+      env:
+        - ADHOC: true
+
 merge_actions:
   - built_in:bump_version:
       ignore_labels:
