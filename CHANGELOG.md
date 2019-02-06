@@ -1,9 +1,17 @@
 # Chef Marketplace Changelog
 <!-- usage documentation: http://expeditor-docs.es.chef.io/configuration/changelog/ -->
-<!-- latest_release -->
+<!-- latest_release 0.3.11 -->
+## [0.3.11](https://github.com/chef-partners/omnibus-marketplace/tree/0.3.11) (2019-02-06)
+
+#### Merged Pull Requests
+- Create omnibus buildkite pipelines [#121](https://github.com/chef-partners/omnibus-marketplace/pull/121) ([jeremiahsnapp](https://github.com/jeremiahsnapp))
 <!-- latest_release -->
 
-<!-- release_rollup -->
+<!-- release_rollup since=0.3.10 -->
+### Changes since 0.3.10 release
+
+#### Merged Pull Requests
+- Create omnibus buildkite pipelines [#121](https://github.com/chef-partners/omnibus-marketplace/pull/121) ([jeremiahsnapp](https://github.com/jeremiahsnapp)) <!-- 0.3.11 -->
 <!-- release_rollup -->
 
 <!-- latest_stable_release -->
