@@ -2,7 +2,7 @@
 set -ueo pipefail
 
 channel="${CHANNEL:-unstable}"
-product="${PRODUCT:-chef-server}"
+product=marketplace
 version="${VERSION:-latest}"
 dep_channel="${DEP_CHANNEL:-current}"
 
