@@ -15,7 +15,7 @@ gem "chefstyle"
 
 # Reckoner Deps
 gem "sequel"
-gem "aws-sdk", "~> 2"
+gem "aws-sdk-marketplacemetering", "~> 1"
 
 group :development do
   # Use Test Kitchen with Vagrant for converging the build environment
