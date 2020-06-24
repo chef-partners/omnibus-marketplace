@@ -238,7 +238,7 @@ GEM
       method_source (~> 0.9.0)
       spoon (~> 0.0)
     public_suffix (3.0.2)
-    rack (2.0.4)
+    rack (2.2.3)
     rainbow (2.2.2)
       rake
     rake (12.3.0)
