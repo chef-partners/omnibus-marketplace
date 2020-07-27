@@ -152,8 +152,8 @@ GEM
     ipaddress (0.8.3)
     iso8601 (0.9.1)
     jmespath (1.3.1)
-    json (2.1.0)
-    json (2.1.0-java)
+    json (2.3.1)
+    json (2.3.1-java)
     kitchen-ec2 (2.2.1)
       aws-sdk (~> 2)
       excon
